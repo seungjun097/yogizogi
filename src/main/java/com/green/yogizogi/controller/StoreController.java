@@ -14,7 +14,7 @@ public class StoreController {
     //가게추가 페이지 이동
     @GetMapping("/update")
     public String StoreUpdate() {
-        return "store/update";
+        return "store/storeupdate";
     }
     //가게추가 과정
     @PostMapping("/update")
