@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="header" th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">GreenShop</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">
+                    <a class="nav-link" href="/admin/item/new">상품등록</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/itemlist"
+                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">상품관리</a>
+                </li>
+                <th:block sec:authorize="isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order/cart">장바구니</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order/orderlist">구매이력</a>
+                    </li>
+                </th:block>
+                <th:block sec:authorize="isAnonymous()">
+                    <!-- 인증 받지 않음 -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/member/login">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/member/signup">회원가입</a>
+                    </li>
+                </th:block>
+
+                <th:block sec:authorize="isAuthenticated()">
+                    <!-- 인증 받음 -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">로그아웃</a>
+                    </li>
+                </th:block>
+
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search"
+                       placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0"
+                        type="submit">Searcch</button>
+            </form>
+        </div>
+    </nav>
+</div>
+</html>
