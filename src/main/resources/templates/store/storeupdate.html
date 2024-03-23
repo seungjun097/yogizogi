@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <h1>회원가입</h1>
+        <form action="/store/update" method="post">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="text" required class="form-control" id="email" name="email"
+                       placeholder="" th:value="${storeDTO != null ? storeDTO.email : ''}"/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                       placeholder="최소 하나의 문자 및 숫자를 포함한 8~16자여야 합니다" th:value="${signupDTO != null ? signupDTO.password : ''}"/>
+                <label th:if="${password != null}">[[${password}]]</label>
+            </div>
+            <div class="form-group">
+                <label for="password">Password 확인</label>
+                <input type="password" class="form-control" id="passwordCheck" name="passwordCheck"
+                       placeholder="비밀번호를 한번 더 입력해주세요" th:value="${signupDTO != null ? signupDTO.password : ''}"/>
+            </div>
+            <div class="form-group">
+                <label for="password">Nickname</label>
+                <input type="text" class="form-control" id="nickname" name="nickname"
+                       placeholder="사용할 닉네임을 입력하세요." th:value="${signupDTO != null ? signupDTO.nickname : ''}"/>
+                <label th:if="${nickname != null}">[[${nickname}]]</label>
+            </div>
+            <div class="form-group">
+                <label for="password">Phone</label>
+                <input type="text" class="form-control" id="phone" name="phone"
+                       placeholder="'-' 없이 입력해 주세요" th:value="${signupDTO != null ? signupDTO.phone : ''}"/>
+                <label th:if="${phone != null}">[[${phone}]]</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </th:block>
+</th:block>
+</body>
+</html>
