@@ -9,35 +9,56 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
-        <h1>회원가입</h1>
+        <h1>Store 등록</h1>
         <form action="/store/update" method="post">
             <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="text" required class="form-control" id="email" name="email"
-                       placeholder="" th:value="${storeDTO != null ? storeDTO.email : ''}"/>
+                <label>가게이름</label>
+                <input type="text" required class="form-control" id="storeName" name="storeName"/>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password"
-                       placeholder="최소 하나의 문자 및 숫자를 포함한 8~16자여야 합니다" th:value="${signupDTO != null ? signupDTO.password : ''}"/>
-                <label th:if="${password != null}">[[${password}]]</label>
+                <label>가게 핸드폰 번호</label>
+                <input type="text" class="form-control" id="storePhone" name="storePhone"
+                       placeholder="'-' 없이 입력해 주세요" />
             </div>
             <div class="form-group">
-                <label for="password">Password 확인</label>
-                <input type="password" class="form-control" id="passwordCheck" name="passwordCheck"
-                       placeholder="비밀번호를 한번 더 입력해주세요" th:value="${signupDTO != null ? signupDTO.password : ''}"/>
+                <label>가게 주소1</label>
+                <input type="text" class="form-control" id="storeAddress1" name="storeAddress1"/>
             </div>
             <div class="form-group">
-                <label for="password">Nickname</label>
-                <input type="text" class="form-control" id="nickname" name="nickname"
-                       placeholder="사용할 닉네임을 입력하세요." th:value="${signupDTO != null ? signupDTO.nickname : ''}"/>
-                <label th:if="${nickname != null}">[[${nickname}]]</label>
+                <label>가게 주소2</label>
+                <input type="text" class="form-control" id="storeAddress2" name="storeAddress2"/>
             </div>
             <div class="form-group">
-                <label for="password">Phone</label>
-                <input type="text" class="form-control" id="phone" name="phone"
-                       placeholder="'-' 없이 입력해 주세요" th:value="${signupDTO != null ? signupDTO.phone : ''}"/>
-                <label th:if="${phone != null}">[[${phone}]]</label>
+                <label>가게 주소3</label>
+                <input type="text" class="form-control" id="storeAddress3" name="storeAddress3"/>
+            </div>
+            <div class="form-group">
+                <label>가게 이미지</label>
+                <input type="file" name="storeImg">
+            </div>
+            <div class="form-group">
+                <label>가게 오프닝 타임</label>
+                <input type="text" class="form-control" id="openingTime" name="openingTime"/>
+            </div>
+            <div class="form-group">
+                <label>가게 클로즈 타임</label>
+                <input type="text" class="form-control" id="closingTime" name="closingTime"/>
+            </div>
+            <div class="form-group">
+                <label>가게 클로즈 타임</label>
+                <input type="text" class="form-control" id="closingTime" name="closingTime"/>
+            </div>
+            <div class="form-group">
+                <label>최소 주문 금액</label>
+                <input type="text" class="form-control" id="minDelivery" name="minDelivery"/>
+            </div>
+            <div class="form-group">
+                <label>평균 배달 시간</label>
+                <input type="text" class="form-control" id="deliveryTime" name="deliveryTime"/>
+            </div>
+            <div class="form-group">
+                <label>배달 요금</label>
+                <input type="text" class="form-control" id="deliveryTip" name="deliveryTip"/>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
