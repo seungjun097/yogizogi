@@ -9,4 +9,16 @@ public class MainController {
     public String mainPage() {
         return "main";
     }
+    @GetMapping("/header")
+    public String main(){
+        return "/layout/header";
+    }
+    @GetMapping("/nav")
+    public String nav(){
+        return "/layout/nav";
+    }
+    @GetMapping("/register")
+    public String register(){
+        return "/layout/register";
+    }
 }
