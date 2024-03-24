@@ -12,4 +12,7 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     @Query(value = "select * from store where category = #{category} and store_address1 like #{address}||'%'"
     , nativeQuery = true)
     List<StoreDTO> storeList(int category, int address);
+
+    @Query("select s, si from Store s left outer join StoreImage si on si.store = s")
+    List<Object[]> StoreAndImgList();
 }

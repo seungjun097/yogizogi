@@ -6,10 +6,10 @@ import lombok.*;
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "store")
-@SequenceGenerator(name = "myStoreImageSeq", sequenceName = "storeimg_seq", allocationSize = 1, initialValue = 1)
+@SequenceGenerator(name = "myStoreImageSeq", sequenceName = "storeimg_seq", allocationSize = 1)
 public class StoreImage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "myStoreImageSeq")

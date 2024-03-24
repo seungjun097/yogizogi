@@ -35,46 +35,40 @@ public class UploadController {
     private String uploadPath;
 
     @PostMapping("/uploadAjax")
-    public ResponseEntity<List<UploadResultDTO>> uploadFile(@RequestParam(value = "uploadFiles")MultipartFile[] uploadFiles){
+    public ResponseEntity<UploadResultDTO> uploadFile(@RequestParam(value = "uploadFile")MultipartFile uploadFile){
 
-        List<UploadResultDTO> resultDTOLists = new ArrayList<>();
-
-        for (MultipartFile uploadFile: uploadFiles){
-
-            //이미지 파일만 업로드 가능
-            if (uploadFile.getContentType().startsWith("image") == false){
-                log.warn("이미지 파일이 아닙니다.");
-                //403에러 : 클라이언트 요청을 이해했지만 서버가 요청 거부, 요청 리소스에 대한 권한이 없을때
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
-            String OriginalName = uploadFile.getOriginalFilename();
-            log.info("OriginalName : " + OriginalName);
-            String FileName = OriginalName.substring(OriginalName.lastIndexOf("\\")+1);
-            log.info("fileName : " + FileName);
-
-            //날짜폴더 생성   //"2024\03\11"
-            String folderpath = makeFolder();
-            //uuid생성
-            String uuid = UUID.randomUUID().toString();
-            String saveNamem = uploadPath+File.separator+folderpath+File.separator+uuid+"_"+FileName;
-            //c://upload\2024\03\11\imgkdfkdjfdfdkjdjfkd_dog.jpg
-            //패스객체 생성
-            Path savePath = Paths.get(saveNamem);
-            try {
-                //파일저장
-                uploadFile.transferTo(savePath);
-                //원본파일 저장할때 썸네일 생성
-                String thumbnailSaveName = uploadPath + File.separator + folderpath + File.separator + "s_" + uuid + "_"+FileName;
-                File thumbnailFile = new File(thumbnailSaveName);
-                //썸네일 생성
-                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
-                resultDTOLists.add(new UploadResultDTO(FileName,uuid,folderpath));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if(uploadFile.getContentType().startsWith("image") == false) {
+            log.warn("이미지 파일이 아닙니다.");
+            //403에러 : 클라이언트 요청을 이해했지만 서버가 요청 거부, 요청 리소스에 대한 권한이 없을때
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(resultDTOLists, HttpStatus.OK);
+
+        String OriginalName = uploadFile.getOriginalFilename();
+        String FileName = OriginalName.substring(OriginalName.lastIndexOf("\\")+1);
+        //날짜폴더 생성   //"2024\03\11"
+        String folderpath = makeFolder();
+        //uuid생성
+        String uuid = UUID.randomUUID().toString();
+        String saveName = uploadPath+File.separator+folderpath+File.separator+uuid+"_"+FileName;
+        //c://upload\2024\03\11\imgkdfkdjfdfdkjdjfkd_dog.jpg
+        //패스객체 생성
+        Path savePath = Paths.get(saveName);
+
+        try {
+            //만들어진 경로에 파일 저장
+            uploadFile.transferTo(savePath);
+            //원본파일 저장할때 썸네일 생성
+            String thumbnailSaveName = uploadPath + File.separator + folderpath + File.separator + "s_" + uuid + "_"+FileName;
+            File thumbnailFile = new File(thumbnailSaveName);
+            //썸네일 생성
+            Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        UploadResultDTO uploadResultDTO = new UploadResultDTO(FileName,uuid,folderpath);
+        return new ResponseEntity<>(uploadResultDTO, HttpStatus.OK);
     }
+
     //날짜폴더 생성메소드
     private String makeFolder(){
         //오늘 날짜객체를 "2024/03/11" 문자로 str 할당
@@ -82,12 +76,12 @@ public class UploadController {
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         String folderpath = str.replace("/", File.separator); //윈도우나 맥이나 프로그램에 파일로 들어가는 경로
         File uploadPathFile = new File(uploadPath, folderpath);
-        if (uploadPathFile.exists()==false){
+        if (!uploadPathFile.exists()){
             uploadPathFile.mkdirs(); //존재하지 않으면 폴더를 만들어줘라
         }
         return folderpath; //존재하면 경로대로 폴더를 다 만들어라
-
     }
+
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFiles(@RequestParam(value = "fileName") String fileName){
         ResponseEntity<byte[]> result = null;
