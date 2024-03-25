@@ -4,6 +4,9 @@ import com.green.yogizogi.constant.StoreCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "store")
 @Builder
@@ -13,6 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @SequenceGenerator(name= "my_store_seq", sequenceName = "store_seq", allocationSize = 1)
 public class Store {
+
     @Id
     @Column(name = "store_id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "my_store_seq")
@@ -20,6 +24,7 @@ public class Store {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StoreCategory category;
+
     @Column(nullable = false)
     private String store_name;
     @Column(nullable = false)
@@ -43,4 +48,13 @@ public class Store {
     @Lob
     @Column
     private String storeDes;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Menu> menuList = new ArrayList<>();
+
+    public void addMenu(Menu menu) {
+        menuList.add(menu);
+        menu.setStore(this);
+    }
 }
