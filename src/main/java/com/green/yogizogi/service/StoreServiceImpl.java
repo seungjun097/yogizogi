@@ -1,8 +1,10 @@
 package com.green.yogizogi.service;
 
 import com.green.yogizogi.dto.StoreDTO;
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.entity.StoreImage;
+import com.green.yogizogi.repository.MemberRepository;
 import com.green.yogizogi.repository.StoreImageRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import jakarta.transaction.Transactional;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final StoreImageRepository storeImageRepository;
+    private final MemberRepository memberRepository;
     //카테고리번호와 주소로 내주위 매장목록 조회
     @Override
     public List<StoreDTO> storeList(int category, int address) {
@@ -27,8 +31,21 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    @Transactional
+    public StoreDTO findStore(Long store_id) {
+        Store store = storeRepository.findById(store_id).get();
+        StoreImage storeImage = storeImageRepository.findByStore(store);
+        return entityToDto(store, storeImage);
+    }
+
+    @Override
+    @Transactional
     public Long StoreRegister(StoreDTO storeDTO) {
         Store store = DtoToEntity(storeDTO);
+        Optional<Member> result = memberRepository.findById(storeDTO.getMember_id());
+        if(result.isPresent()) {
+            store.setMember(result.get());
+        }
         storeRepository.save(store);
 
         StoreImage storeImage = StoreImage.builder()

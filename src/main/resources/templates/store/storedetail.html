@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <h1>가게정보</h1>
+        <div class="form-group">
+            <label>가게이름</label>
+            <input type="text" class="form-control" id="storeName" name="storeName" th:value="${storeDTO.storeName}"/>
+        </div>
+        <div class="form-group">
+            <label>가게 핸드폰 번호</label>
+            <input type="text" class="form-control" id="storePhone" name="storePhone" th:value="${storeDTO.storePhone}"/>
+        </div>
+    </th:block>
+</th:block>
+</html>
