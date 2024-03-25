@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <h1>Store 등록</h1>
+        <form action="/store/register" method="post">
+            <select class="form-group" id="category" name="category">
+                카테고리
+                <option value=" KOREA_FOOD">한식</option>
+                <option value="USA_FOOD">미국식</option>
+                <option value="JAPAN_FOOD">일식</option>
+                <option value="CHINA_FOOD">중식</option>
+            </select>
+            <input type="hidden" name="member_id" id="member_id" th:value="${member_id}">
+            <div class="form-group">
+                <label>가게이름</label>
+                <input type="text" required class="form-control" id="storeName" name="storeName"/>
+            </div>
+            <div class="form-group">
+                <label>가게 핸드폰 번호</label>
+                <input type="text" class="form-control" id="storePhone" name="storePhone"
+                       placeholder="'-' 없이 입력해 주세요" />
+            </div>
+            <div class="form-group">
+                <label>가게 주소1</label>
+                <input type="text" class="form-control" id="storeAddress1" name="storeAddress1"/>
+            </div>
+            <div class="form-group">
+                <label>가게 주소2</label>
+                <input type="text" class="form-control" id="storeAddress2" name="storeAddress2"/>
+            </div>
+            <div class="form-group">
+                <label>가게 주소3</label>
+                <input type="text" class="form-control" id="storeAddress3" name="storeAddress3"/>
+            </div>
+            <div class="form-group">
+                <label>가게 이미지</label>
+                <input type="file" class="store-image-input files" id="fileInput">
+                <label class="store-image-label" data-browse="Browse"></label>
+            </div>
+            <div class="uploadResult">
+                <ul></ul>
+            </div>
+            <div class="form-group">
+                <label>가게 상세설명</label>
+                <textarea class="form-control" id="storeDes" name="storeDes"></textarea>
+            </div>
+            <div class="form-group">
+                <label>가게 오프닝 타임</label>
+                <input type="text" class="form-control" id="openingTime" name="openingTime"/>
+            </div>
+            <div class="form-group">
+                <label>가게 클로즈 타임</label>
+                <input type="text" class="form-control" id="closingTime" name="closingTime"/>
+            </div>
+            <div class="form-group">
+                <label>최소 주문 금액</label>
+                <input type="text" class="form-control" id="minDelivery" name="minDelivery"/>
+            </div>
+            <div class="form-group">
+                <label>평균 배달 시간</label>
+                <input type="text" class="form-control" id="deliveryTime" name="deliveryTime"/>
+            </div>
+            <div class="form-group">
+                <label>배달 요금</label>
+                <input type="text" class="form-control" id="deliveryTip" name="deliveryTip"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </th:block>
+</th:block>
+</body>
+<script>
+    $(document).ready(function(e){
+        $(".store-image-input").on("change", function() {
+            let fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".store-image-label").addClass("selected").html(fileName);
+            let formData = new FormData();
+            let inputFile = $(this);
+            let file = inputFile[0].files[0];
+            if (file) {
+                formData.append("uploadFile", file);
+            } else {
+                return;
+            }
+
+            $.ajax({
+                url:'/uploadAjax',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+                    showResult(result);
+                },
+                error: function(err) {
+                  console.log(err);
+                }
+            })
+        })
+        function showResult(obj) {
+          let str = "";
+          let uploadUL = $(".uploadResult ul");
+          str += "<li>"
+          str += "<div>"
+          str += "<button type='button' data-file='"+obj.imageURL+"' class='btn-warning btn-sm'>X</button>"
+          str += "<img src='/display?fileName="+obj.thumbnailURL+"'>";
+          str += "</div></li>"
+          str += "<input type='hidden' name='imgName' value='"+obj.fileName+"' >";
+          str += "<input type='hidden' name='path' value='"+obj.folderPath+"' >";
+          str += "<input type='hidden' name='uuid' value='"+obj.uuid+"' >";
+          uploadUL.append(str);
+        }
+    })
+
+</script>
+</html>

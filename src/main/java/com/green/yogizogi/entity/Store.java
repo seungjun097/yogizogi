@@ -1,5 +1,6 @@
 package com.green.yogizogi.entity;
 
+import com.green.yogizogi.constant.StoreCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,7 +8,7 @@ import lombok.*;
 @Table(name = "store")
 @Builder
 @Getter
-@ToString
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SequenceGenerator(name= "my_store_seq", sequenceName = "store_seq", allocationSize = 1)
@@ -17,7 +18,8 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "my_store_seq")
     private Long id;
     @Column(nullable = false)
-    private int category;
+    @Enumerated(EnumType.STRING)
+    private StoreCategory category;
     @Column(nullable = false)
     private String store_name;
     @Column(nullable = false)
@@ -29,21 +31,20 @@ public class Store {
     @Column(nullable = false)
     private String store_phone;
     @Column
-    private String store_img;
+    private int opening_time;
     @Column
-    private String store_thumb;
+    private int closing_time;
     @Column
-    private int opening_time = 0;
+    private int min_delivery;
     @Column
-    private int closing_time = 0;
+    private int delivery_time;
     @Column
-    private int min_delivery = 0;
-    @Column
-    private int delivery_time = 0;
-    @Column
-    private int delivery_tip = 0;
+    private int delivery_tip;
     @Lob
     @Column
-    private String store_des = "가게소개가 없습니다";
+    private String storeDes;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

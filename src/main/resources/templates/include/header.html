@@ -12,7 +12,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">
-                    <a class="nav-link" href="/admin/item/new">상품등록</a>
+                    <a class="nav-link" href="/store/register">가게등록</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/store/list">가게 목록</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/itemlist"

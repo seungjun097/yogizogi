@@ -1,34 +1,18 @@
 package com.green.yogizogi.dto;
 
-import com.green.yogizogi.constant.StoreCategory;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 @Data
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreDTO {
-    private Long member_id;
-    private Long id;
-    private StoreCategory category;
-    private String storeName;
-    private String storeAddress1;
-    private String storeAddress2;
-    private String storeAddress3;
-    private String storePhone;
-    private int openingTime;
-    private int closingTime;
-    private int minDelivery;
-    private int deliveryTime;
-    private int deliveryTip;
-    private String storeDes;
-    //가게 등록 시 이미지 저장주소
+public class StoreImageDTO {
     private String uuid;
     private String imgName;
     private String path;

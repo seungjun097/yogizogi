@@ -37,6 +37,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return "ok";
     }
 
+    @Override
+    public Member userFindEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
