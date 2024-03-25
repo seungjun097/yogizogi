@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="213234917868-0gh5neetqbvsi58o7ekqbknd7l1ufh67.apps.googleusercontent.com">
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
         <h1>로그인</h1>
@@ -13,8 +15,18 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password"/>
             </div>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </th:block>
 </th:block>
+<script>
+function onSignIn(googleUser) {
+var profile = googleUser.getBasicProfile();
+console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+console.log('Name: ' + profile.getName());
+console.log('Image URL: ' + profile.getImageUrl());
+console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
+</script>
 </html>
