@@ -10,6 +10,8 @@ public interface StoreService {
     //카테고리 코드와 우편번호로 내주위에 매장목록 조회
     List<StoreDTO> storeList(int category, int address);
 
+    StoreDTO findStore(Long store_id);
+
     Long StoreRegister(StoreDTO storeDTO);
 
     List<StoreDTO> storeListAll();

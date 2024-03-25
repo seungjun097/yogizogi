@@ -49,6 +49,10 @@ public class Store {
     @Column
     private String storeDes;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+  
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Menu> menuList = new ArrayList<>();
@@ -57,4 +61,5 @@ public class Store {
         menuList.add(menu);
         menu.setStore(this);
     }
+
 }

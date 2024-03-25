@@ -9,6 +9,8 @@ public interface MemberService {
 
     String userEmailChk(String email);
 
+    Member userFindEmail(String email);
+
     default Member signUpDTOtoEntity(SignupDTO dto) {
         Member member = Member.builder()
                 .email(dto.getEmail())

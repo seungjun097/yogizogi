@@ -14,7 +14,8 @@ import java.net.URLEncoder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StoreDTO {
-    private long id;
+    private Long member_id;
+    private Long id;
     private StoreCategory category;
     private String storeName;
     private String storeAddress1;
