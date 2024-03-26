@@ -43,7 +43,6 @@ public class StoreServiceImpl implements StoreService {
         return store.getId();
     }
 
-
     //상점 리스트
     @Override
     public PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO RequestDTO) {
@@ -84,11 +83,6 @@ public class StoreServiceImpl implements StoreService {
         }*/
         booleanBuilder.and(conditionBuilder);
         return booleanBuilder;
-
-        List<Store> storeList = storeRepository.findAll();
-        List<StoreDTO> storeDTOList = storeList.stream()
-                .map(store-> entityToDto(store)).collect(Collectors.toList());
-        return storeDTOList;
     }
 
     @Override
