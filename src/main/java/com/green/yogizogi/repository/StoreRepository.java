@@ -13,5 +13,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store,Long> {
+
+
+    @Query("select s, si from Store s left outer join StoreImage si on si.store = s")
+    Page<List<Object[]>> StoreAndImgList(Pageable pageable);
+
     List<Store> findByMember(Member member);
 }

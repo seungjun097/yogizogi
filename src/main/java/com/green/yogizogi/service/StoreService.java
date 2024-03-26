@@ -10,11 +10,12 @@ import com.green.yogizogi.entity.Store;
 import java.util.List;
 
 public interface StoreService {
+
     StoreDTO findStore(Long store_id);
 
     Long StoreRegister(StoreDTO storeDTO);
 
-    PageResultDTO<List<StoreDTO>,Store> storeListAll(PageRequestDTO requestDTO);
+    PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO requestDTO);
 
     List<StoreDTO> search();
 
