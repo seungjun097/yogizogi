@@ -34,5 +34,4 @@ public class Menu {
     private String imgName;
     private String path;
 
-
 }

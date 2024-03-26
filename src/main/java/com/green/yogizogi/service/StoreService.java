@@ -30,10 +30,13 @@ public interface StoreService {
                 .delivery_time(storeDTO.getDeliveryTime())
                 .delivery_tip(storeDTO.getDeliveryTip())
                 .storeDes(storeDTO.getStoreDes())
+                .imgName(storeDTO.getImgName())
+                .uuid(storeDTO.getUuid())
+                .path(storeDTO.getPath())
                 .build();
         return store;
     }
-    default StoreDTO entityToDto(Store store, StoreImage storeImage) {
+    default StoreDTO entityToDto(Store store) {
         StoreDTO dto = StoreDTO.builder()
                 .id(store.getId())
                 .category(store.getCategory())
@@ -48,9 +51,9 @@ public interface StoreService {
                 .deliveryTime(store.getDelivery_time())
                 .deliveryTip(store.getDelivery_tip())
                 .minDelivery(store.getMin_delivery())
-                .imgName(storeImage.getImgName())
-                .path(storeImage.getPath())
-                .uuid(storeImage.getUuid())
+                .imgName(store.getImgName())
+                .uuid(store.getUuid())
+                .path(store.getPath())
                 .build();
         return dto;
     }

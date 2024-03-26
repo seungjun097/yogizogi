@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -33,6 +35,12 @@ public class StoreDTO {
     private String imgName;
     private String path;
 
+    @Builder.Default
+    List<MenuDTO>menuDTOList = new ArrayList<>();
+
+    public void addMemuDTO (MenuDTO menuDTO) {
+        menuDTOList.add(menuDTO);
+    }
     public String getImageURL(){
         try {
             return URLEncoder.encode(path+"/"+uuid+"_"+imgName,"utf-8");
