@@ -49,10 +49,14 @@ public class Store {
     @Column
     private String storeDes;
 
+    private String uuid;
+    private String imgName;
+    private String path;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-  
+
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Menu> menuList = new ArrayList<>();

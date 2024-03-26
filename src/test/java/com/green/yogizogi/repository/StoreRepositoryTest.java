@@ -11,10 +11,4 @@ public class StoreRepositoryTest {
     @Autowired
     private StoreRepository storeRepository;
 
-    @Test
-    public void selectall() {
-        List<Object[]> result = storeRepository.StoreAndImgList();
-        System.out.println(result);
-    }
-
 }
