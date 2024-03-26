@@ -49,14 +49,17 @@ public class Store {
     @Column
     private String storeDes;
 
+    //이미지 주소
     private String uuid;
     private String imgName;
     private String path;
-
+    
+    //스토어 수정에 접속할 작성 멤버 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    //스토어 엔티티에 담긴 메뉴들
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Menu> menuList = new ArrayList<>();
