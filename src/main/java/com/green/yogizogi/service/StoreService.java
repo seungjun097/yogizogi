@@ -1,20 +1,35 @@
 package com.green.yogizogi.service;
 
+import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.entity.StoreImage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface StoreService {
-    //카테고리 코드와 우편번호로 내주위에 매장목록 조회
-    List<StoreDTO> storeList(int category, int address);
+    // 카테고리로 검색
+    Page<Store> searchByCategory(String keyword, Pageable pageable);
+
+    // 가게 이름으로 검색
+    Page<Store> searchByStoreName(String keyword, Pageable pageable);
+
+    // 배달 팁으로 검색
+    Page<Store> searchByDeliveryTip(String keyword, Pageable pageable);
+
+    // 배달 시간으로 검색
+    Page<Store> searchByDeliveryTime(String keyword, Pageable pageable);
 
     StoreDTO findStore(Long store_id);
 
     Long StoreRegister(StoreDTO storeDTO);
 
-    List<StoreDTO> storeListAll();
+    PageResultDTO<List<StoreDTO>,Store> storeListAll(PageRequestDTO requestDTO);
+
+    List<StoreDTO> search();
 
     default Store DtoToEntity(StoreDTO storeDTO) {
         Store store = Store.builder()
