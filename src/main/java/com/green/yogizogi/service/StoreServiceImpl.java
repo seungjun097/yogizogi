@@ -55,39 +55,21 @@ public class StoreServiceImpl implements StoreService {
     @Transactional
     public StoreDTO findStore(Long store_id) {
         Store store = storeRepository.findById(store_id).get();
-        StoreImage storeImage = storeImageRepository.findByStore(store);
-        return entityToDto(store, storeImage);
+        return entityToDto(store);
     }
 
     @Override
-    @Transactional
     public Long StoreRegister(StoreDTO storeDTO) {
         Store store = DtoToEntity(storeDTO);
-        Optional<Member> result = memberRepository.findById(storeDTO.getMember_id());
-        if(result.isPresent()) {
-            store.setMember(result.get());
-        }
         storeRepository.save(store);
-
-        StoreImage storeImage = StoreImage.builder()
-                .imgName(storeDTO.getImgName())
-                .uuid(storeDTO.getUuid())
-                .path(storeDTO.getPath())
-                .store(store)
-                .build();
-        storeImageRepository.save(storeImage);
         return store.getId();
     }
-
+  
     @Override
-    public PageResultDTO<List<StoreDTO>, Store> storeListAll(PageRequestDTO requestDTO) {
-        return null;
-    }
-
-
-    @Override
-    public List<StoreDTO> search() {
-
-        return null;
+    public List<StoreDTO> storeListAll() {
+        List<Store> storeList = storeRepository.findAll();
+        List<StoreDTO> storeDTOList = storeList.stream()
+                .map(store-> entityToDto(store)).collect(Collectors.toList());
+        return storeDTOList;
     }
 }
