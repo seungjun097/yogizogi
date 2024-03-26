@@ -20,4 +20,19 @@ public interface MenuService {
                 .build();
         return menu;
     }
+    default MenuDTO enTityToDto(Menu menu) {
+        MenuDTO dto = MenuDTO.builder()
+                .id(menu.getId())
+                .menuName(menu.getMenuName())
+                .menuPrice(menu.getMenuPrice())
+                .sellStatus(menu.getSellStatus())
+                .menuType(menu.getMenuType())
+                .menuDesc(menu.getMenuDesc())
+                .imgName(menu.getImgName())
+                .path(menu.getPath())
+                .uuid(menu.getUuid())
+                .store_id(menu.getStore().getId())
+                .build();
+        return dto;
+    }
 }

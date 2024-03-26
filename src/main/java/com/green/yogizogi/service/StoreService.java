@@ -2,27 +2,14 @@ package com.green.yogizogi.service;
 
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
+import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.StoreDTO;
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Store;
-import com.green.yogizogi.entity.StoreImage;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface StoreService {
-    // 카테고리로 검색
-    Page<Store> searchByCategory(String keyword, Pageable pageable);
-
-    // 가게 이름으로 검색
-    Page<Store> searchByStoreName(String keyword, Pageable pageable);
-
-    // 배달 팁으로 검색
-    Page<Store> searchByDeliveryTip(String keyword, Pageable pageable);
-
-    // 배달 시간으로 검색
-    Page<Store> searchByDeliveryTime(String keyword, Pageable pageable);
-
     StoreDTO findStore(Long store_id);
 
     Long StoreRegister(StoreDTO storeDTO);
@@ -30,6 +17,8 @@ public interface StoreService {
     PageResultDTO<List<StoreDTO>,Store> storeListAll(PageRequestDTO requestDTO);
 
     List<StoreDTO> search();
+
+    List<StoreDTO> storeFindMember(Member member);
 
     default Store DtoToEntity(StoreDTO storeDTO) {
         Store store = Store.builder()
@@ -49,10 +38,13 @@ public interface StoreService {
                 .uuid(storeDTO.getUuid())
                 .path(storeDTO.getPath())
                 .build();
+
         return store;
     }
+
+    //store엔티티를 storeDTO바꾸며 store의 menu리스트도 menudto리스트로 바꿔 넣는다.
     default StoreDTO entityToDto(Store store) {
-        StoreDTO dto = StoreDTO.builder()
+        StoreDTO storeDTO = StoreDTO.builder()
                 .id(store.getId())
                 .category(store.getCategory())
                 .storeName(store.getStore_name())
@@ -70,6 +62,21 @@ public interface StoreService {
                 .uuid(store.getUuid())
                 .path(store.getPath())
                 .build();
-        return dto;
+        store.getMenuList().stream().map(menu->{
+            MenuDTO menuDTO = MenuDTO.builder()
+                    .id(menu.getId())
+                    .menuName(menu.getMenuName())
+                    .menuPrice(menu.getMenuPrice())
+                    .sellStatus(menu.getSellStatus())
+                    .menuType(menu.getMenuType())
+                    .menuDesc(menu.getMenuDesc())
+                    .imgName(menu.getImgName())
+                    .path(menu.getPath())
+                    .uuid(menu.getUuid())
+                    .store_id(menu.getStore().getId())
+                    .build();
+            return menuDTO;
+        }).forEach(menuDTO-> storeDTO.addMemuDTO(menuDTO));
+        return storeDTO;
     }
 }
