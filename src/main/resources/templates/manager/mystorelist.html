@@ -3,6 +3,28 @@
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
         <h1>메인페이지</h1>
+        <div th:each="dto:${storeDTOList}">
+            <div class="card" style="width: 18rem;">
+                <img th:if="${dto.path != null}"
+                     th:src="|/display?fileName=${dto.getThumbnailURL()}|" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">[[${dto.storeName}]]</h5>
+                    <p class="card-text">[[${dto.storeDes}]]</p>
+                </div>
+            </div>
+            <form action="/manager/menu/+'${dto.id}'" method="post">
+                <div class="form-group">
+                    <label for="email">email</label>
+                    <input type="text" class="form-control" id="email" name="username"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"/>
+                </div>
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
     </th:block>
 </th:block>
 </html>
