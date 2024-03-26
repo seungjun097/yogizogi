@@ -47,7 +47,12 @@ public class StoreController {
         System.out.println("가게 등록 성공 : "+storeId);
         return "main";
     }
-
+    @GetMapping("/list")
+    public String storeList(Model model,PageRequestDTO pageRequestDTO){
+        PageResultDTO<StoreDTO,Store> result = storeService.storeListAll(pageRequestDTO);
+        model.addAttribute("result",result);
+        return "/store/storelist";
+    }
 
     @GetMapping("/detail/{storeId}")
     public String storeDetatilview(@PathVariable("storeId") Long storeId, Model model) {
@@ -56,39 +61,5 @@ public class StoreController {
         model.addAttribute("storeDTO", storeDTO);
         return "store/storedetail";
     }
-    @GetMapping("/search")
-    public String search(@RequestParam(name = "searchType", required = false) String searchType,
-                         @RequestParam(name = "keyword", required = false) String keyword,
-                         @ModelAttribute("pageRequest") PageRequestDTO pageRequestDTO,
-                         Model model) {
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize());
-        Page<Store> searchResults = null;
 
-        if (searchType != null && keyword != null) {
-            switch (searchType) {
-                case "category":
-                    searchResults = storeService.searchByCategory(keyword, pageable);
-                    break;
-                case "storeName":
-                    searchResults = storeService.searchByStoreName(keyword, pageable);
-                    break;
-                case "deliveryTip":
-                    searchResults = storeService.searchByDeliveryTip(keyword, pageable);
-                    break;
-                case "deliveryTime":
-                    searchResults = storeService.searchByDeliveryTime(keyword, pageable);
-                    break;
-                default:
-                    // 처리할 수 없는 검색 유형일 경우
-                    break;
-            }
-        }
-
-        // 검색 결과를 모델에 추가
-        model.addAttribute("searchResults", searchResults);
-
-        // 검색 결과를 보여줄 뷰의 이름을 반환
-        return "/storelist";
     }
-
-}

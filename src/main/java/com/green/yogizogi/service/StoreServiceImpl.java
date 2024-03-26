@@ -3,12 +3,15 @@ package com.green.yogizogi.service;
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.StoreDTO;
-import com.green.yogizogi.entity.Member;
+
+import com.green.yogizogi.entity.QStore;
 import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.entity.StoreImage;
 import com.green.yogizogi.repository.MemberRepository;
 import com.green.yogizogi.repository.StoreImageRepository;
 import com.green.yogizogi.repository.StoreRepository;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,26 +35,6 @@ public class StoreServiceImpl implements StoreService {
 
 
     @Override
-    public Page<Store> searchByCategory(String keyword, Pageable pageable) {
-        return storeRepository.findByCategoryContainingKeyword(keyword, pageable);
-    }
-
-    @Override
-    public Page<Store> searchByStoreName(String keyword, Pageable pageable) {
-        return storeRepository.findByStoreNameContainingKeyword(keyword, pageable);
-    }
-
-    @Override
-    public Page<Store> searchByDeliveryTip(String keyword, Pageable pageable) {
-        return storeRepository.findByDeliveryTipContainingKeyword(keyword, pageable);
-    }
-
-    @Override
-    public Page<Store> searchByDeliveryTime(String keyword, Pageable pageable) {
-        return storeRepository.findByDeliveryTimeContainingKeyword(keyword, pageable);
-    }
-
-    @Override
     @Transactional
     public StoreDTO findStore(Long store_id) {
         Store store = storeRepository.findById(store_id).get();
@@ -64,12 +47,46 @@ public class StoreServiceImpl implements StoreService {
         storeRepository.save(store);
         return store.getId();
     }
-  
+
+    //상점 리스트
     @Override
-    public List<StoreDTO> storeListAll() {
-        List<Store> storeList = storeRepository.findAll();
-        List<StoreDTO> storeDTOList = storeList.stream()
-                .map(store-> entityToDto(store)).collect(Collectors.toList());
-        return storeDTOList;
+    public PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO RequestDTO) {
+        Pageable pageable = RequestDTO.getPageable(Sort.by("id").descending());
+        Page<Store> result = storeRepository.findAll(pageable);
+        Function<Store,StoreDTO> fn = (entity -> entityToDto(entity));
+        return new PageResultDTO<>(result,fn);
+    }
+
+    @Override
+    public List<StoreDTO> search() {
+        return null;
+    }
+
+
+    private BooleanBuilder getSearch(PageRequestDTO requestDTO) {
+        String type = requestDTO.getType();
+        String keyword = requestDTO.getKeyword();
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        QStore qStore = QStore.store;
+        BooleanExpression expression = qStore.id.gt(0L);
+        booleanBuilder.and(expression);
+        if(type == null || type.trim().length() == 0) {
+            return booleanBuilder;
+        }
+        BooleanBuilder conditionBuilder = new BooleanBuilder();
+       /* if(type.contains("cate")) {
+            conditionBuilder.or(qStore.category.contains(keyword));
+        }
+        if(type.contains("name")) {
+            conditionBuilder.or(qStore.store_name.contains(keyword));
+        }
+        if(type.contains("time")) {
+            conditionBuilder.or(qStore.delivery_time.contains(keyword));
+        }
+        if(type.contains("tip")) {
+            conditionBuilder.or(qStore.delivery_tip.contains(keyword));
+        }*/
+        booleanBuilder.and(conditionBuilder);
+        return booleanBuilder;
     }
 }

@@ -11,23 +11,12 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface StoreService {
-    // 카테고리로 검색
-    Page<Store> searchByCategory(String keyword, Pageable pageable);
-
-    // 가게 이름으로 검색
-    Page<Store> searchByStoreName(String keyword, Pageable pageable);
-
-    // 배달 팁으로 검색
-    Page<Store> searchByDeliveryTip(String keyword, Pageable pageable);
-
-    // 배달 시간으로 검색
-    Page<Store> searchByDeliveryTime(String keyword, Pageable pageable);
 
     StoreDTO findStore(Long store_id);
 
     Long StoreRegister(StoreDTO storeDTO);
 
-    PageResultDTO<List<StoreDTO>,Store> storeListAll(PageRequestDTO requestDTO);
+    PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO requestDTO);
 
     List<StoreDTO> search();
 
