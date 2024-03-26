@@ -47,6 +47,7 @@ public class StoreController {
         System.out.println("가게 등록 성공 : "+storeId);
         return "main";
     }
+  
     @GetMapping("/list")
     public String storeList(Model model,PageRequestDTO pageRequestDTO){
         PageResultDTO<StoreDTO,Store> result = storeService.storeListAll(pageRequestDTO);
@@ -62,4 +63,4 @@ public class StoreController {
         return "store/storedetail";
     }
 
-    }
+}
