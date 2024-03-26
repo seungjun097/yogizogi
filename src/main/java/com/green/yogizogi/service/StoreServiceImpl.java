@@ -4,10 +4,10 @@ import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.StoreDTO;
 
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.QStore;
 import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.repository.MemberRepository;
-import com.green.yogizogi.repository.MenuRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,9 +15,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service

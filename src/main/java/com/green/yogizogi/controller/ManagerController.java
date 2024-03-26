@@ -39,6 +39,7 @@ public class ManagerController {
         model.addAttribute("storeDTOList", storeDTOList);
         return "manager/mystorelist";
     }
+
     @PostMapping("/menu/{storeId}")
     @Transactional
     public @ResponseBody ResponseEntity menuRegister(@PathVariable(name = "storeId")Long storeId,
