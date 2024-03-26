@@ -1,5 +1,7 @@
 package com.green.yogizogi.service;
 
+import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Store;
@@ -9,11 +11,15 @@ import com.green.yogizogi.repository.StoreImageRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,11 +29,26 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final StoreImageRepository storeImageRepository;
     private final MemberRepository memberRepository;
-    //카테고리번호와 주소로 내주위 매장목록 조회
+
+
     @Override
-    public List<StoreDTO> storeList(int category, int address) {
-        System.out.println("서비스임플 category: " +category + ", address: " + address );
-        return storeRepository.storeList(category,address);
+    public Page<Store> searchByCategory(String keyword, Pageable pageable) {
+        return storeRepository.findByCategoryContainingKeyword(keyword, pageable);
+    }
+
+    @Override
+    public Page<Store> searchByStoreName(String keyword, Pageable pageable) {
+        return storeRepository.findByStoreNameContainingKeyword(keyword, pageable);
+    }
+
+    @Override
+    public Page<Store> searchByDeliveryTip(String keyword, Pageable pageable) {
+        return storeRepository.findByDeliveryTipContainingKeyword(keyword, pageable);
+    }
+
+    @Override
+    public Page<Store> searchByDeliveryTime(String keyword, Pageable pageable) {
+        return storeRepository.findByDeliveryTimeContainingKeyword(keyword, pageable);
     }
 
     @Override
@@ -43,7 +64,7 @@ public class StoreServiceImpl implements StoreService {
         storeRepository.save(store);
         return store.getId();
     }
-
+  
     @Override
     public List<StoreDTO> storeListAll() {
         List<Store> storeList = storeRepository.findAll();
