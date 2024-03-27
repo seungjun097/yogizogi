@@ -19,7 +19,7 @@ public interface StoreService {
 
     List<StoreDTO> search();
 
-    List<StoreDTO> storeFindMember(Member member);
+    List<StoreDTO> storeFindMemberEmail(String email);
 
     default Store DtoToEntity(StoreDTO storeDTO) {
         Store store = Store.builder()

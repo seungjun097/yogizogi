@@ -39,6 +39,8 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Long StoreRegister(StoreDTO storeDTO) {
         Store store = DtoToEntity(storeDTO);
+        Member member = memberRepository.findById(storeDTO.getMember_id()).get();
+        store.setMember(member);
         storeRepository.save(store);
         return store.getId();
     }
@@ -86,7 +88,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreDTO> storeFindMember(Member member) {
-        return null;
+    @Transactional
+    public List<StoreDTO> storeFindMemberEmail(String email) {
+        List<Store> storeList = storeRepository.findByMember(memberRepository.findByEmail(email));
+        List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
+        return storeDTOList;
     }
 }
