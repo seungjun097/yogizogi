@@ -28,6 +28,11 @@ public class StoreController {
     private final StoreService storeService;
     private final MemberService memberService;
 
+    @GetMapping("/")
+    public String index() {
+        return "/store/storelist";
+    }
+
     //가게추가 페이지 이동
     @GetMapping("/register")
     public String StoreUpdate(@AuthenticationPrincipal User user, Model model) {
@@ -48,12 +53,18 @@ public class StoreController {
         return "main";
     }
   
-    @GetMapping("/list")
+    /*@GetMapping("/list")
     public String storeList(Model model,PageRequestDTO pageRequestDTO){
         PageResultDTO<StoreDTO,Store> result = storeService.storeListAll(pageRequestDTO);
         model.addAttribute("result",result);
         return "/store/storelist";
+    }*/
+    @GetMapping("/list")
+    public String list(PageRequestDTO dto, Model model) {
+        model.addAttribute("result", storeService.storeListAll(dto));
+        return "/store/storelist";
     }
+
 
     @GetMapping("/detail/{storeId}")
     public String storeDetatilview(@PathVariable("storeId") Long storeId, Model model) {

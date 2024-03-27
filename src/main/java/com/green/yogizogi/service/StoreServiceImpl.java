@@ -35,6 +35,17 @@ public class StoreServiceImpl implements StoreService {
         Store store = storeRepository.findById(store_id).get();
         return entityToDto(store);
     }
+    @Override
+    public PageResultDTO<StoreDTO, Store> storeListAll(PageRequestDTO requestDTO) {
+        Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
+        BooleanBuilder booleanBuilder = getSearch(requestDTO); //검색조건 처리
+        Page<Store> result = storeRepository.findAll(booleanBuilder, pageable);
+        Function<Store, StoreDTO> fn = (entity->entityToDto(entity));
+        PageResultDTO<StoreDTO, Store> resultDTO = new PageResultDTO<>(result, fn);
+        resultDTO.setType(requestDTO.getType());
+        resultDTO.setKeyword(requestDTO.getKeyword());
+        return resultDTO;
+    }
 
     @Override
     public Long StoreRegister(StoreDTO storeDTO) {
@@ -46,21 +57,26 @@ public class StoreServiceImpl implements StoreService {
     }
 
     //상점 리스트
-    @Override
+    /*@Override
     public PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO RequestDTO) {
         Pageable pageable = RequestDTO.getPageable(Sort.by("id").descending());
         Page<Store> result = storeRepository.findAll(pageable);
         Function<Store,StoreDTO> fn = (entity -> entityToDto(entity));
         return new PageResultDTO<>(result,fn);
-    }
-
+    }*/
     @Override
     public List<StoreDTO> search() {
         return null;
     }
 
-
-    private BooleanBuilder getSearch(PageRequestDTO requestDTO) {
+    @Override
+    @Transactional
+    public List<StoreDTO> storeFindMemberEmail(String email) {
+        List<Store> storeList = storeRepository.findByMember(memberRepository.findByEmail(email));
+        List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
+        return storeDTOList;
+    }
+    private BooleanBuilder getSearch(PageRequestDTO requestDTO){
         String type = requestDTO.getType();
         String keyword = requestDTO.getKeyword();
         BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -71,7 +87,7 @@ public class StoreServiceImpl implements StoreService {
             return booleanBuilder;
         }
         BooleanBuilder conditionBuilder = new BooleanBuilder();
-       /* if(type.contains("cate")) {
+        /*if(type.contains("cate")) {
             conditionBuilder.or(qStore.category.contains(keyword));
         }
         if(type.contains("name")) {
@@ -85,13 +101,5 @@ public class StoreServiceImpl implements StoreService {
         }*/
         booleanBuilder.and(conditionBuilder);
         return booleanBuilder;
-    }
-
-    @Override
-    @Transactional
-    public List<StoreDTO> storeFindMemberEmail(String email) {
-        List<Store> storeList = storeRepository.findByMember(memberRepository.findByEmail(email));
-        List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
-        return storeDTOList;
     }
 }

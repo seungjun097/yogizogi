@@ -50,7 +50,7 @@
                 </th:block>
 
             </ul>
-            <form action="/list" method="get" id="searchForm">
+            <form action="/store/list" method="get" id="searchForm">
                 <div class = "input-group">
                     <input type="hidden" name="page" value="1">
                     <select name="type">
@@ -66,16 +66,5 @@
         </div>
     </nav>
 </div>
-<script th:inline="javascript">
-    let msg = [[${msg}]];
-    console.log(msg);
-    if(msg) {
-        $(".modal").modal();
-    }
-    //버튼 클릭시 폼 전송
-    let SearchForm = $("#searchForm")
-    $(".btn-search").click(function() {
-        searchForm.submit();
-    })
-</script>
+
 </html>
