@@ -9,5 +9,4 @@ public class YogizogiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(YogizogiApplication.class, args);
 	}
-
 }

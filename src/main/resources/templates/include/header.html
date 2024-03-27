@@ -21,8 +21,8 @@
                     <a class="nav-link" href="/store/register">가게 관리</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/itemlist"
-                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">상품관리</a>
+                    <a class="nav-link" href="/manager/myStoreList"
+                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">메뉴등록</a>
                 </li>
                 <th:block sec:authorize="isAuthenticated()">
                     <li class="nav-item">

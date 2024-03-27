@@ -27,6 +27,7 @@ public class ManagerController {
     private final StoreService storeService;
     private final MemberService memberService;
     @GetMapping("/myStoreList")
+    @Transactional
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
         String email;
         if(user==null) {
@@ -34,8 +35,8 @@ public class ManagerController {
         }else {
             email = user.getUsername();
         }
-        List<StoreDTO> storeDTOList = storeService
-                .storeFindMember(memberService.userFindEmail(email));
+        Member member = memberService.userFindEmail(email);
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
         model.addAttribute("storeDTOList", storeDTOList);
         return "manager/mystorelist";
     }
