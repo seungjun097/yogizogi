@@ -11,6 +11,18 @@
             <label>가게 핸드폰 번호</label>
             <input type="text" class="form-control" id="storePhone" name="storePhone" th:value="${storeDTO.storePhone}"/>
         </div>
+            <div th:each="menu:${storeDTO.menuDTOList}">
+                <div class="w-layout-blockcontainer container w-container">
+                    <div class="menu_card"><img th:src="|/display?fileName=${menu.getThumbnailURL()}|" loading="lazy" id="w-node-_965acd6c-d97a-bac4-78c1-b1ddcae45480-78d18556" alt="">
+                        <div id="w-node-_6da358a5-3905-9059-f47d-c14a375d859d-78d18556" class="menu_content">
+                            <h3 id="menuName">[[${menu.menuName}]]</h3>
+                            <h4>[[${menu.menuPrice}]]원</h4>
+                            <p>[[${menu.menuDesc}]]</p>
+                            <button class="btn-primary">Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </th:block>
 </th:block>
 </html>

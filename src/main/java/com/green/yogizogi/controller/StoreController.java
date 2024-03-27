@@ -62,5 +62,4 @@ public class StoreController {
         model.addAttribute("storeDTO", storeDTO);
         return "store/storedetail";
     }
-
 }

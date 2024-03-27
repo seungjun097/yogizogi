@@ -4,8 +4,8 @@ import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.StoreDTO;
-import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Store;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -44,6 +44,7 @@ public interface StoreService {
     }
 
     //store엔티티를 storeDTO바꾸며 store의 menu리스트도 menudto리스트로 바꿔 넣는다.
+    @Transactional
     default StoreDTO entityToDto(Store store) {
         StoreDTO storeDTO = StoreDTO.builder()
                 .id(store.getId())

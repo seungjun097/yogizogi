@@ -27,6 +27,7 @@ public class Menu {
     private String menuName;
     private int menuPrice;
     private String menuDesc;
+    @Enumerated(EnumType.STRING)
     private SellStatus sellStatus;
 
     //메뉴 이미지

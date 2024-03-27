@@ -1,7 +1,9 @@
 package com.green.yogizogi.repository;
 
 import com.green.yogizogi.entity.Member;
+import com.green.yogizogi.entity.Menu;
 import com.green.yogizogi.entity.Store;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,5 +23,13 @@ public class StoreRepositoryTest {
         System.out.println(member.getNickname());
         List<Store> storeList = storeRepository.findByMember(member);
         System.out.println(storeList.get(0).getStore_name());
+    }
+
+    @Test
+    @Transactional
+    public void storemenuList() {
+        Store store = storeRepository.findById(1L).get();
+        List<Menu> menuList = store.getMenuList();
+        menuList.stream().forEach(i-> System.out.println(i.getMenuName()));
     }
 }

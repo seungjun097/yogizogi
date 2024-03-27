@@ -4,9 +4,8 @@
     <th:block th:fragment="content">
         <h1>가게 리스트</h1>
         <select id="dtoSelect">
-            <option th:each="dto : ${StoreDTOList}" th:value="${dto.id}">[[${dto.storeName}]]</option>
+            <option th:each="dto : ${storeDTOList}" th:value="${dto.id}" th:text="${dto.storeName}"></option>
         </select>
-
         <div th:each="dto:${storeDTOList}">
             <div class="card" style="width: 18rem;">
                 <img th:if="${dto.path != null}"
@@ -16,14 +15,16 @@
                     <p class="card-text">[[${dto.storeDes}]]</p>
                 </div>
             </div>
-            <form th:action="/manager/menu/${dto.id}" method="post">
+
+            <div id="menuListView"></div>
+
+            <div id="menuRegister">
                 <input type="hidden" name="store_id" id="store_id" th:value="${dto.id}">
                 <div class="form-group">
                     <label>메뉴이름</label>
-                    <input type="text" required class="form-control" id="storeName" name="storeName"/>
+                    <input type="text" required class="form-control" id="menuName" name="menuName"/>
                 </div>
                 <select class="form-group" id="menuType" name="menuType">
-                    카테고리
                     <option value="MAIN">메인메뉴</option>
                     <option value="SIDE">사이드메뉴</option>
                     <option value="ECT">기타</option>
@@ -44,13 +45,15 @@
                 <div class="uploadResult">
                     <ul></ul>
                 </div>
-                <button type="submit" class="btn btn-primary">메뉴추가</button>
-            </form>
+                <button type="submit" onclick="submitForm()" class="btn btn-primary">메뉴추가</button>
+            </div>
         </div>
     </th:block>
 </th:block>
-<script>
+<script th:inline="javascript">
     $(document).ready(function(e){
+
+
         $(".menu-image-input").on("change", function() {
             let fileName = $(this).val().split("\\").pop();
             $(this).siblings(".menu-image-label").addClass("selected").html(fileName);
@@ -87,11 +90,55 @@
           str += "<button type='button' data-file='"+obj.imageURL+"' class='btn-warning btn-sm'>X</button>"
           str += "<img src='/display?fileName="+obj.thumbnailURL+"'>";
           str += "</div></li>"
-          str += "<input type='hidden' name='imgName' value='"+obj.fileName+"' >";
-          str += "<input type='hidden' name='path' value='"+obj.folderPath+"' >";
-          str += "<input type='hidden' name='uuid' value='"+obj.uuid+"' >";
+          str += "<input type='hidden' id='imgName' name='imgName' value='"+obj.fileName+"' >";
+          str += "<input type='hidden' id='path' name='path' value='"+obj.folderPath+"' >";
+          str += "<input type='hidden' id='uuid' name='uuid' value='"+obj.uuid+"' >";
           uploadUL.append(str);
         }
     })
+
+    function submitForm() {
+        let storeId = $("#store_id").val;
+        let menuData = {
+            store_id: $('#store_id').val(),
+            menuName: $('#menuName').val(),
+            menuType: $('#menuType').val(),
+            menuPrice: $('#menuPrice').val(),
+            menuDesc: $('#menuDesc').val(),
+            imgName: $('#imgName').val(),
+            path: $('#path').val(),
+            uuid: $('#uuid').val()
+        };
+        console.log(menuData);
+        $.ajax({
+            type: "POST",
+            url: "/manager/menu/",
+            data: JSON.stringify(menuData),
+            contentType: "application/json",
+            success: function (menuList) {
+                console.log(menuList)
+                for(let menu of menuList) {
+                    showMenu (menu)
+                }
+            },
+            error: function (e) {
+               console.log(e)
+            }
+        })
+    }
+
+    function showMenu(obj) {
+        let str = "";
+        let uploadUL = $("#menuListView");
+        str += "<div class='card' style='width: 18rem;'>";
+        str += "<img src='/display?fileName=" + obj.thumbnailURL + "' class='card-img-top'>";
+        str += "<div class='card-body'>";
+        str += "<h6 class='card-title'>" + obj.menuName + "</h6>";
+        str += "<p class='card-text'>" + obj.menuPrice + "원</p>";
+        str += "<p class='card-text'>" + obj.menuDesc + "</p>";
+        str += "</div></div>";
+
+        uploadUL.append(str);
+    }
 </script>
 </html>

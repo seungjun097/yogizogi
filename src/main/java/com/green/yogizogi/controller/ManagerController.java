@@ -41,12 +41,11 @@ public class ManagerController {
         return "manager/mystorelist";
     }
 
-    @PostMapping("/menu/{storeId}")
+    @PostMapping("/menu/")
     @Transactional
-    public @ResponseBody ResponseEntity menuRegister(@PathVariable(name = "storeId")Long storeId,
-                                                     @RequestBody MenuDTO menuDTO) {
+    public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) {
         menuService.MenuSave(menuDTO);
-        List<MenuDTO> menuDTOList = storeService.findStore(storeId).getMenuDTOList();
+        List<MenuDTO> menuDTOList = storeService.findStore(menuDTO.getStore_id()).getMenuDTOList();
         try {
             return new ResponseEntity<List<MenuDTO>>(menuDTOList,HttpStatus.OK);
         }catch (Exception e) {

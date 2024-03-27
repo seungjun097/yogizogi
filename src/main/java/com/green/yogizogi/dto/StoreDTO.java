@@ -36,7 +36,7 @@ public class StoreDTO {
     private String path;
 
     @Builder.Default
-    List<MenuDTO>menuDTOList = new ArrayList<>();
+    List<MenuDTO> menuDTOList = new ArrayList<>();
 
     public void addMemuDTO (MenuDTO menuDTO) {
         menuDTOList.add(menuDTO);

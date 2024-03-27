@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuDTO {
