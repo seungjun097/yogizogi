@@ -93,3 +93,20 @@ body {
     width: 100%;
     padding: 10px;
   }
+
+   /*수량조절 버튼CSS*/
+  .quantity {
+        display: flex;
+        align-items: center;
+        width: 150px;
+      }
+      .quantity input {
+        text-align: center;
+        width: 50px;
+      }
+      .quantity button {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2em;
+        cursor: pointer;
+      }

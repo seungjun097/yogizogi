@@ -16,7 +16,26 @@
                 </div>
             </div>
 
-            <div id="menuListView"></div>
+            <div th:each="menu:${dto.menuDTOList}" id="menuListView">
+                <div class="w-layout-blockcontainer container w-container">
+                    <div class="menu_card"><img th:src="|/display?fileName=${menu.getThumbnailURL()}|" loading="lazy" id="w-node-_965acd6c-d97a-bac4-78c1-b1ddcae45480-78d18556" alt="">
+                        <div id="w-node-_6da358a5-3905-9059-f47d-c14a375d859d-78d18556" class="menu_content">
+                            <h3>[[${menu.menuName}]]</h3>
+                            <h4>[[${menu.menuPrice}]]원</h4>
+                            <p>[[${menu.menuDesc}]]</p>
+                            <div th:each="option:${menu.menuOptionDTOList}">
+                                <p>[[${option.opName}]]</p>
+                                <p>[[${option.opPrice}]]</p>
+                            </div>
+                            <label>옵션이름</label>
+                            <input type="text">
+                            <label>옵션가격</label>
+                            <input type="number">
+                            <button class="btn-primary" th:id="'optionBtn'+${menu.id}" onclick="addOption(this.getAttribute('value'))" name="detail_btn" th:attr="value=${menu.id}">add option</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div id="menuRegister">
                 <input type="hidden" name="store_id" id="store_id" th:value="${dto.id}">
@@ -53,7 +72,7 @@
 <script th:inline="javascript">
     $(document).ready(function(e){
 
-
+        //이미지 추가시 썸네일이 뜨는 과정
         $(".menu-image-input").on("change", function() {
             let fileName = $(this).val().split("\\").pop();
             $(this).siblings(".menu-image-label").addClass("selected").html(fileName);
@@ -82,6 +101,7 @@
                 }
             })
         })
+
         function showResult(obj) {
           let str = "";
           let uploadUL = $(".uploadResult ul");
@@ -97,6 +117,8 @@
         }
     })
 
+
+    //메뉴 추가 버튼 클릭시 아작스로 데이터 저장
     function submitForm() {
         let storeId = $("#store_id").val;
         let menuData = {
@@ -117,9 +139,7 @@
             contentType: "application/json",
             success: function (menuList) {
                 console.log(menuList)
-                for(let menu of menuList) {
-                    showMenu (menu)
-                }
+                //location.reload();
             },
             error: function (e) {
                console.log(e)
@@ -127,18 +147,30 @@
         })
     }
 
-    function showMenu(obj) {
-        let str = "";
-        let uploadUL = $("#menuListView");
-        str += "<div class='card' style='width: 18rem;'>";
-        str += "<img src='/display?fileName=" + obj.thumbnailURL + "' class='card-img-top'>";
-        str += "<div class='card-body'>";
-        str += "<h6 class='card-title'>" + obj.menuName + "</h6>";
-        str += "<p class='card-text'>" + obj.menuPrice + "원</p>";
-        str += "<p class='card-text'>" + obj.menuDesc + "</p>";
-        str += "</div></div>";
+    function addOption(menuId) {
+        let btn = $('#optionBtn'+menuId);
+        let opName = btn.prevAll('input[type="text"]').first().val();
+        let opPrice = btn.prevAll('input[type="number"]').first().val();
 
-        uploadUL.append(str);
+        let optionData = {
+            menu_id: menuId,
+            opName: opName,
+            opPrice: opPrice
+        };
+        console.log(optionData);
+        $.ajax({
+            type: "POST",
+            url: "/manager/option/",
+            data: JSON.stringify(optionData),
+            contentType: "application/json",
+            success: function (optionList) {
+                console.log(optionList);
+                //location.reload();
+            },
+            error: function (e) {
+               console.log(e)
+            }
+        })
     }
 </script>
 </html>

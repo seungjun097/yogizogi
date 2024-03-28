@@ -38,7 +38,7 @@ public class StoreDTO {
     @Builder.Default
     List<MenuDTO> menuDTOList = new ArrayList<>();
 
-    public void addMemuDTO (MenuDTO menuDTO) {
+    public void addMenuDTO (MenuDTO menuDTO) {
         menuDTOList.add(menuDTO);
     }
     public String getImageURL(){

@@ -3,7 +3,9 @@ package com.green.yogizogi.service;
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.MenuDTO;
+import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
+import com.green.yogizogi.entity.MenuOption;
 import com.green.yogizogi.entity.Store;
 import jakarta.transaction.Transactional;
 
@@ -77,8 +79,18 @@ public interface StoreService {
                     .uuid(menu.getUuid())
                     .store_id(menu.getStore().getId())
                     .build();
+            List<MenuOption> optionList = menu.getOptionList();
+            optionList.stream().forEach(option -> {
+                MenuOptionDTO menuOptionDTO = MenuOptionDTO.builder()
+                        .opPrice(option.getOpPrice())
+                        .opName(option.getOpName())
+                        .menu_id(menu.getId())
+                        .id(option.getId())
+                        .build();
+                menuDTO.addOptionDTO(menuOptionDTO);
+            });
             return menuDTO;
-        }).forEach(menuDTO-> storeDTO.addMemuDTO(menuDTO));
+        }).forEach(menuDTO-> storeDTO.addMenuDTO(menuDTO));
         return storeDTO;
     }
 }
