@@ -8,12 +8,57 @@
         <h1>가게정보</h1>
         <div class="form-group">
             <label>가게이름</label>
+            <input type="hidden" id="storeId" name="storeId" th:value="storeDTO.id">
             <input type="text" class="form-control" id="storeName" name="storeName" th:value="${storeDTO.storeName}"/>
         </div>
         <div class="form-group">
             <label>가게 핸드폰 번호</label>
             <input type="text" class="form-control" id="storePhone" name="storePhone" th:value="${storeDTO.storePhone}"/>
         </div>
+        <!--리뷰버튼 + 리뷰리스트-->
+        <div>
+            <button type="button" class="btn btn-info addReviewBtn">
+                리뷰등록
+            </button>
+        </div>
+        <div class="list-group reviewList">
+
+        </div>
+
+        <!--//리뷰버튼 + 리뷰리스트-->
+
+        <!-- 모달 -->
+        <div class="reviewModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">가게 리뷰</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>작성자 ID</label>
+                            <input type="text" class="form-control" name="member_id" />
+                        </div>
+                        <div class="form-group">
+                            <label>평점</label>
+                            <input type="text" class="form-control" name="grade" />
+                        </div>
+                        <div class="form-group">
+                            <label>리뷰 내용</label>
+                            <input type="text" class="form-control" name="text" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
+                        <button type="button" class="btn btn-primary reviewModifyBtn">수정</button>
+                        <button type="button" class="btn btn-primary reviewDeleteBtn">삭제</button>
+                    </div>
+                </div>
+            </div>
         <div id="store_address" th:data-address="${storeDTO.getStoreAddress2()}"></div>
         <div id="store_Name" th:data-store_name="${storeDTO.storeName}"></div>
         <div id="map" style="width:500px;height:400px;">
@@ -84,4 +129,122 @@
         </div>
     </th:block>
 </th:block>
+<script>
+    $(document).ready(function(){
+
+        let storeId = $("#storeId").val(); //자바스크립트 변수에 담아주기
+        let reviewList = $(".reviewList");
+        //페이지가 열리면 리뷰 데이터 가져오기!
+        function getStoreReviews(){
+            $.getJSON("/reviews/"+storeId+"/all", function(arr){
+                let str="";
+                //서버가 보내준 list --> 자바스크립트 배열로 변환됨 arr(어떤 이름을 지어주든 상관 x)
+                $.each(arr,function(idx,review){
+                    str += "<div class='card-body' data-reviewnum='"+review.reviewnum+"' data-member-id='"+review.member_id+"'>";
+                    str += "<h5 class='card-title'><span class='reviewtext'>"+review.text+"</span> 평점 : <span class='reviewgrade'>"+review.grade+"</span></h5>";
+                    str += "<h6 class='card-subtitle mb-2 text-muted'>"+review.nickname+"</h6>";
+                    str += "<p class='card-text'>"+review.regDate+"</p>";
+                    str += "</div>";
+                })
+                reviewList.html(str);
+            })
+        }
+        getStoreReviews();
+
+        let reviewModal = $(".reviewModal");
+        //리뷰 등록 버튼 클릭시 모달창 보이기
+        $(".addReviewBtn").click(function(){
+            //모든 버튼 보이기
+            $(".modal-footer button").show();
+            //삭제, 수정 버튼 숨기기
+            $(".reviewDeleteBtn, .reviewModifyBtn").hide();
+            reviewModal.modal('show');
+        })
+
+        //save클릭시 서버로 등록 요청 post, /reviews/+storeId, json데이터 전송
+        //자바스크립트 객체 --> json
+        let inputMember_id = $("input[name='member_id']");
+        let inputGrade = $("input[name='grade']");
+        let inputText = $("input[name='text']");
+        $(".reviewSaveBtn").click(function(){
+            let data = {
+                //앞은 다 문자열이다. : 뒤가 변수
+                storeId: storeId,
+                grade: inputGrade.val(),
+                text: inputText.val(),
+                member_id: inputMember_id.val()
+            }
+            $.ajax({
+                url:'/reviews/'+storeId,
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        let reviewnum; //변수 선언 이벤트 바깥에다 하기
+        //리뷰선택시 모달창 보이기
+        $(".reviewList").on("click",".card-body",function(){
+            let target = $(this); //this = 클릭한 대상
+
+            console.log(target);
+            reviewnum = target.data("reviewnum");
+            inputMember_id.val(target.data("member_id"));
+            //inputMember_id는 readonly 속성지정
+            inputMember_id.attr("readonly", true);
+            let reviewtext = target.find(".reviewtext").text();
+            let reviewgrade = target.find(".reviewgrade").text();
+            inputText.val(reviewtext);
+            inputGrade.val(reviewgrade);
+            //모든 버튼 숨기기
+            $(".modal-footer button").hide();
+            //삭제, 수정 버튼 나타내기
+            $(".reviewDeleteBtn, .reviewModifyBtn").show();
+            reviewModal.modal('show');
+        })
+
+        //수정버튼 클릭했을때 서버로 수정요청 ajax요청
+        $(".reviewModifyBtn").click(function(){
+            let data = {
+                reviewnum: reviewnum,
+                storeId: storeId,
+                grade: inputGrade.val(),
+                text: inputText.val(),
+                member_id: inputMember_id.val()
+            }
+            $.ajax({
+                url:'/reviews/'+storeId+'/'+reviewnum,
+                type:'put',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        //삭제버튼 클릭시 삭제 요청
+        $(".reviewDeleteBtn").click(function(){
+            let data = {reviewnum: reviewnum};
+            $.ajax({
+                url:'/reviews/'+storeId+'/'+reviewnum,
+                type:'delete',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+    })
+</script>
 </html>
