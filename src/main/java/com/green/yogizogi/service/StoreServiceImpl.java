@@ -2,6 +2,7 @@ package com.green.yogizogi.service;
 
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
+import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.StoreDTO;
 
 import com.green.yogizogi.entity.Member;
@@ -56,18 +57,6 @@ public class StoreServiceImpl implements StoreService {
         return store.getId();
     }
 
-    //상점 리스트
-    /*@Override
-    public PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO RequestDTO) {
-        Pageable pageable = RequestDTO.getPageable(Sort.by("id").descending());
-        Page<Store> result = storeRepository.findAll(pageable);
-        Function<Store,StoreDTO> fn = (entity -> entityToDto(entity));
-        return new PageResultDTO<>(result,fn);
-    }*/
-    @Override
-    public List<StoreDTO> search() {
-        return null;
-    }
 
     @Override
     @Transactional
@@ -87,18 +76,18 @@ public class StoreServiceImpl implements StoreService {
             return booleanBuilder;
         }
         BooleanBuilder conditionBuilder = new BooleanBuilder();
-        /*if(type.contains("cate")) {
-            conditionBuilder.or(qStore.category.contains(keyword));
+        for(StoreCategory category : StoreCategory.values()){
+            conditionBuilder.or(qStore.category.eq(category).and(qStore.category.stringValue().eq(keyword)));
         }
         if(type.contains("name")) {
             conditionBuilder.or(qStore.store_name.contains(keyword));
         }
         if(type.contains("time")) {
-            conditionBuilder.or(qStore.delivery_time.contains(keyword));
+            conditionBuilder.or(qStore.delivery_time.eq(Integer.parseInt(keyword)));
         }
         if(type.contains("tip")) {
-            conditionBuilder.or(qStore.delivery_tip.contains(keyword));
-        }*/
+            conditionBuilder.or(qStore.delivery_tip.eq(Integer.parseInt(keyword)));
+        }
         booleanBuilder.and(conditionBuilder);
         return booleanBuilder;
     }
