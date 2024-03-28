@@ -2,16 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
+        <script type="text/javascript"
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb&libraries=services,clusterer,drawing"></script>
+        <link rel="stylesheet" type="text/css" href="/testcss/detail.css">
         <h1>가게정보</h1>
         <div class="form-group">
             <label>가게이름</label>
+            <input type="hidden" id="storeId" name="storeId" th:value="storeDTO.id">
             <input type="text" class="form-control" id="storeName" name="storeName" th:value="${storeDTO.storeName}"/>
         </div>
         <div class="form-group">
             <label>가게 핸드폰 번호</label>
             <input type="text" class="form-control" id="storePhone" name="storePhone" th:value="${storeDTO.storePhone}"/>
         </div>
-
             <div th:each="menu:${storeDTO.menuDTOList}">
                 <div class="w-layout-blockcontainer container w-container">
                     <div class="menu_card"><img th:src="|/display?fileName=${menu.getThumbnailURL()}|" loading="lazy" id="w-node-_965acd6c-d97a-bac4-78c1-b1ddcae45480-78d18556" alt="">
@@ -55,10 +58,363 @@
                     </div>
                 </div>
             </div>
+
+        <!-- 장바구니 -->
+        <aside id="cart">
+            <div class="cart">
+                <h2>장바구니</h2>
+                <i class="far fa-trash-alt deliteAll" ></i>
+
+                <div class="cart_list">
+                    <ul>
+                        <!--
+                        <li>
+                            <h3>메뉴</h3>
+                                  <div>가격</div>
+                                  <div>수량 : 0 </div>
+                                  <div> 옵션  </div>
+                                  <div>합계 : 0원</div>
+                                  <button class="cancle_btn"> ｘ </button>
+                        </li>
+                                  -->
+                    </ul>
+                </div>
+
+                <div class="order_btn_box">
+                    <div class="total">장바구니가 비었습니다.</div>
+                    <button class="order_btn" disabled>주문하기</button>
+                </div>
+            </div>
+
+        </aside>
+        <div class="alarm">장바구니에 담았습니다</div>
+        <!-- 장바구니 -->
+
+
+        <main>
+            <div class="offset"></div>
+            <ul class="tab ">
+                <li class="select">메뉴</li>
+                <li>정보</li>
+                <li>리뷰</li>
+            </ul>
+
+
+            <!-- 메뉴 탭 -->
+            <ul class="menu">
+
+
+
+            </ul>
+            <!-- 메뉴 탭 -->
+
+
+            <!-- 정보 탭 -->
+            <ul class="info" >
+                <li>
+                    <div>
+                        <h2>찾아 오시는 길</h2>
+                        <div id="store_address" th:data-address="${storeDTO.getStoreAddress2()}"></div>
+                        <div id="store_Name" th:data-store_name="${storeDTO.storeName}"></div>
+                        <div id="map" style="width:500px;height:400px;">
+                            <script>
+                                $(document).ready(function(){
+                                    var storeAddress = $("#store_address").data("address");
+                                    console.log("storeAdd: "+ storeAddress)
+                                    var storeName = $("#store_Name").data("store_name");
+                                    console.log("storeName: " + storeName)
+                                    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                                        mapOption = {
+                                            center: new kakao.maps.LatLng(33.25110701, 126.570667), // 지도의 중심좌표
+                                            level: 3 // 지도의 확대 레벨
+                                        };
+                                    // 지도를 생성합니다
+                                    var map = new kakao.maps.Map(mapContainer, mapOption);
+                                    // 주소-좌표 변환 객체를 생성합니다
+                                    var geocoder = new kakao.maps.services.Geocoder();
+                                    // 주소로 좌표를 검색합니다
+                                    geocoder.addressSearch(storeAddress, function(result, status) {
+                                        // 정상적으로 검색이 완료됐으면
+                                        if (status === kakao.maps.services.Status.OK) {
+                                            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                                            // 결과값으로 받은 위치를 마커로 표시합니다
+                                            var marker = new kakao.maps.Marker({
+                                                map: map,
+                                                position: coords
+                                            });
+                                            // 인포윈도우로 장소에 대한 설명을 표시합니다
+                                            var infowindow = new kakao.maps.InfoWindow({
+                                                content: '<div style="width:150px;text-align:center;padding:3px 0;">' + storeName + '</div>'
+                                            });
+                                            infowindow.open(map, marker);
+                                            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                                            map.setCenter(coords);
+                                            $(".storePosition").click(function(){
+                                                map.panTo(coords);
+                                            })
+                                        }
+                                    });
+                                    var userAddress = $("#delivery_address").val();
+                                    if(userAddress != "" ) {
+                                        $(".userPosition").css("display" , "inline");
+                                        // 주소로 좌표를 검색합니다
+                                        geocoder.addressSearch(userAddress, function(result, status) {
+                                            // 정상적으로 검색이 완료됐으면
+                                            if (status === kakao.maps.services.Status.OK) {
+                                                coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                                                // 결과값으로 받은 위치를 마커로 표시합니다
+                                                var marker = new kakao.maps.Marker({
+                                                    map: map,
+                                                    position: coords
+                                                });
+                                                // 인포윈도우로 장소에 대한 설명을 표시합니다
+                                                var infowindow = new kakao.maps.InfoWindow({
+                                                    content: '<div style="width:150px;text-align:center;padding:3px 0;">' + "배달받을위치" + '</div>'
+                                                });
+                                                infowindow.open(map, marker);
+
+                                                $(".userPosition").click(function(){
+                                                    map.panTo(coords);
+                                                })
+                                            }
+                                        });
+                                    }
+                                })
+                            </script>
+                        </div>
+                            <div id="position_box">
+                                <button class="storePosition" ><i class="far fa-dot-circle"></i> 가게 위치로</button>
+                                <button class="userPosition"> <i class="far fa-dot-circle"></i> 내 위치로</button>
+                            </div>
+                        <h2>위치안내</h2>
+                        <div th:text="${storeDTO.getStoreAddress2()}"></div>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <h2>가게 소개</h2>
+                        <div th:text="${storeDTO.getStoreDes()}"></div>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <h2>영업 정보</h2>
+
+                        <div class="info_detail_title">
+                            <div>상호명</div>
+                            <div>영업시간</div>
+                            <div>전화번호</div>
+
+                        </div>
+
+                        <div class="info_detail">
+                            <div th:text="${storeDTO.storeName}"></div>
+                            <div>
+                                <span th:text="${storeDTO.openingTime}+'시 ~ '+${storeDTO.closingTime}+'시 까지 영업'"></span>
+                            </div>
+                            <div th:text="${storeDTO.getStorePhone()}"></div>
+
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <h2>가계 통계</h2>
+                        <div class="info_detail_title">
+                            <div>최근 주문수</div>
+                            <div>전체 리뷰 수</div>
+                            <div>찜</div>
+                        </div>
+
+                        <div class="info_detail">
+                            <div>${info.orderCount }</div>
+                            <div>${info.reviewCount }</div>
+                            <div>${info.likesCount }</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- 메뉴 탭 -->
+
+            <!-- 리뷰 탭 -->
+            <ul class="comment" >
+            </ul>
+        </main>
+
+        <input type="hidden" th:value="${storeDTO.id}" id="store_id">
+        <input type="hidden" th:value="${storeDTO.category}" id="store_category">
+        <input type="hidden" th:value="${storeDTO.openingTime}" id="store_opening_time">
+        <input type="hidden" th:value="${storeDTO.closingTime}" id="store_closing_time">
+<!--
+        <input type="hidden" th:value="${BMaddress.address2}" id="delivery_address">-->
+
+        <!--리뷰버튼 + 리뷰리스트-->
+        <div>
+            <button type="button" class="btn btn-info addReviewBtn">
+                리뷰등록
+            </button>
+        </div>
+        <div class="list-group reviewList">
+
+        </div>
+
+        <!--//리뷰버튼 + 리뷰리스트-->
+
+        <!-- 모달 -->
+        <div class="reviewModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">가게 리뷰</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>작성자 ID</label>
+                            <input type="text" class="form-control" name="member_id" />
+                        </div>
+                        <div class="form-group">
+                            <label>평점</label>
+                            <input type="text" class="form-control" name="grade" />
+                        </div>
+                        <div class="form-group">
+                            <label>리뷰 내용</label>
+                            <input type="text" class="form-control" name="text" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
+                        <button type="button" class="btn btn-primary reviewModifyBtn">수정</button>
+                        <button type="button" class="btn btn-primary reviewDeleteBtn">삭제</button>
+                    </div>
+                </div>
+            </div>
     </th:block>
 </th:block>
-
 <script>
+    $(document).ready(function(){
+
+        let storeId = $("#storeId").val(); //자바스크립트 변수에 담아주기
+        let reviewList = $(".reviewList");
+        //페이지가 열리면 리뷰 데이터 가져오기!
+        function getStoreReviews(){
+            $.getJSON("/reviews/"+storeId+"/all", function(arr){
+                let str="";
+                //서버가 보내준 list --> 자바스크립트 배열로 변환됨 arr(어떤 이름을 지어주든 상관 x)
+                $.each(arr,function(idx,review){
+                    str += "<div class='card-body' data-reviewnum='"+review.reviewnum+"' data-member-id='"+review.member_id+"'>";
+                    str += "<h5 class='card-title'><span class='reviewtext'>"+review.text+"</span> 평점 : <span class='reviewgrade'>"+review.grade+"</span></h5>";
+                    str += "<h6 class='card-subtitle mb-2 text-muted'>"+review.nickname+"</h6>";
+                    str += "<p class='card-text'>"+review.regDate+"</p>";
+                    str += "</div>";
+                })
+                reviewList.html(str);
+            })
+        }
+        getStoreReviews();
+
+        let reviewModal = $(".reviewModal");
+        //리뷰 등록 버튼 클릭시 모달창 보이기
+        $(".addReviewBtn").click(function(){
+            //모든 버튼 보이기
+            $(".modal-footer button").show();
+            //삭제, 수정 버튼 숨기기
+            $(".reviewDeleteBtn, .reviewModifyBtn").hide();
+            reviewModal.modal('show');
+        })
+
+        //save클릭시 서버로 등록 요청 post, /reviews/+storeId, json데이터 전송
+        //자바스크립트 객체 --> json
+        let inputMember_id = $("input[name='member_id']");
+        let inputGrade = $("input[name='grade']");
+        let inputText = $("input[name='text']");
+        $(".reviewSaveBtn").click(function(){
+            let data = {
+                //앞은 다 문자열이다. : 뒤가 변수
+                storeId: storeId,
+                grade: inputGrade.val(),
+                text: inputText.val(),
+                member_id: inputMember_id.val()
+            }
+            $.ajax({
+                url:'/reviews/'+storeId,
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        let reviewnum; //변수 선언 이벤트 바깥에다 하기
+        //리뷰선택시 모달창 보이기
+        $(".reviewList").on("click",".card-body",function(){
+            let target = $(this); //this = 클릭한 대상
+
+            console.log(target);
+            reviewnum = target.data("reviewnum");
+            inputMember_id.val(target.data("member_id"));
+            //inputMember_id는 readonly 속성지정
+            inputMember_id.attr("readonly", true);
+            let reviewtext = target.find(".reviewtext").text();
+            let reviewgrade = target.find(".reviewgrade").text();
+            inputText.val(reviewtext);
+            inputGrade.val(reviewgrade);
+            //모든 버튼 숨기기
+            $(".modal-footer button").hide();
+            //삭제, 수정 버튼 나타내기
+            $(".reviewDeleteBtn, .reviewModifyBtn").show();
+            reviewModal.modal('show');
+        })
+
+        //수정버튼 클릭했을때 서버로 수정요청 ajax요청
+        $(".reviewModifyBtn").click(function(){
+            let data = {
+                reviewnum: reviewnum,
+                storeId: storeId,
+                grade: inputGrade.val(),
+                text: inputText.val(),
+                member_id: inputMember_id.val()
+            }
+            $.ajax({
+                url:'/reviews/'+storeId+'/'+reviewnum,
+                type:'put',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        //삭제버튼 클릭시 삭제 요청
+        $(".reviewDeleteBtn").click(function(){
+            let data = {reviewnum: reviewnum};
+            $.ajax({
+                url:'/reviews/'+storeId+'/'+reviewnum,
+                type:'delete',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+    })
+
     //단추의 수량조절 버튼
     $(document).ready(function() {
       $('.decrease').on('click', function() {
@@ -90,6 +446,5 @@
         let menuModal = $(".modal"+menuId);
         menuModal.modal("show");
     }
-
 </script>
 </html>
