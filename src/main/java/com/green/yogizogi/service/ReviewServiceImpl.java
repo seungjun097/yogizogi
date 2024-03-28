@@ -1,9 +1,12 @@
 package com.green.yogizogi.service;
 
 import com.green.yogizogi.dto.ReviewDTO;
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Review;
 import com.green.yogizogi.entity.Store;
+import com.green.yogizogi.repository.MemberRepository;
 import com.green.yogizogi.repository.ReviewRepository;
+import com.green.yogizogi.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService{
 
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
+    private final StoreRepository storeRepository;
 
     @Override
     public List<ReviewDTO> getListOfStore(Long storeId) {
@@ -29,7 +34,10 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public Long register(ReviewDTO reviewDTO) {
         Review review = dtoToEntity(reviewDTO);
-        //db에 데이터 저장 insert
+        Member member = memberRepository.findById(reviewDTO.getMember_id()).get();
+        Store store = storeRepository.findById(reviewDTO.getStoreId()).get();
+        review.setMember(member);
+        review.setStore(store);
         reviewRepository.save(review);
         return review.getReviewnum();
     }
