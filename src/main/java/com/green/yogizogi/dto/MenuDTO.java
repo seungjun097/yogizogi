@@ -7,10 +7,13 @@ import lombok.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuDTO {
@@ -27,6 +30,13 @@ public class MenuDTO {
 
     private String imgName;
     private String path;
+
+    @Builder.Default
+    List<MenuOptionDTO> menuOptionDTOList = new ArrayList<>();
+
+    public void addOptionDTO (MenuOptionDTO optionDTO) {
+        menuOptionDTOList.add(optionDTO);
+    }
 
     public String getImageURL(){
         try {

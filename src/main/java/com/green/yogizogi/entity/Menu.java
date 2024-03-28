@@ -5,6 +5,9 @@ import com.green.yogizogi.constant.SellStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -27,10 +30,20 @@ public class Menu {
     private String menuName;
     private int menuPrice;
     private String menuDesc;
+    @Enumerated(EnumType.STRING)
     private SellStatus sellStatus;
 
     //메뉴 이미지
     private String uuid;
     private String imgName;
     private String path;
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<MenuOption> optionList = new ArrayList<>();
+
+    public void addOption(MenuOption option) {
+        optionList.add(option);
+        option.setMenu(this);
+    }
 }

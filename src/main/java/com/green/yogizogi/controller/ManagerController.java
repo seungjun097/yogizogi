@@ -1,9 +1,11 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.MenuDTO;
+import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.MemberService;
+import com.green.yogizogi.service.MenuOptionService;
 import com.green.yogizogi.service.MenuService;
 import com.green.yogizogi.service.StoreService;
 import jakarta.transaction.Transactional;
@@ -26,6 +28,7 @@ public class ManagerController {
     private final MenuService menuService;
     private final StoreService storeService;
     private final MemberService memberService;
+    private final MenuOptionService menuOptionService;
     @GetMapping("/myStoreList")
     @Transactional
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
@@ -41,16 +44,27 @@ public class ManagerController {
         return "manager/mystorelist";
     }
 
-    @PostMapping("/menu/{storeId}")
+    @PostMapping("/menu/")
     @Transactional
-    public @ResponseBody ResponseEntity menuRegister(@PathVariable(name = "storeId")Long storeId,
-                                                     @RequestBody MenuDTO menuDTO) {
+    public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) {
         menuService.MenuSave(menuDTO);
-        List<MenuDTO> menuDTOList = storeService.findStore(storeId).getMenuDTOList();
+        List<MenuDTO> menuDTOList = storeService.findStore(menuDTO.getStore_id()).getMenuDTOList();
         try {
             return new ResponseEntity<List<MenuDTO>>(menuDTOList,HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<String>("메뉴 리스트를 불러오는데 실패.", HttpStatus.OK);
         }
+    }
+
+    @PostMapping("/option/")
+    @Transactional
+    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
+        menuOptionService.addOption(optionDTO);
+        try {
+            return new ResponseEntity<String>("옵션저장 성공", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<String>("메뉴 리스트를 불러오는데 실패.", HttpStatus.OK);
+        }
+
     }
 }

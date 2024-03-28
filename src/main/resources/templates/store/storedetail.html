@@ -15,7 +15,50 @@
             <label>가게 핸드폰 번호</label>
             <input type="text" class="form-control" id="storePhone" name="storePhone" th:value="${storeDTO.storePhone}"/>
         </div>
-      
+            <div th:each="menu:${storeDTO.menuDTOList}">
+                <div class="w-layout-blockcontainer container w-container">
+                    <div class="menu_card"><img th:src="|/display?fileName=${menu.getThumbnailURL()}|" loading="lazy" id="w-node-_965acd6c-d97a-bac4-78c1-b1ddcae45480-78d18556" alt="">
+                        <div id="w-node-_6da358a5-3905-9059-f47d-c14a375d859d-78d18556" class="menu_content">
+                            <h3 id="menuName">[[${menu.menuName}]]</h3>
+                            <h4>[[${menu.menuPrice}]]원</h4>
+                            <p>[[${menu.menuDesc}]]</p>
+                            <button class="btn-primary" id="detail_btn" onclick="showModal(this.getAttribute('value'))" name="detail_btn" th:attr="value=${menu.id}">Show detail</button>
+                        </div>
+                    </div>
+                </div>
+                <!--메뉴의 상세정보를 나타낼 모달창-->
+                <div th:class="'modal'+${menu.id}+' modal'" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">[[${menu.menuName}]]</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>[[${menu.menuDesc}]]</p>
+                                <h4>[[${menu.menuPrice}]]원</h4>
+                            </div>
+                            <div th:each="option:${menu.menuOptionDTOList}">
+                                <label>[[${option.opName}]]</label>
+                                <label>[[${option.opPrice}]]</label>
+                                <input type="radio" th:name="${option.opName}+${option.id}">
+                            </div>
+                            <div class="quantity">
+                                <button class="decrease">-</button>
+                                <input type="number" class="quantity-input" name="count" id="count" value="1">
+                                <button class="increase">+</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <!-- 장바구니 -->
         <aside id="cart">
             <div class="cart">
@@ -252,7 +295,6 @@
                     </div>
                 </div>
             </div>
-
     </th:block>
 </th:block>
 <script>
@@ -372,5 +414,37 @@
             })
         })
     })
+
+    //단추의 수량조절 버튼
+    $(document).ready(function() {
+      $('.decrease').on('click', function() {
+        let quantityInput = $(this).next('.quantity-input');
+        let currentValue = parseInt(quantityInput.val());
+        if (currentValue > 1) {
+          quantityInput.val(currentValue - 1);
+        } else {
+          alert('수량은 1보다 작을 수 없습니다!');
+        }
+      });
+
+      $('.increase').on('click', function() {
+        let quantityInput = $(this).prev('.quantity-input');
+        let currentValue = parseInt(quantityInput.val());
+        quantityInput.val(currentValue + 1);
+      });
+
+      $('.quantity-input').on('change', function() {
+        let quantityInput = $(this);
+        if (quantityInput.val() < 1) {
+          alert('수량은 1보다 작을 수 없습니다!');
+          quantityInput.val(1);
+        }
+      });
+    });
+    //메뉴를 눌렀을 때 모달창 뛰우기
+    function showModal(menuId) {
+        let menuModal = $(".modal"+menuId);
+        menuModal.modal("show");
+    }
 </script>
 </html>

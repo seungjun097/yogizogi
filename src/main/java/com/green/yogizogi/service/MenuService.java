@@ -2,7 +2,12 @@ package com.green.yogizogi.service;
 
 import com.green.yogizogi.constant.SellStatus;
 import com.green.yogizogi.dto.MenuDTO;
+import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.entity.Menu;
+import com.green.yogizogi.entity.MenuOption;
+import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 public interface MenuService {
     void MenuSave(MenuDTO menuDTO);
@@ -20,6 +25,7 @@ public interface MenuService {
                 .build();
         return menu;
     }
+    @Transactional
     default MenuDTO enTityToDto(Menu menu) {
         MenuDTO dto = MenuDTO.builder()
                 .id(menu.getId())
@@ -33,6 +39,17 @@ public interface MenuService {
                 .uuid(menu.getUuid())
                 .store_id(menu.getStore().getId())
                 .build();
+
+        List<MenuOption> optionList = menu.getOptionList();
+        optionList.stream().forEach(option -> {
+            MenuOptionDTO menuOptionDTO = MenuOptionDTO.builder()
+                    .opPrice(option.getOpPrice())
+                    .opName(option.getOpName())
+                    .menu_id(menu.getId())
+                    .id(option.getId())
+                    .build();
+            dto.addOptionDTO(menuOptionDTO);
+        });
         return dto;
     }
 }
