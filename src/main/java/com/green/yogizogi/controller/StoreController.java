@@ -1,25 +1,16 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
-import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.service.MemberService;
 import com.green.yogizogi.service.StoreService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +22,10 @@ public class StoreController {
     @GetMapping("/")
     public String index() {
         return "/store/storelist";
+    }
+    @GetMapping("/map")
+    public String map(){
+        return "/store/map";
     }
 
     //가게추가 페이지 이동
@@ -52,13 +47,7 @@ public class StoreController {
         System.out.println("가게 등록 성공 : "+storeId);
         return "main";
     }
-  
-    /*@GetMapping("/list")
-    public String storeList(Model model,PageRequestDTO pageRequestDTO){
-        PageResultDTO<StoreDTO,Store> result = storeService.storeListAll(pageRequestDTO);
-        model.addAttribute("result",result);
-        return "/store/storelist";
-    }*/
+
     @GetMapping("/list")
     public String list(PageRequestDTO dto, Model model) {
         model.addAttribute("result", storeService.storeListAll(dto));
@@ -73,5 +62,6 @@ public class StoreController {
         model.addAttribute("storeDTO", storeDTO);
         return "store/storedetail";
     }
+
 
 }
