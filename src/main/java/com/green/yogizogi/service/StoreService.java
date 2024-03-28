@@ -17,7 +17,6 @@ public interface StoreService {
 
     PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO requestDTO);
 
-    List<StoreDTO> search();
 
     List<StoreDTO> storeFindMemberEmail(String email);
 
@@ -80,4 +79,5 @@ public interface StoreService {
         }).forEach(menuDTO-> storeDTO.addMemuDTO(menuDTO));
         return storeDTO;
     }
+
 }

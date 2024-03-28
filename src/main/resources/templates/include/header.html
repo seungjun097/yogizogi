@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div class="header" th:fragment="header">
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -50,7 +51,7 @@
                 </th:block>
 
             </ul>
-            <form action="/list" method="get" id="searchForm">
+            <form action="/store/list" method="get" id="searchForm">
                 <div class = "input-group">
                     <input type="hidden" name="page" value="1">
                     <select name="type">
@@ -66,16 +67,5 @@
         </div>
     </nav>
 </div>
-<script th:inline="javascript">
-    let msg = [[${msg}]];
-    console.log(msg);
-    if(msg) {
-        $(".modal").modal();
-    }
-    //버튼 클릭시 폼 전송
-    let SearchForm = $("#searchForm")
-    $(".btn-search").click(function() {
-        searchForm.submit();
-    })
-</script>
+
 </html>
