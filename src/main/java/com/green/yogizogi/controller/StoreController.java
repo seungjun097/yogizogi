@@ -1,16 +1,20 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.MemberService;
 import com.green.yogizogi.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -61,6 +65,14 @@ public class StoreController {
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
         return "store/storedetail";
+    }
+
+    @PostMapping("/cart")
+    public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
+                                                     @AuthenticationPrincipal User user) {
+        System.out.println(cartMenuDTO);
+        System.out.println(cartMenuDTO.getCartMenuOptionDTOList().size());
+        return new ResponseEntity<String> ("전송성공", HttpStatus.OK);
     }
 
 }
