@@ -1,11 +1,15 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
+import com.green.yogizogi.service.CartMenuService;
+import com.green.yogizogi.service.CartService;
 import com.green.yogizogi.service.MemberService;
 import com.green.yogizogi.service.StoreService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 public class StoreController {
     private final StoreService storeService;
     private final MemberService memberService;
+    private final CartMenuService cartMenuService;
+    private final CartService cartService;
 
     @GetMapping("/")
     public String index() {
@@ -60,19 +66,32 @@ public class StoreController {
 
 
     @GetMapping("/detail/{storeId}")
-    public String storeDetatilview(@PathVariable("storeId") Long storeId, Model model) {
+    @Transactional
+    public String storeDetatilview(@PathVariable("storeId") Long storeId,
+                                   @AuthenticationPrincipal User user,
+                                   Model model) {
         System.out.println("가게 아이디 조회 : "+storeId);
+        //로그인한 유저 아이디로 카트DTO 불러오기
+        String email = user.getUsername();
+        CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
+        //스토어 아이디로 스토어DTO 불러오기
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
+        model.addAttribute("cartDTO", cartDTO);
         return "store/storedetail";
     }
 
     @PostMapping("/cart")
     public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
                                                      @AuthenticationPrincipal User user) {
-        System.out.println(cartMenuDTO);
+        /*System.out.println(cartMenuDTO);
         System.out.println(cartMenuDTO.getCartMenuOptionDTOList().size());
-        return new ResponseEntity<String> ("전송성공", HttpStatus.OK);
+        cartMenuDTO.getCartMenuOptionDTOList().stream().forEach(i-> System.out.println(i.toString()));*/
+
+        String email = user.getUsername();
+        Long cartId = cartMenuService.CartMenuRegister(email, cartMenuDTO);
+        CartDTO cartDTO = cartService.cartFindById(cartId);
+        return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
     }
 
 }

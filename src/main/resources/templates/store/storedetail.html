@@ -299,7 +299,7 @@
             </div>
     </th:block>
 </th:block>
-<script>
+<script th:inline="javascript">
     $(document).ready(function(){
 
         let storeId = [[${storeDTO.id}]];
@@ -415,6 +415,10 @@
                 }
             })
         })
+        //페이지 로드 때 카트 불러오기
+        let cartDTO = [[${cartDTO}]];
+        console.log(cartDTO);
+        cartList(cartDTO);
     })
 
     //단추의 수량조절 버튼
@@ -464,8 +468,8 @@
         let cartMenuOptionDTOList = [];
         $(targetDiv+ ' input[type="checkbox"]').each(function() {
             let CartMenuOptionDTO = {
-                MenuOptionId: $(this).attr('name').split('%').pop(),
-                Menu_id: menuId,
+                menuOptionId: $(this).attr('name').split('%').pop(),
+                menu_id: menuId,
                 checked: $(this).val()
             };
             cartMenuOptionDTOList.push(CartMenuOptionDTO);
@@ -482,14 +486,34 @@
             url: "/store/cart",
             data: JSON.stringify(cartMenuDTO),
             contentType: "application/json",
-            success: function (str) {
-                console.log(str);
-                location.reload();
+            success: function (cartDTO) {
+                console.log(cartDTO);
+                cartList(cartDTO);
             },
             error: function (e) {
                console.log(e)
             }
         })
+    }
+
+    function cartList(cartDTO) {
+        let CartList = $(".cart_list ul");
+        let str = "";
+
+        for (let cartMenu of cartDTO.cartMenuDTOList) {
+            str += "<li><h3>메뉴 : " + cartMenu.menu_name + "</h3>";
+            str += "<div>가격 : " + cartMenu.menu_price + "</div>";
+            str += "<div>수량 : " + cartMenu.count + " </div>";
+            str += "<div> 옵션  </div>";
+            for (let option of cartMenu.cartMenuOptionDTOList) {
+                str += "<div>" + option.menuOption_name + "</div>";
+                str += "<div>" + option.menuOption_price + "</div>";
+                str += "<input type='checkbox' value='" + option.checked + "'>";
+            };
+            str += "<div>합계 : " + cartMenu.menu_price * cartMenu.count + " 원</div>";
+            str += "<button class='cancel_btn'> ｘ </button></li>";
+        }
+        CartList.html(str);
     }
 </script>
 </html>
