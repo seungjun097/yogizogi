@@ -30,7 +30,7 @@ public class CartMenu {
     private int count;
 
     @OneToMany(mappedBy = "cartMenu", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+            orphanRemoval = true)
     private List<CartMenuOption> cartMenuOptionList = new ArrayList<>();
 
     public void addCount(int count) {

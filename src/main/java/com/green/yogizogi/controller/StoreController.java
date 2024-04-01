@@ -74,24 +74,30 @@ public class StoreController {
         //로그인한 유저 아이디로 카트DTO 불러오기
         String email = user.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
+        model.addAttribute("cartDTO", cartDTO);
         //스토어 아이디로 스토어DTO 불러오기
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
-        model.addAttribute("cartDTO", cartDTO);
+
         return "store/storedetail";
     }
 
+    //카트 및 카트 메뉴 생성
     @PostMapping("/cart")
     public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
                                                      @AuthenticationPrincipal User user) {
-        /*System.out.println(cartMenuDTO);
-        System.out.println(cartMenuDTO.getCartMenuOptionDTOList().size());
-        cartMenuDTO.getCartMenuOptionDTOList().stream().forEach(i-> System.out.println(i.toString()));*/
-
         String email = user.getUsername();
         Long cartId = cartMenuService.CartMenuRegister(email, cartMenuDTO);
+        //여기까지 저장은 되는데
         CartDTO cartDTO = cartService.cartFindById(cartId);
         return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cart/delete/{cartMenuId}")
+    public @ResponseBody ResponseEntity cartMenuDelete(@PathVariable("cartMenuId") Long cartMenuId) {
+        Long cartId = cartMenuService.cartMenuDelete(cartMenuId);
+        CartDTO cartDTO = cartService.cartFindById(cartId);
+        return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
     }
 
 }

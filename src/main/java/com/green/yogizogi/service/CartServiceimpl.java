@@ -19,11 +19,21 @@ public class CartServiceimpl implements CartService{
     public CartDTO cartFindByMemberEmail(String memberEmail) {
         Member member = memberRepository.findByEmail(memberEmail);
         Cart cart = cartRepository.findByMember(member);
-        return entityToDTO(cart);
+        if(cart != null) {
+            return entityToDTO(cart);
+        }else {
+            return null;
+        }
     }
 
     @Override
+    @Transactional
     public CartDTO cartFindById(Long cartId) {
-        return entityToDTO(cartRepository.findById(cartId).get());
+        Cart cart = cartRepository.findById(cartId).get();
+        if(cart != null) {
+            return entityToDTO(cart);
+        }else {
+            return null;
+        }
     }
 }

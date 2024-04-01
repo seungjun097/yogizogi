@@ -61,4 +61,12 @@ public class CartMenuServiceImpl implements CartMenuService{
         }
         return cart.getId();
     }
+
+    @Override
+    public Long cartMenuDelete(Long cartMenuId) {
+        CartMenu cartMenu = cartMenuRepository.findById(cartMenuId).get();
+        Long cartId = cartMenu.getCart().getId();
+        cartMenuRepository.delete(cartMenu);
+        return cartId;
+    }
 }
