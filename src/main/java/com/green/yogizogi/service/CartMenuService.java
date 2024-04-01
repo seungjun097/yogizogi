@@ -4,4 +4,6 @@ import com.green.yogizogi.dto.CartMenuDTO;
 
 public interface CartMenuService {
     Long CartMenuRegister(String email, CartMenuDTO cartMenuDTO);
+
+    Long cartMenuDelete(Long cartMenuId);
 }

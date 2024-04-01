@@ -62,7 +62,7 @@
             </div>
 
         <!-- 장바구니 -->
-        <aside id="cart">
+        <aside id="cart" style="width:1000px;">
             <div class="cart">
                 <h2>장바구니</h2>
                 <i class="far fa-trash-alt deliteAll" ></i>
@@ -83,7 +83,6 @@
                 </div>
 
                 <div class="order_btn_box">
-                    <div class="total">장바구니가 비었습니다.</div>
                     <button class="order_btn" disabled>주문하기</button>
                 </div>
             </div>
@@ -479,7 +478,6 @@
             count: $('#count'+menuId).val(),
             cartMenuOptionDTOList: cartMenuOptionDTOList
         }
-        console.log(cartMenuDTO);
 
         $.ajax({
             type: "POST",
@@ -500,20 +498,44 @@
         let CartList = $(".cart_list ul");
         let str = "";
 
-        for (let cartMenu of cartDTO.cartMenuDTOList) {
-            str += "<li><h3>메뉴 : " + cartMenu.menu_name + "</h3>";
-            str += "<div>가격 : " + cartMenu.menu_price + "</div>";
-            str += "<div>수량 : " + cartMenu.count + " </div>";
-            str += "<div> 옵션  </div>";
-            for (let option of cartMenu.cartMenuOptionDTOList) {
-                str += "<div>" + option.menuOption_name + "</div>";
-                str += "<div>" + option.menuOption_price + "</div>";
-                str += "<input type='checkbox' value='" + option.checked + "'>";
-            };
-            str += "<div>합계 : " + cartMenu.menu_price * cartMenu.count + " 원</div>";
-            str += "<button class='cancel_btn'> ｘ </button></li>";
+        if(cartDTO.cartMenuDTOList.length != 0) {
+            for (let cartMenu of cartDTO.cartMenuDTOList) {
+                str += "<li><h3>메뉴 : " + cartMenu.menu_name + "</h3>";
+                str += "<div>가격 : " + cartMenu.menu_price + "</div>";
+                str += "<div>수량 : " + cartMenu.count + " </div>";
+                str += "<div> 옵션  </div>";
+                    for (let option of cartMenu.cartMenuOptionDTOList) {
+                        str += "<div>" + option.menuOption_name + "</div>";
+                        str += "<div>" + option.menuOption_price + "</div>";
+                        if(option.checked) {
+                            str += "<input type='checkbox' value=" + option.checked + " checked/>"
+                        }else {
+                            str += "<input type='checkbox' value=" + option.checked + "/>";
+                        }
+                    };
+                str += "<div>합계 : " + cartMenu.menu_price * cartMenu.count + " 원</div>";
+                str += "<button class='cancel_btn' onclick='deleteCartMenu("+cartMenu.cartMenu_id+")'> ｘ </button></li>";
+            }
+        }else {
+            str += "장바구니가 비었습니다.";
         }
         CartList.html(str);
     }
+
+    function deleteCartMenu(cartMenuId) {
+
+        $.ajax({
+            type: "DELETE",
+            url: "/store/cart/delete/"+cartMenuId,
+            contentType: "application/json",
+            success: function (cartDTO) {
+                cartList(cartDTO);
+            },
+            error: function (e) {
+               console.log(e)
+            }
+        })
+    }
+
 </script>
 </html>
