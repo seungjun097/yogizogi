@@ -21,4 +21,8 @@ public class MainController {
     public String register(){
         return "/layout/register";
     }
+    @GetMapping("/main2")
+    public String main2view() {
+        return "main2";
+    }
 }

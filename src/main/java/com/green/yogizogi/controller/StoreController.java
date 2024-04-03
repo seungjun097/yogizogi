@@ -79,7 +79,6 @@ public class StoreController {
         return "/store/storelist";
     }
 
-
     @GetMapping("/detail/{storeId}")
     @Transactional
     public String storeDetatilview(@PathVariable("storeId") Long storeId,
@@ -113,6 +112,30 @@ public class StoreController {
         Long cartId = cartMenuService.cartMenuDelete(cartMenuId);
         CartDTO cartDTO = cartService.cartFindById(cartId);
         return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
+    }
+
+    //신규 페이지 테스트용
+    @GetMapping("/main2")
+    public String list2(PageRequestDTO dto, Model model) {
+        model.addAttribute("result", storeService.storeListAll(dto));
+        return "main2";
+    }
+
+    @GetMapping("/detail2/{storeId}")
+    @Transactional
+    public String storeDetatilview2(@PathVariable("storeId") Long storeId,
+                                   @AuthenticationPrincipal User user,
+                                   Model model) {
+        System.out.println("가게 아이디 조회 : "+storeId);
+        //로그인한 유저 아이디로 카트DTO 불러오기
+        String email = user.getUsername();
+        CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
+        model.addAttribute("cartDTO", cartDTO);
+        //스토어 아이디로 스토어DTO 불러오기
+        StoreDTO storeDTO = storeService.findStore(storeId);
+        model.addAttribute("storeDTO", storeDTO);
+
+        return "store/storedetail2";
     }
 
 }
