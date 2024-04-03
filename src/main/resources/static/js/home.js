@@ -68,7 +68,7 @@ var getCookie = function(name) {
 
 
 //주소 입력 확인
-$(".category li").click(function(){
+/*$(".category li").click(function(){
     let address1 = $("#deliveryAddress1").val();
     if(!address1) {
         swal("배달 받으실 주소를 입력해 주세요");
@@ -78,6 +78,46 @@ $(".category li").click(function(){
     const index = $(this).index();
 
     location.href = "/store/" + (100+index) + "/" +address1;
+})*/
+$(".category li").click(function(){
+    let address1 = $("#deliveryAddress1").val();
+    if (!address1) {
+        swal("배달 받으실 주소를 입력해 주세요");
+        return false;
+    }
+
+    // 클릭한 li 요소의 텍스트 값 가져오기
+    let categoryType = $(this).text().trim();
+
+    // categoryType을 이용하여 주소 설정
+    let enumType;
+    switch (categoryType) {
+        case "CHINA_FOOD":
+            enumType = "CHINA_FOOD";
+            break;
+
+        case "KOREA_FOOD":
+            enumType = "KOREA_FOOD";
+            break;
+
+        case "JAPAN_FOOD":
+            enumType = "JAPAN_FOOD";
+            break;
+
+        case "USA_FOOD":
+            enumType = "USA_FOOD";
+            break;
+        case "OTHER_CATEGORY":
+            enumType = "OTHER_CATEGORY";
+            break;
+        // 필요한 경우 다른 이넘 값들에 대해서도 처리 추가
+        default:
+            // 기본값 설정
+            enumType = "DEFAULT_CATEGORY";
+    }
+
+    // 주소 설정 및 페이지 이동
+    location.href = "/store/" + enumType + "/" + address1;
 })
 
 
