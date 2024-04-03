@@ -49,6 +49,8 @@ public class StoreServiceImpl implements StoreService {
         return resultDTO;
     }
 
+
+
     @Override
     public Long StoreRegister(StoreDTO storeDTO) {
         Store store = DtoToEntity(storeDTO);
@@ -58,7 +60,13 @@ public class StoreServiceImpl implements StoreService {
         return store.getId();
     }
 
-
+    //카테고리 주소값으로 주변가게 검색
+    @Override
+    public List<StoreDTO> getStoresByCategoryAndAddress(StoreCategory category, int address) {
+        List<Store> storeList = storeRepository.findStoresByCategoryAndAddress(category,address);
+        List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
+        return storeDTOList;
+    }
     @Override
     @Transactional
     public List<StoreDTO> storeFindMemberEmail(String email) {

@@ -1,6 +1,7 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.StoreDTO;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +31,18 @@ public class StoreController {
     private final MemberService memberService;
     private final CartMenuService cartMenuService;
     private final CartService cartService;
+
+    //카테고리 주소로 주위가게리스트 검색
+    @GetMapping("/{category}/{address1}")
+    public String store(@PathVariable("category") StoreCategory category, @PathVariable("address1") int address1, Model model) {
+
+        System.out.println("category.address1 = " + category +","+ address1);
+        List<StoreDTO> storeList = storeService.getStoresByCategoryAndAddress(category, address1 / 100);
+        model.addAttribute("storeList", storeList);
+        System.out.println("storeList: " + storeList);
+
+        return "store/store";
+    }
 
     @GetMapping("/")
     public String index() {
