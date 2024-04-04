@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/manager/")
-@RequiredArgsConstructor
+@RequiredArgsConstructor //필수 매개 변수를 갖는 생성자 생성, 생성자에 final 키워드 필드 포함될시 객체 생성후 필드값이 변경되지 않도록 보장
 public class ManagerController {
 
     private final MenuService menuService;
@@ -30,7 +30,7 @@ public class ManagerController {
     private final MemberService memberService;
     private final MenuOptionService menuOptionService;
     @GetMapping("/myStoreList")
-    @Transactional
+    @Transactional // 여러개의 데이터작업을 하나로 묶음으로 일관성 유지 성공시 커밋 하나라도 실패시 롤백
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
         String email;
         if(user==null) {
@@ -46,7 +46,7 @@ public class ManagerController {
 
     @PostMapping("/menu/")
     @Transactional
-    public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) {
+    public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) { //RequestBody는 http본문에있는 데이터를 메서드의 매개변수로 바인딩
         menuService.MenuSave(menuDTO);
         List<MenuDTO> menuDTOList = storeService.findStore(menuDTO.getStore_id()).getMenuDTOList();
         try {
