@@ -1,11 +1,13 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
+import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.service.CartMenuService;
 import com.green.yogizogi.service.CartService;
 import com.green.yogizogi.service.MemberService;
@@ -20,8 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -34,15 +34,21 @@ public class StoreController {
 
     //카테고리 주소로 주위가게리스트 검색
     @GetMapping("/{category}/{address1}")
-    public String store(@PathVariable("category") StoreCategory category, @PathVariable("address1") int address1, Model model) {
+    public String store(@PathVariable("category") StoreCategory category, @PathVariable("address1") int address1, Model model, PageRequestDTO dto) {
 
-        System.out.println("category.address1 = " + category +","+ address1);
-        List<StoreDTO> storeList = storeService.getStoresByCategoryAndAddress(category, address1 / 100);
-        model.addAttribute("storeList", storeList);
-        System.out.println("storeList: " + storeList);
-
+        PageResultDTO<StoreDTO, Store> StoreList = storeService.getStoresByCategoryAndAddress(category, address1 / 100,dto);
+        System.out.println("---------------------------------StoreList = " + StoreList);
+        System.out.println("주위가게 리스트 컨트롤러 작동");
+        model.addAttribute("storeList", StoreList);
         return "store/store";
     }
+
+    @GetMapping("/list")
+    public String list(PageRequestDTO dto, Model model) {
+        model.addAttribute("result", storeService.storeListAll(dto));
+        return "/store/storelist";
+    }
+
 
     @GetMapping("/")
     public String index() {
@@ -73,11 +79,6 @@ public class StoreController {
         return "main";
     }
 
-    @GetMapping("/list")
-    public String list(PageRequestDTO dto, Model model) {
-        model.addAttribute("result", storeService.storeListAll(dto));
-        return "/store/storelist";
-    }
 
 
     @GetMapping("/detail/{storeId}")

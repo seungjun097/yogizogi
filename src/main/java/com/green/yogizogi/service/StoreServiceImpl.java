@@ -49,6 +49,18 @@ public class StoreServiceImpl implements StoreService {
         return resultDTO;
     }
 
+    //카테고리 주소값으로 주변가게 검색
+    @Override
+    public PageResultDTO<StoreDTO, Store> getStoresByCategoryAndAddress(StoreCategory category, int address, PageRequestDTO requestDTO) {
+        System.out.println("--------------------------주변가게검색 서비스임플 작동");
+        Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
+        Page<Store> result = storeRepository.findStoresByCategoryAndAddress(category,address,pageable);
+        System.out.println("-----------------------------------result:"+result.getTotalElements());
+        Function<Store, StoreDTO> fn = (entity->entityToDto(entity));
+        PageResultDTO<StoreDTO, Store> resultDTO = new PageResultDTO<>(result, fn);
+        return resultDTO;
+    }
+
 
 
     @Override
@@ -60,13 +72,7 @@ public class StoreServiceImpl implements StoreService {
         return store.getId();
     }
 
-    //카테고리 주소값으로 주변가게 검색
-    @Override
-    public List<StoreDTO> getStoresByCategoryAndAddress(StoreCategory category, int address) {
-        List<Store> storeList = storeRepository.findStoresByCategoryAndAddress(category,address);
-        List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
-        return storeDTOList;
-    }
+
     @Override
     @Transactional
     public List<StoreDTO> storeFindMemberEmail(String email) {

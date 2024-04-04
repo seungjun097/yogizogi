@@ -19,8 +19,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-@Slf4j
-@RestController
+@Slf4j // 자동으로 로깅 코드 생성
+@RestController // @Controller 랑 차이점은 View 페이지 반환 vs 데이터 반환(RestController)
 public class LoginController {
 
     @Value("${google.auth.url}")

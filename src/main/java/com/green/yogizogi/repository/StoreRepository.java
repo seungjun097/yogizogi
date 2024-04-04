@@ -1,5 +1,6 @@
 package com.green.yogizogi.repository;
 
+import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
@@ -21,7 +22,8 @@ public interface StoreRepository extends JpaRepository<Store,Long>, QuerydslPred
 
 
 
-    @Query("SELECT s FROM Store s WHERE s.category = :category AND s.store_address1 LIKE CONCAT(:address, '%')")
-    List<Store> findStoresByCategoryAndAddress(@Param("category") StoreCategory category,@Param("address") int address);
+    @Query("SELECT s FROM Store s WHERE s.category = :category AND CAST(s.store_address1 AS string) LIKE CONCAT(:address, '%')")
+    Page<Store> findStoresByCategoryAndAddress(@Param("category") StoreCategory category, @Param("address") int address, Pageable pageable);
+
 
 }
