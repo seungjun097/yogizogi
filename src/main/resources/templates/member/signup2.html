@@ -1,21 +1,23 @@
 <!DOCTYPE html><!--  This site was created in Webflow. https://www.webflow.com  -->
-<!--  Last Published: Wed Apr 03 2024 07:19:11 GMT+0000 (Coordinated Universal Time)  -->
-<html data-wf-page="65fc42eb24b1318121bba1a0" data-wf-site="65fc42eb24b1318121bba199" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--  Last Published: Mon Apr 08 2024 06:31:00 GMT+0000 (Coordinated Universal Time)  -->
+<html data-wf-page="660e61cd8bd6a6912cc72394" data-wf-site="65fc42eb24b1318121bba199">
 <head>
   <meta charset="utf-8">
-  <title>yogizogi</title>
+  <title>signup</title>
+  <meta content="signup" property="og:title">
+  <meta content="signup" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="/css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="/css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="/css/yogizogi-ef7df8.webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/yogizogi-ef7df8.webflow.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
   <script type="text/javascript">WebFont.load({  google: {    families: ["PT Sans:400,400italic,700,700italic","Open Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic","Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"]  }});</script>
   <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
-  <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
-  <link href="/images/webclip.png" rel="apple-touch-icon">
+  <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.png" rel="apple-touch-icon">
 </head>
 <body>
   <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
@@ -25,25 +27,25 @@
           <h1 class="logo-text">yogizogi</h1>
         </a>
         <nav role="navigation" class="nav-menu w-nav-menu">
-          <a href="/store/list" class="memu-link w-inline-block">
-            <div class="menu-link-text login">가게 리스트</div>
-          </a>
-          <a href="/store/register" class="memu-link w-inline-block">
-            <div class="menu-link-text login">가게 등록</div>
-          </a>
-          <a href="/manager/myStoreList" class="memu-link w-inline-block">
-            <div class="menu-link-text login">메뉴 등록</div>
+          <a href="#" class="memu-link w-inline-block">
+            <div class="menu-link-text login">store list</div>
           </a>
           <a href="#" class="memu-link w-inline-block">
-            <div class="menu-link-text login">주문 목록(X)</div>
+            <div class="menu-link-text login">store register</div>
+          </a>
+          <a href="#" class="memu-link w-inline-block">
+            <div class="menu-link-text login">menu register</div>
+          </a>
+          <a href="#" class="memu-link w-inline-block">
+            <div class="menu-link-text login">order list</div>
           </a>
           <a href="#" class="memu-link w-inline-block">
             <div class="menu-link-text cart-button">Cart</div>
           </a>
-          <a href="/member/login" class="memu-link w-inline-block">
+          <a href="#" class="memu-link w-inline-block">
             <div class="menu-link-text login">log in</div>
           </a>
-          <a href="/member/signup" class="memu-link w-inline-block">
+          <a href="#" class="memu-link w-inline-block">
             <div class="menu-link-text">sign up</div>
           </a>
         </nav>
@@ -53,11 +55,31 @@
       </div>
     </div>
   </div>
-  <section>
+  <section class="section">
     <div class="w-layout-blockcontainer container w-container">
-      <div class="search-form w-form">
-        <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65fc42eb24b1318121bba1a0" data-wf-element-id="3585398e-5210-5018-d628-be643e77115e">
-          <div class="search-div"><label for="name" class="search_text">Mark</label><input class="search_bar w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"><input type="submit" data-wait="Please wait..." class="search_btn w-button" value="Search"></div>
+      <div class="signup-form-block w-form">
+        <form id="email-form" name="email-form" data-name="Email Form" method="get" class="sighup-form" data-wf-page-id="660e61cd8bd6a6912cc72394" data-wf-element-id="acdbdd91-6f47-cef3-89ab-22d94249a896">
+          <h1 class="str_reg_heading">Store register</h1><label for="field" class="sigh-up-label">choose category</label><select id="field" name="field" data-name="Field" class="signup-select w-select">
+            <option value="">korea_food</option>
+            <option value="First">china_food</option>
+            <option value="Second">japan_food</option>
+            <option value="Another option">thai_food</option>
+          </select><label for="name-2" class="sigh-up-label">store name</label><input class="input-round w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"><label for="email" class="sigh-up-label">store phone number</label><input class="input-round w-input" maxlength="256" name="email" data-name="Email" placeholder="" type="email" id="email" required=""><label for="email-2" class="sigh-up-label">store Address</label>
+          <div class="signup_address_block">
+            <a href="#" class="signup_addressbtn w-button">find_address</a><input class="input-round address w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="" type="email" id="email-2" required="">
+          </div><input class="input-round w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="" type="email" id="email-2" required=""><label for="email-2" class="sigh-up-label">detail Address</label><input class="input-round w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="" type="email" id="email-2" required=""><label for="email-2" class="sigh-up-label">store image</label>
+          <div class="storeregisterimgbox">
+            <div class="image-insert">
+              <div class="w-embed"><input id="fileInput" type="file">
+                <label data-browse="Browse"></label>
+              </div>
+            </div>
+          </div><label for="field-2" class="sigh-up-label">store detail</label><textarea placeholder="Example Text" maxlength="5000" id="field-2" name="field-2" data-name="Field 2" class="storeregister_textarea w-input"></textarea><label for="field-3" class="sigh-up-label">opening hours</label>
+          <div class="open_close_time_div">
+            <div class="time_select w-embed"><input type="time"></div>
+            <div class="time_and">~</div>
+            <div class="time_select w-embed"><input type="time"></div>
+          </div><label for="field-3" class="sigh-up-label">minimum delivery amount</label><input class="input-round w-input" maxlength="256" name="email-3" data-name="Email 3" placeholder="" type="email" id="email-3" required=""><label for="field-3" class="sigh-up-label">avg delivery time</label><input class="input-round w-input" maxlength="256" name="email-3" data-name="Email 3" placeholder="" type="email" id="email-3" required=""><label for="field-3" class="sigh-up-label">delivery fee</label><input class="input-round w-input" maxlength="256" name="email-3" data-name="Email 3" placeholder="" type="email" id="email-3" required=""><input type="submit" data-wait="Please wait..." class="signup-submit w-button" value="sign up">
         </form>
         <div class="w-form-done">
           <div>Thank you! Your submission has been received!</div>
@@ -66,115 +88,6 @@
           <div>Oops! Something went wrong while submitting the form.</div>
         </div>
       </div>
-      <div class="category_list">
-        <a id="w-node-_0ece2735-593d-af76-757f-12bcca9066b4-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Korean.png" loading="lazy" width="Auto" height="Auto" alt="" class="category_img">
-          <div class="img_name">korean</div>
-        </a>
-        <a id="w-node-e7f47c87-b996-8abf-5fc0-be43453b9335-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sushi.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">sushi</div>
-        </a>
-        <a id="w-node-_240f2f58-210d-d638-7e9f-ebd7fdb3c006-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Thai.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">thai</div>
-        </a>
-        <a id="w-node-bb0a6397-18ee-2fe9-d02e-9321958097d1-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/American.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">hotdog</div>
-        </a>
-        <a id="w-node-_9f89a53c-4f06-2b82-b526-f7cf89f32bb2-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Italian.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">italian</div>
-        </a>
-        <a id="w-node-_9733c04d-0ffd-76de-329f-0421dbb81fc2-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Pizza.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">pizza</div>
-        </a>
-        <a id="w-node-_90f4e41e-2914-9d6c-5dad-9d862bd12df7-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Mexican.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">maxican</div>
-        </a>
-        <a id="w-node-f9454491-af22-d632-c5c6-baca0f6865a1-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Asian.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">raman</div>
-        </a>
-        <a id="w-node-d8768093-e038-cf83-7fee-9a665364092d-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/FastFood.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">fastfood</div>
-        </a>
-        <a id="w-node-e1eaf7f9-fa5a-d7f4-f58e-bd3173ad88f6-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/SoulFood.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">BBQ</div>
-        </a>
-        <a id="w-node-d70cbe9b-fc42-549c-30df-98251ec85640-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Smoothie.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">tea</div>
-        </a>
-        <a id="w-node-d8dc3e35-567b-f6a8-bbe1-4845bbda871b-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/StreetFood.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">street</div>
-        </a>
-        <a id="w-node-d30e77dc-cfbe-5eba-7708-152fc431a09f-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Wings.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">chicken</div>
-        </a>
-        <a id="w-node-_852f1e4a-5c17-5182-521e-0150ef51f47a-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sandwich.png" loading="lazy" alt="" class="category_img">
-          <div class="img_name">sandwich</div>
-        </a>
-      </div>
-      <div class="sortbydiv">
-        <a href="#" class="search_btn w-button">distance</a>
-        <a href="#" class="search_btn w-button">highest rate</a>
-        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
-          <div class="dropdown-toggle w-dropdown-toggle">
-            <div class="icon w-icon-dropdown-toggle"></div>
-            <div>delivery fee</div>
-          </div>
-          <nav class="w-dropdown-list">
-            <a href="#" class="w-dropdown-link">Link 1</a>
-            <a href="#" class="w-dropdown-link">Link 2</a>
-            <a href="#" class="w-dropdown-link">Link 3</a>
-          </nav>
-        </div>
-        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
-          <div class="dropdown-toggle w-dropdown-toggle">
-            <div class="w-icon-dropdown-toggle"></div>
-            <div>price</div>
-          </div>
-          <nav class="w-dropdown-list">
-            <a href="#" class="w-dropdown-link">Link 1</a>
-            <a href="#" class="w-dropdown-link">Link 2</a>
-            <a href="#" class="w-dropdown-link">Link 3</a>
-          </nav>
-        </div>
-        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
-          <div class="dropdown-toggle w-dropdown-toggle">
-            <div class="w-icon-dropdown-toggle"></div>
-            <div>rating</div>
-          </div>
-          <nav class="w-dropdown-list">
-            <a href="#" class="w-dropdown-link">Link 1</a>
-            <a href="#" class="w-dropdown-link">Link 2</a>
-            <a href="#" class="w-dropdown-link">Link 3</a>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="w-layout-blockcontainer container w-container">
-      <div class="menuwrap">
-        <div th:each="dto:${result.dtoList}">
-            <a th:href="'/store/detail2/'+${dto.id}" class="sysf-card sysf-card-box w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getThumbnailURL()}|" alt="" class="sysf-card-image sysf-card-image-box">
-              <div class="sysf-card-text-wrapper sysf-s-p-24">
-                <div class="sysf-card-title">
-                  <div class="div-block">
-                    <h3 class="sysf-heading sysf-xs">[[${dto.storeName}]]</h3>
-                    <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
-                      <h3 class="sysf-heading sysf-xs">4.5</h3>
-                    </div>
-                  </div>
-                  <p class="sysf-body-text sysf-m sysf-s-m-b-0">[[${dto.storeDes}]]</p>
-                </div>
-              </div>
-            </a>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="w-layout-blockcontainer container-2 w-container">
-      <section class="combine-section_clients3">
-        <div class="combine-padding-global"></div>
-      </section>
     </div>
   </section>
   <footer class="uui-footer04_component">

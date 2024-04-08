@@ -2,73 +2,39 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div class="header" th:fragment="header">
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="/">GreenShop</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">
-                    <a class="nav-link" href="/store/register">가게등록</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/store/list">가게 목록</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">
-                    <a class="nav-link" href="/store/register">가게 관리</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/manager/myStoreList"
-                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">메뉴등록</a>
-                </li>
-                <th:block sec:authorize="isAuthenticated()">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/order/cart">장바구니</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/order/orderlist">구매이력</a>
-                    </li>
-                </th:block>
-                <th:block sec:authorize="isAnonymous()">
-                    <!-- 인증 받지 않음 -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/store/main2">신규페이지 전환</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/member/login">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/member/signup">회원가입</a>
-                    </li>
-                </th:block>
-
-                <th:block sec:authorize="isAuthenticated()">
-                    <!-- 인증 받음 -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">로그아웃</a>
-                    </li>
-                </th:block>
-
-            </ul>
-            <form action="/store/list" method="get" id="searchForm">
-                <div class = "input-group">
-                    <input type="hidden" name="page" value="1">
-                    <select name="type">
-                        <option value="cate">카테고리</option>
-                        <option value="name">이름</option>
-                        <option value="time">배달시간</option>
-                        <option value="tip">배달팁</option>
-                    </select>
-                    <input type="text" class="form-control" name="keyword">
-                    <button class="btn-search">검색</button>
+    <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+        <div class="container w-container">
+            <div class="top-memu">
+                <a href="/" class="logo w-inline-block">
+                    <h1 class="logo-text">yogizogi</h1>
+                </a>
+                <nav role="navigation" class="nav-menu w-nav-menu">
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text login">store list</div>
+                    </a>
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text login">store register</div>
+                    </a>
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text login">menu register</div>
+                    </a>
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text login">order list</div>
+                    </a>
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text cart-button">Cart</div>
+                    </a>
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text login">log in</div>
+                    </a>
+                    <a href="#" class="memu-link w-inline-block">
+                        <div class="menu-link-text">sign up</div>
+                    </a>
+                </nav>
+                <div class="w-nav-button">
+                    <div class="w-icon-nav-menu"></div>
                 </div>
-            </form>
+            </div>
         </div>
-    </nav>
-</div>
-
+    </div>
 </html>

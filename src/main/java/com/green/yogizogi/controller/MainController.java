@@ -1,28 +1,20 @@
 package com.green.yogizogi.controller;
 
+import com.green.yogizogi.common.PageRequestDTO;
+import com.green.yogizogi.service.StoreService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class MainController {
+    private final StoreService storeService;
+
     @GetMapping("/")
-    public String mainPage() {
+    public String mainPage(PageRequestDTO dto, Model model) {
+        model.addAttribute("result", storeService.storeListAll(dto));
         return "main";
-    }
-    @GetMapping("/header")
-    public String main(){
-        return "/layout/header";
-    }
-    @GetMapping("/nav")
-    public String nav(){
-        return "/layout/nav";
-    }
-    @GetMapping("/register")
-    public String register(){
-        return "/layout/register";
-    }
-    @GetMapping("/main2")
-    public String main2view() {
-        return "main2";
     }
 }

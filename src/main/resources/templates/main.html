@@ -1,152 +1,220 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb"></script>
-<link rel="stylesheet" href="/css/home.css">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
-        <h1>메인페이지</h1>
-        <div class="wrap">
-            <main>
-                <section class="address_search">
-                    <div id="search_box">
-                        <div>
-                            <input type="hidden" id="deliveryAddress1" placeholder="우편번호" value="" name="address1" readonly>
-                            <input type="text" value= "" onclick="execution_daum_address()"
-                                   id="deliveryAddress2" readonly placeholder="주소를 입력해 주세요" name="address2"><br>
-                        </div>
-
-                        <div class="search_btn">
-                            <label for="search_btn">
-                                <i class="fas fa-search"></i>
-                            </label>
-
-                            <input type="button" name="search" id="search_btn">
-
-                        </div>
-
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="search-form w-form">
+                    <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65fc42eb24b1318121bba1a0" data-wf-element-id="3585398e-5210-5018-d628-be643e77115e">
+                        <div class="search-div"><label for="name" class="search_text">Mark</label><input class="search_bar w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"><input type="submit" data-wait="Please wait..." class="search_btn w-button" value="Search"></div>
+                    </form>
+                    <div class="w-form-done">
+                        <div>Thank you! Your submission has been received!</div>
                     </div>
-                </section>
-                <section class="category_box">
-                    <div class="box">
-                        <ul class="category">
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/pizza2.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">USA_FOOD</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/chicken1.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">KOREA_FOOD</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/hamburger4.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">패스트푸드</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/bunsik1.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">분식</div>
-                            </li>
-
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/dessert2.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">카페/디저트</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/cutlet1.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">JAPAN_FOOD</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/chinese1.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">CHINA_FOOD</div>
-                            </li>
-
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/jockbal1.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">족발/보쌈</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/jockbal2.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">야식</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/bibimbap.jpg" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">한식</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/jockbal3.png" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">1인분</div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="img_box">
-                                        <img src="/img/dosirac.jpg" alt="이미지">
-                                    </div>
-                                </div>
-                                <div class="name">도시락</div>
-                            </li>
-                        </ul>
+                    <div class="w-form-fail">
+                        <div>Oops! Something went wrong while submitting the form.</div>
                     </div>
+                </div>
+                <div class="category_list">
+                    <a id="w-node-_0ece2735-593d-af76-757f-12bcca9066b4-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Korean.png" loading="lazy" width="Auto" height="Auto" alt="" class="category_img">
+                        <div class="img_name">korean</div>
+                    </a>
+                    <a id="w-node-e7f47c87-b996-8abf-5fc0-be43453b9335-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sushi.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">sushi</div>
+                    </a>
+                    <a id="w-node-_240f2f58-210d-d638-7e9f-ebd7fdb3c006-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Thai.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">thai</div>
+                    </a>
+                    <a id="w-node-bb0a6397-18ee-2fe9-d02e-9321958097d1-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/American.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">hotdog</div>
+                    </a>
+                    <a id="w-node-_9f89a53c-4f06-2b82-b526-f7cf89f32bb2-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Italian.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">italian</div>
+                    </a>
+                    <a id="w-node-_9733c04d-0ffd-76de-329f-0421dbb81fc2-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Pizza.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">pizza</div>
+                    </a>
+                    <a id="w-node-_90f4e41e-2914-9d6c-5dad-9d862bd12df7-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Mexican.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">maxican</div>
+                    </a>
+                    <a id="w-node-f9454491-af22-d632-c5c6-baca0f6865a1-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Asian.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">raman</div>
+                    </a>
+                    <a id="w-node-d8768093-e038-cf83-7fee-9a665364092d-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/FastFood.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">fastfood</div>
+                    </a>
+                    <a id="w-node-e1eaf7f9-fa5a-d7f4-f58e-bd3173ad88f6-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/SoulFood.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">BBQ</div>
+                    </a>
+                    <a id="w-node-d70cbe9b-fc42-549c-30df-98251ec85640-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Smoothie.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">tea</div>
+                    </a>
+                    <a id="w-node-d8dc3e35-567b-f6a8-bbe1-4845bbda871b-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/StreetFood.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">street</div>
+                    </a>
+                    <a id="w-node-d30e77dc-cfbe-5eba-7708-152fc431a09f-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Wings.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">chicken</div>
+                    </a>
+                    <a id="w-node-_852f1e4a-5c17-5182-521e-0150ef51f47a-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sandwich.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">sandwich</div>
+                    </a>
+                </div>
+                <div class="sortbydiv">
+                    <a href="#" class="search_btn w-button">distance</a>
+                    <a href="#" class="search_btn w-button">highest rate</a>
+                    <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div class="dropdown-toggle w-dropdown-toggle">
+                            <div class="icon w-icon-dropdown-toggle"></div>
+                            <div>delivery fee</div>
+                        </div>
+                        <nav class="w-dropdown-list">
+                            <a href="#" class="w-dropdown-link">Link 1</a>
+                            <a href="#" class="w-dropdown-link">Link 2</a>
+                            <a href="#" class="w-dropdown-link">Link 3</a>
+                        </nav>
+                    </div>
+                    <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div class="dropdown-toggle w-dropdown-toggle">
+                            <div class="w-icon-dropdown-toggle"></div>
+                            <div>price</div>
+                        </div>
+                        <nav class="w-dropdown-list">
+                            <a href="#" class="w-dropdown-link">Link 1</a>
+                            <a href="#" class="w-dropdown-link">Link 2</a>
+                            <a href="#" class="w-dropdown-link">Link 3</a>
+                        </nav>
+                    </div>
+                    <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div class="dropdown-toggle w-dropdown-toggle">
+                            <div class="w-icon-dropdown-toggle"></div>
+                            <div>rating</div>
+                        </div>
+                        <nav class="w-dropdown-list">
+                            <a href="#" class="w-dropdown-link">Link 1</a>
+                            <a href="#" class="w-dropdown-link">Link 2</a>
+                            <a href="#" class="w-dropdown-link">Link 3</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="menuwrap">
+                    <a href="#" class="sysf-card sysf-card-box w-inline-block"><img src="/images/제휴FR_20240328_버거킹_통새우맥시멈3_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <div class="div-block">
+                                    <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                    <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
+                                        <h3 class="sysf-heading sysf-xs">4.5</h3>
+                                    </div>
+                                </div>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_6b1b17b4-b136-fea2-d8ad-c69ebfe429ab-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="/images/제휴FR_20240328_버거킹_통새우맥시멈4_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-ab4e2b41-cb40-6521-9d96-3da0afbe1f4f-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20240215_버거킹_통모짜와퍼_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_7cbb0eea-9225-0db9-07a8-7b57dc7c2b9b-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20240215_버거킹_통모짜와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_730f3972-ab04-f0ff-5111-4c35286f9c10-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴fr_20190214_버거킹_몬스터와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_932c09c0-fbcf-14cb-4f2a-626bf8d61fb1-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20200827_버거킹_콰트로치즈와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_9457e433-ef12-7d20-7460-c5b39e446d8d-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20240125_버거킹_오리지널스솔티드에그싱글세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-ce9139b4-7ab8-fdc1-a11e-51196e20058d-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20200917_버거킹_기네스콰트로치즈와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_9fa5c396-7abc-3c0e-1501-363dc87c7197-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_8cd1354c-dc5e-6504-0aa5-19263c1e45c0-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-_20fc233e-eb8a-4216-24b3-9bafb4294853-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a id="w-node-b624cc57-f025-1272-bd75-b6d740c77009-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
+                        <div class="sysf-card-text-wrapper sysf-s-p-24">
+                            <div class="sysf-card-title">
+                                <h3 class="sysf-heading sysf-xs">Heading</h3>
+                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="w-layout-blockcontainer container-2 w-container">
+                <section class="combine-section_clients3">
+                    <div class="combine-padding-global"></div>
                 </section>
-            </main>
-        </div>
+            </div>
+        </section>
     </th:block>
 </th:block>
-<script src="/js/home.js"></script>
 </html>
