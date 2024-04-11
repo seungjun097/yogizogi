@@ -42,6 +42,9 @@ public class ManagerController {
         Member member = memberService.userFindEmail(email);
         List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
         model.addAttribute("storeDTOList", storeDTOList);
+        if(!storeDTOList.isEmpty()) {
+            model.addAttribute("storeDto", storeDTOList.get(0));
+        }
         return "manager/storeupdate2";
     }
 

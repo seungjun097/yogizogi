@@ -21,80 +21,82 @@
     <section class="section">
       <div class="w-layout-blockcontainer container w-container">
         <div class="menuupdate">
-          <div th:if="${storeDTO != null}" th:each="menu: ${storeDTO.menuDTOList}" id="menuListView">
-          <div class="menu-update-modal rework">
-            <div class="menu-modal-header">
-              <h4 class="menu-modal-head-text">YOGIZOGI</h4>
-              <div class="delete-btn close-btn">delete</div>
-            </div>
-            <div class="menu-update-formblock w-form">
-              <form name="email-form" data-name="Email Form" method="get" class="menu-update-form" data-wf-page-id="660e43c0ad4d459d38f1bc44" data-wf-element-id="ead3f250-8638-ac37-1d41-e8de00953b2d">
-                <div class="menu-modal-body">
-                  <div class="menu-modal-divide"><img th:src="|/display?fileName=${menu.getImageURL()}|" loading="lazy" alt="">
-                    <div id="w-node-ead3f250-8638-ac37-1d41-e8de00953b32-38f1bc44" class="menu-ubdate-form">
+          <div th:if="${storeDto != null && storeDto.getMenuDTOList().size() != 0}"
+               th:each="menu: ${storeDto.getMenuDTOList()}" id="menuListView">
+            <div class="menu-update-modal rework">
+              <div class="menu-modal-header">
+                <h4 class="menu-modal-head-text">YOGIZOGI</h4>
+                <div class="delete-btn close-btn">delete</div>
+              </div>
+              <div class="menu-update-formblock w-form">
+                <form name="email-form" data-name="Email Form" method="get" class="menu-update-form" data-wf-page-id="660e43c0ad4d459d38f1bc44" data-wf-element-id="ead3f250-8638-ac37-1d41-e8de00953b2d">
+                  <div class="menu-modal-body">
+                    <div class="menu-modal-divide"><img th:src="|/display?fileName=${menu.getImageURL()}|" loading="lazy" alt="">
+                      <div id="w-node-ead3f250-8638-ac37-1d41-e8de00953b32-38f1bc44" class="menu-ubdate-form">
 
-                      <div class="menu-update-opform">
-                        <input class="input-round w-input" maxlength="256" name="field-4" data-name="Field 4" placeholder="menu name" type="text" id="field-4" required="">
-                        <select id="category-2" name="category-2" data-name="Category 2" required="" class="input-round w-select">
-                          <option value="korea_food">main_menu</option>
-                          <option value="side_menu">side_menu</option>
-                          <option value="ect">ect</option>
-                        </select><input class="input-round w-input" maxlength="256" name="field-2" data-name="Field 2" placeholder="menu price" type="number" id="field-2" required="">
-                        <textarea placeholder="menu description" maxlength="5000" id="field-3" name="field-3" data-name="Field 3" class="menu-update-textarea w-input"></textarea>
-                      </div>
+                        <div class="menu-update-opform">
+                          <input class="input-round w-input" maxlength="256" name="field-4" data-name="Field 4" placeholder="menu name" type="text"  required="">
+                          <select id="category-2" name="category-2" data-name="Category 2" required="" class="input-round w-select">
+                            <option value="korea_food">main_menu</option>
+                            <option value="side_menu">side_menu</option>
+                            <option value="ect">ect</option>
+                          </select><input class="input-round w-input" maxlength="256" placeholder="menu price" type="number">
+                          <textarea placeholder="menu description" maxlength="5000" class="menu-update-textarea w-input"></textarea>
+                        </div>
 
-                      <div class="option-register-form">
-                        <div class="menu-update-price">option register</div>
-                        <div class="option-input"><input class="input-round w-input" maxlength="256" name="field-4" data-name="Field 4" placeholder="option name" type="text" id="field-4" required=""><input class="input-round w-input" maxlength="256" name="field-4" data-name="Field 4" placeholder="option price" type="number" id="field-4" required=""></div>
-                        <div class="option-list-box">
-                          <div class="menu-update-option">
-                            <div class="option-left">
-                              <div class="option-name">option name</div>
-                              <div class="option-price">option price $</div>
+                        <div class="option-register-form">
+                          <div class="menu-update-price">option register</div>
+                          <div class="option-input"><input class="input-round w-input" maxlength="256" name="field-4" data-name="Field 4" placeholder="option name" type="text" id="field-4" required=""><input class="input-round w-input" maxlength="256" name="field-4" data-name="Field 4" placeholder="option price" type="number" id="field-4" required=""></div>
+                          <div class="option-list-box">
+                            <div class="menu-update-option">
+                              <div class="option-left">
+                                <div class="option-name">option name</div>
+                                <div class="option-price">option price $</div>
+                              </div>
+                              <a href="#" class="xbutton-update w-button">x</a>
                             </div>
-                            <a href="#" class="xbutton-update w-button">x</a>
-                          </div>
-                          <div class="menu-update-option">
-                            <div class="option-left">
-                              <div class="option-name">option name</div>
-                              <div class="option-price">option price $</div>
+                            <div class="menu-update-option">
+                              <div class="option-left">
+                                <div class="option-name">option name</div>
+                                <div class="option-price">option price $</div>
+                              </div>
+                              <a href="#" class="xbutton-update w-button">x</a>
                             </div>
-                            <a href="#" class="xbutton-update w-button">x</a>
-                          </div>
-                          <div class="menu-update-option">
-                            <div class="option-left">
-                              <div class="option-name">option name</div>
-                              <div class="option-price">option price $</div>
+                            <div class="menu-update-option">
+                              <div class="option-left">
+                                <div class="option-name">option name</div>
+                                <div class="option-price">option price $</div>
+                              </div>
+                              <a href="#" class="xbutton-update w-button">x</a>
                             </div>
-                            <a href="#" class="xbutton-update w-button">x</a>
-                          </div>
-                          <div class="menu-update-option">
-                            <div class="option-left">
-                              <div class="option-name">option name</div>
-                              <div class="option-price">option price $</div>
+                            <div class="menu-update-option">
+                              <div class="option-left">
+                                <div class="option-name">option name</div>
+                                <div class="option-price">option price $</div>
+                              </div>
+                              <a href="#" class="xbutton-update w-button">x</a>
                             </div>
-                            <a href="#" class="xbutton-update w-button">x</a>
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div class="meu-update-btn">
+                      <a href="#" class="menu-update-btn w-inline-block">
+                        <div class="menu-update-btntext">update</div>
+                      </a>
+                    </div>
                   </div>
-                  <div class="meu-update-btn">
-                    <a href="#" class="menu-update-btn w-inline-block">
-                      <div class="menu-update-btntext">update</div>
-                    </a>
-                  </div>
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
                 </div>
-              </form>
-              <div class="w-form-done">
-                <div>Thank you! Your submission has been received!</div>
-              </div>
-              <div class="w-form-fail">
-                <div>Oops! Something went wrong while submitting the form.</div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form.</div>
+                </div>
               </div>
             </div>
           </div>
-          </div>
+
           <div class="menu-update-modal rework">
             <div class="menu-modal-header">
               <h4 class="menu-modal-head-text">YOGIZOGI</h4>
