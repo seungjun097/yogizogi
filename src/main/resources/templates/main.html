@@ -18,6 +18,7 @@
                         <div>Oops! Something went wrong while submitting the form.</div>
                     </div>
                 </div>
+                <!--별점 표시 및 검색 기능 정리-->
                 <div class="category_list">
                     <a id="w-node-_0ece2735-593d-af76-757f-12bcca9066b4-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Korean.png" loading="lazy" width="Auto" height="Auto" alt="" class="category_img">
                         <div class="img_name">korean</div>
@@ -104,107 +105,21 @@
         <section class="section">
             <div class="w-layout-blockcontainer container w-container">
                 <div class="menuwrap">
-                    <a href="#" class="sysf-card sysf-card-box w-inline-block"><img src="/images/제휴FR_20240328_버거킹_통새우맥시멈3_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <div class="div-block">
-                                    <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                    <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
-                                        <h3 class="sysf-heading sysf-xs">4.5</h3>
+                    <div th:each="dto:${result.dtoList}">
+                        <a th:href="'/store/detail2/'+${dto.id}" class="sysf-card sysf-card-box w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getImageURL()}|" alt="" class="sysf-card-image sysf-card-image-box">
+                            <div class="sysf-card-text-wrapper sysf-s-p-24">
+                                <div class="sysf-card-title">
+                                    <div class="div-block">
+                                        <h3 class="sysf-heading sysf-xs">[[${dto.storeName}]]</h3>
+                                        <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
+                                            <h3 class="sysf-heading sysf-xs">4.5</h3>
+                                        </div>
                                     </div>
+                                    <p class="sysf-body-text sysf-m sysf-s-m-b-0">[[${dto.storeDes}]]</p>
                                 </div>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
                             </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_6b1b17b4-b136-fea2-d8ad-c69ebfe429ab-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="/images/제휴FR_20240328_버거킹_통새우맥시멈4_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-ab4e2b41-cb40-6521-9d96-3da0afbe1f4f-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20240215_버거킹_통모짜와퍼_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_7cbb0eea-9225-0db9-07a8-7b57dc7c2b9b-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20240215_버거킹_통모짜와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_730f3972-ab04-f0ff-5111-4c35286f9c10-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴fr_20190214_버거킹_몬스터와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_932c09c0-fbcf-14cb-4f2a-626bf8d61fb1-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20200827_버거킹_콰트로치즈와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_9457e433-ef12-7d20-7460-c5b39e446d8d-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20240125_버거킹_오리지널스솔티드에그싱글세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-ce9139b4-7ab8-fdc1-a11e-51196e20058d-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/제휴FR_20200917_버거킹_기네스콰트로치즈와퍼세트_1080x640.jpg" alt="" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_9fa5c396-7abc-3c0e-1501-363dc87c7197-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_8cd1354c-dc5e-6504-0aa5-19263c1e45c0-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-_20fc233e-eb8a-4216-24b3-9bafb4294853-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a id="w-node-b624cc57-f025-1272-bd75-b6d740c77009-21bba1a0" href="#" class="sysf-card sysf-card-box w-inline-block"><img src="images/Image-Placeholder-2.svg" alt="Image placeholder" class="sysf-card-image sysf-card-image-box">
-                        <div class="sysf-card-text-wrapper sysf-s-p-24">
-                            <div class="sysf-card-title">
-                                <h3 class="sysf-heading sysf-xs">Heading</h3>
-                                <p class="sysf-body-text sysf-m sysf-s-m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum.</p>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>

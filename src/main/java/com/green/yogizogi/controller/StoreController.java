@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -61,7 +62,7 @@ public class StoreController {
         }else {
             Member member = memberService.userFindEmail(user.getUsername());
             model.addAttribute("member_id", member.getId());
-            return "store/storeregister";
+            return "store/storeRegister";
         }
     }
     //가게추가 과정
@@ -114,13 +115,6 @@ public class StoreController {
         return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
     }
 
-    //신규 페이지 테스트용
-    @GetMapping("/main2")
-    public String list2(PageRequestDTO dto, Model model) {
-        model.addAttribute("result", storeService.storeListAll(dto));
-        return "main2";
-    }
-
     @GetMapping("/detail2/{storeId}")
     @Transactional
     public String storeDetatilview2(@PathVariable("storeId") Long storeId,
@@ -137,5 +131,4 @@ public class StoreController {
 
         return "store/storedetail2";
     }
-
 }

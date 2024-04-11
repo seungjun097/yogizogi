@@ -55,6 +55,7 @@ public class MemberController {
     public String loginMember() {
         return "/member/login";
     }
+
     @GetMapping("/login/error")
     public String loginMember(Model model) {
         model.addAttribute("loginErrorMsg",

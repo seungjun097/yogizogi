@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/manager/")
@@ -29,7 +30,7 @@ public class ManagerController {
     private final StoreService storeService;
     private final MemberService memberService;
     private final MenuOptionService menuOptionService;
-    @GetMapping("/myStoreList")
+    @GetMapping("/update")
     @Transactional
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
         String email;
@@ -41,7 +42,7 @@ public class ManagerController {
         Member member = memberService.userFindEmail(email);
         List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
         model.addAttribute("storeDTOList", storeDTOList);
-        return "manager/mystorelist";
+        return "manager/storeupdate2";
     }
 
     @PostMapping("/menu/")
@@ -66,5 +67,18 @@ public class ManagerController {
             return new ResponseEntity<String>("메뉴 리스트를 불러오는데 실패.", HttpStatus.OK);
         }
 
+    }
+
+    @GetMapping("update/{storeId}")
+    @Transactional
+    public String storeUpdate(@PathVariable("storeId") Long storeId,
+                              @AuthenticationPrincipal User user,
+                              Model model) {
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(user.getUsername());
+        StoreDTO storeDTO = storeDTOList.stream().filter(storeDto -> storeDto.getId() == storeId)
+                .collect(Collectors.toList()).get(0);
+        model.addAttribute("storeDTOList", storeDTOList);
+        model.addAttribute("storeDto", storeDTO);
+        return "manager/storeupdate2";
     }
 }

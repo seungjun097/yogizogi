@@ -7,7 +7,9 @@ import lombok.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,8 +26,8 @@ public class StoreDTO {
     private String storeAddress2;
     private String storeAddress3;
     private String storePhone;
-    private int openingTime;
-    private int closingTime;
+    private String openingTime;
+    private String closingTime;
     private int minDelivery;
     private int deliveryTime;
     private int deliveryTip;
