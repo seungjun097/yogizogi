@@ -6,6 +6,8 @@ import com.green.yogizogi.entity.MenuOption;
 public interface MenuOptionService {
     Long addOption(MenuOptionDTO optionDTO);
 
+    void deleteOption(Long menuOptionId);
+
     default MenuOption DtoToEntity(MenuOptionDTO optionDTO) {
         MenuOption menuOption = MenuOption.builder()
                 .opName(optionDTO.getOpName())

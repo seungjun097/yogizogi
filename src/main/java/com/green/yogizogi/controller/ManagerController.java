@@ -34,7 +34,7 @@ public class ManagerController {
     @Transactional
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
         String email;
-        if(user==null) {
+        if(user.getUsername().isEmpty()) {
             return "main";
         }else {
             email = user.getUsername();
@@ -83,5 +83,11 @@ public class ManagerController {
         model.addAttribute("storeDTOList", storeDTOList);
         model.addAttribute("storeDto", storeDTO);
         return "manager/storeupdate2";
+    }
+
+    @DeleteMapping("optionDelete")
+    public @ResponseBody ResponseEntity optionDelete(@RequestBody Long menuOptionId) {
+        menuOptionService.deleteOption(menuOptionId);
+        return new ResponseEntity<String>("옵션삭제 성공", HttpStatus.OK);
     }
 }
