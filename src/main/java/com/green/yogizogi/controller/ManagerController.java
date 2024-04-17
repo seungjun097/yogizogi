@@ -77,6 +77,7 @@ public class ManagerController {
 
     @PostMapping("/option")
     public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
+        System.out.println("추가된 옵션 이름"+optionDTO.getOpName());
         Long optionId =  menuOptionService.addOption(optionDTO);
         return new ResponseEntity<String>("옵션저장 성공"+optionId, HttpStatus.OK);
     }
