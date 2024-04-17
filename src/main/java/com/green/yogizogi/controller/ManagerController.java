@@ -24,12 +24,14 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/manager/")
 @RequiredArgsConstructor
+@Transactional
 public class ManagerController {
 
     private final MenuService menuService;
     private final StoreService storeService;
     private final MemberService memberService;
     private final MenuOptionService menuOptionService;
+
     @GetMapping("/update")
     @Transactional
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
@@ -60,18 +62,6 @@ public class ManagerController {
         }
     }
 
-    @PostMapping("/option/")
-    @Transactional
-    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
-        menuOptionService.addOption(optionDTO);
-        try {
-            return new ResponseEntity<String>("옵션저장 성공", HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<String>("메뉴 리스트를 불러오는데 실패.", HttpStatus.OK);
-        }
-
-    }
-
     @GetMapping("update/{storeId}")
     @Transactional
     public String storeUpdate(@PathVariable("storeId") Long storeId,
@@ -85,9 +75,21 @@ public class ManagerController {
         return "manager/storeupdate2";
     }
 
-    @DeleteMapping("optionDelete")
-    public @ResponseBody ResponseEntity optionDelete(@RequestBody Long menuOptionId) {
-        menuOptionService.deleteOption(menuOptionId);
+    @PostMapping("/option")
+    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
+        Long optionId =  menuOptionService.addOption(optionDTO);
+        return new ResponseEntity<String>("옵션저장 성공"+optionId, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/optionDelete/{menuOptionId}")
+    public @ResponseBody ResponseEntity optionDelete( @PathVariable("menuOptionId") Long id) {
+        menuOptionService.deleteOption(id);
         return new ResponseEntity<String>("옵션삭제 성공", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/menuDelete/{menuId}")
+    public @ResponseBody ResponseEntity menuDelete(@PathVariable("menuId") Long id) {
+        menuService.menuDelete(id);
+        return new ResponseEntity<>("메뉴삭제 성공", HttpStatus.OK);
     }
 }

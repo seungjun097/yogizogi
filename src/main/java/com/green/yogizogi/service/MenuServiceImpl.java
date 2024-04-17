@@ -5,11 +5,13 @@ import com.green.yogizogi.entity.Menu;
 import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.repository.MenuRepository;
 import com.green.yogizogi.repository.StoreRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MenuServiceImpl implements MenuService{
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
@@ -19,5 +21,11 @@ public class MenuServiceImpl implements MenuService{
         Menu menu = DtoToEntity(menuDTO);
         menu.setStore(store);
         menuRepository.save(menu);
+    }
+
+    @Override
+    public void menuDelete(Long menuId) {
+        Menu menu = menuRepository.findById(menuId).get();
+        menuRepository.delete(menu);
     }
 }

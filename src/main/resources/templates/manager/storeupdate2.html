@@ -26,7 +26,7 @@
             <div class="menu-update-modal rework">
               <div class="menu-modal-header">
                 <h4 class="menu-modal-head-text">YOGIZOGI</h4>
-                <div class="delete-btn close-btn">delete</div>
+                <div class="delete-btn close-btn" th:onclick="'deleteMenu('+${menu.id}+')'" >delete</div>
               </div>
               <div class="menu-update-formblock w-form">
                 <form method="post" class="menu-update-form" data-wf-page-id="660e43c0ad4d459d38f1bc44" data-wf-element-id="ead3f250-8638-ac37-1d41-e8de00953b2d">
@@ -51,8 +51,7 @@
                           <div class="option-input">
                             <input class="input-round w-input" placeholder="option name" type="text">
                             <input class="input-round w-input" placeholder="option price" type="number">
-                            <button class="btn-primary" th:id="'optionBtn'+${menu.id}" onclick="addOption(this.getAttribute('value'))"
-                                    name="detail_btn" th:attr="value=${menu.id}">옵션추가</button>
+                            <button class="btn-primary" th:onclick="'addOption('+ ${menu.id} +')'">추가</button>
                           </div>
                           <div class="option-list-box">
                             <div th:if="${menu.menuOptionDTOList.size() != 0}"
@@ -88,12 +87,14 @@
               <form  method="get" class="menu-update-form" data-wf-page-id="660e43c0ad4d459d38f1bc44" data-wf-element-id="6b9a18d6-3a39-927d-7280-9fd725c5a253">
                 <div class="menu-modal-body">
                   <div class="menu-modal-divide">
-                    <div class="image-insert">
-                      <div class="w-embed">
-                        <input type="file" class="store-image-input files" id="fileInput">
-                        <label class="store-image-label" data-browse="Browse"></label>
-                        <div class="uploadResult">
-                          <ul></ul>
+                    <div class="storeregisterimgbox">
+                      <div class="image-insert">
+                        <div class="w-embed">
+                          <input type="file" class="store-image-input files" id="fileInput">
+                          <label class="store-image-label" data-browse="Browse"></label>
+                          <div class="uploadResult">
+                            <ul></ul>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -127,13 +128,12 @@
     </section>
   </th:block>
 </th:block>
+
 <script th:inline="javascript">
   $(document).ready(function(e){
-
-      //이미지 추가시 썸네일이 뜨는 과정
-      $(".menu-image-input").on("change", function() {
+      $(".store-image-input").on("change", function() {
           let fileName = $(this).val().split("\\").pop();
-          $(this).siblings(".menu-image-label").addClass("selected").html(fileName);
+          $(this).siblings(".store-image-label").addClass("selected").html(fileName);
           let formData = new FormData();
           let inputFile = $(this);
           let file = inputFile[0].files[0];
@@ -159,7 +159,6 @@
               }
           })
       })
-
       function showResult(obj) {
         let str = "";
         let uploadUL = $(".uploadResult ul");
@@ -176,7 +175,7 @@
   })
 
 
-  //메뉴 추가 버튼 클릭시 아작스로 데이터 저장
+  //메뉴 추가 버튼 클릭시 아작스로 메뉴를 새로이 추가함
   function submitForm() {
       let storeId = $("#store_id").val;
       let menuData = {
@@ -205,8 +204,8 @@
       })
   }
 
+  //옵션 추가 버튼 클릭시 옵션 저장
   function addOption(menuId) {
-      let btn = $('#optionBtn'+menuId);
       let opName = btn.prevAll('input[type="text"]').first().val();
       let opPrice = btn.prevAll('input[type="number"]').first().val();
 
@@ -217,12 +216,12 @@
       };
       console.log(optionData);
       $.ajax({
-          type: "POST",
-          url: "/manager/option/",
+          type: 'POST',
+          url: '/manager/option',
           data: JSON.stringify(optionData),
-          contentType: "application/json",
-          success: function (optionList) {
-              console.log(optionList);
+          contentType: "text",
+          success: function (str) {
+              console.log(str)
               location.reload();
           },
           error: function (e) {
@@ -231,12 +230,26 @@
       })
   }
 
-
   function deleteOption(menuOptionId) {
     $.ajax({
+          url: "/manager/optionDelete/"+menuOptionId,
           type: "delete",
-          url: "/manager/optionDelete",
-          data: menuOptionId,
+          dataType: 'text',
+          success: function (str) {
+              console.log(str);
+              location.reload();
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
+  }
+
+  function deleteMenu(menuId) {
+  $.ajax({
+          url: "/manager/menuDelete/"+menuId,
+          type: "delete",
+          dataType: 'text',
           success: function (str) {
               console.log(str);
               location.reload();
