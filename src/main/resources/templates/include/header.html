@@ -12,24 +12,33 @@
                     <a href="/" class="memu-link w-inline-block">
                         <div class="menu-link-text login">가게 찾기</div>
                     </a>
-                    <a href="/store/register" class="memu-link w-inline-block">
-                        <div class="menu-link-text login">스토어 등록</div>
-                    </a>
-                    <a href="/manager/update" class="memu-link w-inline-block">
-                        <div class="menu-link-text login">스토어 관리</div>
-                    </a>
-                    <a href="#" class="memu-link w-inline-block">
-                        <div class="menu-link-text login">주문 목록</div>
-                    </a>
-                    <a href="#" class="memu-link w-inline-block">
-                        <div class="menu-link-text cart-button">장바구니</div>
-                    </a>
-                    <a href="/member/login" class="memu-link w-inline-block">
-                        <div class="menu-link-text login">로그인</div>
-                    </a>
-                    <a href="/member/signup" class="memu-link w-inline-block">
-                        <div class="menu-link-text">회원가입</div>
-                    </a>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <a href="/store/register" class="memu-link w-inline-block">
+                            <div class="menu-link-text login">스토어 등록</div>
+                        </a>
+                        <a href="/manager/update" class="memu-link w-inline-block">
+                            <div class="menu-link-text login">스토어 관리</div>
+                        </a>
+                        <a href="#" class="memu-link w-inline-block">
+                            <div class="menu-link-text login">주문 이력</div>
+                        </a>
+                        <a href="#" class="memu-link w-inline-block">
+                            <div class="menu-link-text cart-button">장바구니</div>
+                        </a>
+                    </th:block>
+                    <th:block sec:authorize="isAnonymous()">
+                        <a href="/member/login" class="memu-link w-inline-block">
+                            <div class="menu-link-text login">로그인</div>
+                        </a>
+                        <a href="/member/signup" class="memu-link w-inline-block">
+                            <div class="menu-link-text">회원가입</div>
+                        </a>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <a  href="/logout" class="memu-link w-inline-block">
+                            <div class="menu-link-text login">로그아웃</div>
+                        </a>
+                    </th:block>
                 </nav>
                 <div class="w-nav-button">
                     <div class="w-icon-nav-menu"></div>
