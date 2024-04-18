@@ -42,7 +42,7 @@ public class StoreController {
         model.addAttribute("storeList", storeList);
         System.out.println("storeList: " + storeList);
 
-        return "store/store";
+        return "/store/mainlist";
     }
 
     @GetMapping("/")
