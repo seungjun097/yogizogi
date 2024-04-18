@@ -2,6 +2,7 @@ package com.green.yogizogi.entity;
 
 import com.green.yogizogi.constant.MenuType;
 import com.green.yogizogi.constant.SellStatus;
+import com.green.yogizogi.dto.MenuDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,5 +46,12 @@ public class Menu {
     public void addOption(MenuOption option) {
         optionList.add(option);
         option.setMenu(this);
+    }
+
+    public void menuUpdate(MenuDTO menuDTO) {
+        this.menuDesc = menuDTO.getMenuDesc();
+        this.menuPrice = menuDTO.getMenuPrice();
+        this.menuName = menuDTO.getMenuName();
+        this.menuType = menuDTO.getMenuType();
     }
 }

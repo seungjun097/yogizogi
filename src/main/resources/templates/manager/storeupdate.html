@@ -35,7 +35,7 @@
                       <div id="w-node-ead3f250-8638-ac37-1d41-e8de00953b32-38f1bc44" class="menu-ubdate-form">
 
                         <div class="menu-update-opform">
-                          <input type="hidden" th:id="'store_id'+${menu.id}" name = "store_id" value="storeDto.id">
+                          <input type="hidden" th:id="'store_id'+${menu.id}" name = "store_id" th:value="${storeDto.id}">
                           <input class="input-round w-input" th:id="'menuName'+${menu.id}" name = "menuName" placeholder="menu name" type="text" th:value="${menu.menuName}">
                           <select required="" class="input-round w-select" th:id="'menuType'+${menu.id}" name = "menuType">
                             <option value="MAIN" th:selected="${menu.menuType == 'MAIN'}">메인 메뉴</option>
@@ -204,7 +204,7 @@
       })
   }
 
-  //버튼 클릭 시 불러오는 메뉴를 수정하는 함수
+  //버튼 클릭 시 메뉴를 수정하는 함수
   function menuUpdateBtn(menuId) {
       let menuData = {
           id : menuId,
@@ -217,7 +217,7 @@
       console.log(menuData);
       $.ajax({
           type: "POST",
-          url: "/manager/update/",
+          url: "/manager/modify",
           data: JSON.stringify(menuData),
           contentType: "application/json",
           success: function (menuList) {
@@ -251,6 +251,7 @@
             success: function (optionList) {
                 console.log(optionList);
                 location.reload();
+                btn.scrollIntoView();
             },
             error: function (e) {
                console.log(e)

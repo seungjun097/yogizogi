@@ -14,6 +14,10 @@ public interface MenuService {
 
     void menuDelete(Long menuId);
 
+    MenuDTO menuSelect(Long menuId);
+
+    void menuModify(MenuDTO menuDTO);
+
     default Menu DtoToEntity(MenuDTO menuDTO) {
         Menu menu = Menu.builder()
                 .menuName(menuDTO.getMenuName())

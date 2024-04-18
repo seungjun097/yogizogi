@@ -28,4 +28,17 @@ public class MenuServiceImpl implements MenuService{
         Menu menu = menuRepository.findById(menuId).get();
         menuRepository.delete(menu);
     }
+
+    @Override
+    public MenuDTO menuSelect(Long menuId) {
+        Menu menu = menuRepository.findById(menuId).get();
+        return enTityToDto(menu);
+    }
+
+    @Override
+    public void menuModify(MenuDTO menuDTO) {
+        Menu menu = menuRepository.findById(menuDTO.getId()).get();
+        menu.menuUpdate(menuDTO);
+        menuRepository.save(menu);
+    }
 }

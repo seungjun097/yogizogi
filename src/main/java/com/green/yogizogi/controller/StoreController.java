@@ -71,7 +71,7 @@ public class StoreController {
         System.out.println(storeDTO.toString());
         Long storeId = storeService.StoreRegister(storeDTO);
         System.out.println("가게 등록 성공 : "+storeId);
-        return "main";
+        return "/";
     }
 
     @GetMapping("/list")

@@ -47,7 +47,7 @@ public class ManagerController {
         if(!storeDTOList.isEmpty()) {
             model.addAttribute("storeDto", storeDTOList.get(0));
         }
-        return "manager/storeupdate2";
+        return "manager/storeupdate";
     }
 
     @PostMapping("/menu/")
@@ -72,7 +72,7 @@ public class ManagerController {
                 .collect(Collectors.toList()).get(0);
         model.addAttribute("storeDTOList", storeDTOList);
         model.addAttribute("storeDto", storeDTO);
-        return "manager/storeupdate2";
+        return "manager/storeupdate";
     }
 
     @PostMapping("/option")
@@ -92,5 +92,11 @@ public class ManagerController {
     public @ResponseBody ResponseEntity menuDelete(@PathVariable("menuId") Long id) {
         menuService.menuDelete(id);
         return new ResponseEntity<>("메뉴삭제 성공", HttpStatus.OK);
+    }
+
+    @PostMapping("/modify")
+    public @ResponseBody ResponseEntity menuModify(@RequestBody MenuDTO menuDTO) {
+        menuService.menuModify(menuDTO);
+        return new ResponseEntity<>("메뉴수정 성공", HttpStatus.OK);
     }
 }
