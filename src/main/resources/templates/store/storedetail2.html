@@ -1,55 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<div class="menu-modal-wrapper">
+  <div class="menu-container">
+    <div class="menu-positon">
+      <div class="menu-modal-window">
+        <div class="menu-modal-header">
+          <h4 class="menu-modal-head-text">YOGIZOGI</h4>
+          <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
+        </div>
+        <div class="menu-modal-body">
+          <div class="menu-modal-divide">
+            <img src="" loading="lazy" alt="" class="menu-modal-img" id="modalMenuImg">
+            <div id="w-node-_7fa41d3a-af4d-8c97-8334-e684d10f9587-0ae922c6" class="menu-modal-body-detail">
+              <div id="modalMenuId" style="display: none;"></div>
+              <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
+              <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
+              <p class="menu-modal-body-paragraph" id="modalMenuDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare,</p>
+              <div class="menu-optionlist">
+              </div>
+              <div class="menu-modal-tp">
+                <div class="text-block-4">총 주문금액 : <span id="menuTotalPrice"></span> 원</div>
+              </div>
+            </div>
+          </div>
+          <div class="menu-modal-button">
+            <a href="#" class="menu-modal-btn w-inline-block" onclick="addToCart()">
+              <div class="menu-modal-btn-text">Cart</div>
+            </a>
+            <a href="#" class="menu-modal-btn w-inline-block">
+              <div class="menu-modal-btn-text">order</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
   <th:block th:fragment="content">
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb&libraries=services,clusterer,drawing"></script>
 
 <body>
-  <div class="menu-modal-wrapper">
-    <div class="menu-container">
-      <div class="menu-positon">
-        <div class="menu-modal-window">
-          <div class="menu-modal-header">
-            <h4 class="menu-modal-head-text">YOGIZOGI</h4>
-            <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
-          </div>
-          <div class="menu-modal-body">
-            <div class="menu-modal-divide">
-              <img src="/images/제휴FR_20240125_버거킹_오리지널스솔티드에그싱글세트_1080x640.jpg" loading="lazy" alt="" class="menu-modal-img" id="modalMenuImg">
-              <div id="w-node-_7fa41d3a-af4d-8c97-8334-e684d10f9587-0ae922c6" class="menu-modal-body-detail">
-                <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
-                <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
-                <p class="menu-modal-body-paragraph" id="modalMenuDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare,</p>
-                <div class="menu-optionlist">
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                </div>
-                <div class="menu-modal-tp">
-                  <div class="text-block-4">total price $</div>
-                </div>
-              </div>
-            </div>
-            <div class="menu-modal-button">
-              <a href="#" class="menu-modal-btn w-inline-block">
-                <div class="menu-modal-btn-text">Cart</div>
-              </a>
-              <a href="#" class="menu-modal-btn w-inline-block">
-                <div class="menu-modal-btn-text">order</div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <section>
     <div class="w-layout-blockcontainer container w-container">
       <div class="store_map">
@@ -164,7 +158,7 @@
                           <h3>[[${menu.menuName}]]</h3>
                           <h4>[[${menu.menuPrice}]]원</h4>
                           <div>[[${menu.menuDesc}]]</div>
-                        </div><img loading="lazy" th:src="|/display?fileName=${menu.getThumbnailURL()}|" alt="" class="image-2">
+                        </div><img loading="lazy" th:src="|/display?fileName=${menu.getImageURL()}|" alt="" class="image-2">
                       </a>
                     </div>
                   </div>
@@ -268,8 +262,9 @@
         <div class="cart_sec">
           <div class="cartbox">
             <h4 class="cart_heading">Cart</h4>
-            <div class="cartlist">
-              <div class="cartmenu">
+            <div class="cartlist" id="cartList">
+
+              <!--<div class="cartmenu">
                 <div class="menuhedingwrap">
                   <h4 class="cartmenuheading">menuName</h4>
                   <a href="#" class="button w-button">x</a>
@@ -299,69 +294,8 @@
                   </div>
                 </div>
                 <div>total price</div>
-              </div>
-              <div class="cartmenu">
-                <div class="menuhedingwrap">
-                  <h4 class="cartmenuheading">menuName</h4>
-                  <a href="#" class="button w-button">x</a>
-                </div>
-                <div>menuPrice</div>
-                <div class="cart-menu-optionlist">
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                </div>
-                <div>total price</div>
-              </div>
-              <div class="cartmenu">
-                <div class="menuhedingwrap">
-                  <h4 class="cartmenuheading">menuName</h4>
-                  <a href="#" class="button w-button">x</a>
-                </div>
-                <div>menuPrice</div>
-                <div class="cart-menu-optionlist">
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                </div>
-                <div>total price</div>
-              </div>
+              </div>-->
+
             </div>
             <div class="cartbtnwrap">
               <a href="#" class="orderbutton w-inline-block">
@@ -380,24 +314,112 @@
 </th:block>
 
 <script th:inline="javascript">
+const storeDTO = [[${storeDTO}]];
+const modalWindow = $(".menu-modal-wrapper");
+const cartDTO = [[${cartDTO}]];
 
-  const storeDTO = [[${storeDTO}]];
-  const modalWindow = $(".menu-modal-wrapper");
+$(document).ready(function() {
+  cartShow();
+});
 
+
+//cartDTO의 정보를 뿌리는 함수
+function cartShow(cartDTO) {
+   if(cartDTO == null) {
+      $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
+   }else {
+      let str = "";
+      str += "<div class='cartmenu'><div class='menuhedingwrap'>"
+      str += "<h4 class='cartmenuheading'>menuName</h4>"
+      str += "<a href='#' class='button w-button'>x</a></div>"
+      str += "<div>menuPrice</div>"
+      str += "<div class='cart-menu-optionlist'>"
+      str += "<div class='menu-detail-option'>"
+      str += "<div class='option-left'>"
+      str += "<div class='option-name'>option name</div>"
+      str += "<div class='option-price'>option price</div>"
+      str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
+      str += "</div><div>total price</div></div>"
+      $("#cartList").html(str);
+   }
+};
+
+//메뉴 클릭할 때 모달창이 열리면서 메뉴 값이 담김.
   function openModal(menuIndex) {
     const menuDTO = storeDTO.menuDTOList[menuIndex];
 
     $('#modalMenuImg').attr("src", "/display?fileName="+menuDTO.imageURL);
     $('#modalMenuName').html(menuDTO.menuName);
-    $('#modalMenuPrice').html(menuDTO.menuPrice);
+    $('#modalMenuPrice').html(menuDTO.menuPrice+" 원");
     $('#modalMenuDesc').html(menuDTO.menuDesc);
+    $('#menuTotalPrice').html(menuDTO.menuPrice);
+    $('#modalMenuId').html(menuDTO.id);
 
+    let str = "";
+
+    for(let option of menuDTO.menuOptionDTOList) {
+      str += "<div class='menu-detail-option'><div class='option-left'>"
+      str += "<div class='option-name'>"+option.opName+"</div>"
+      str += "<div class='option-price'>"+option.opPrice+" 원</div>"
+      str += "</div><div class='checkbox w-embed'>"
+      str += "<input type='checkbox' value='"+option.opPrice+"'"
+      str += " id='opCheck"+option.id+"' onchange='optionCheck("+option.id+")'/></div></div>"
+    }
+    $(".menu-optionlist").html(str);
     modalWindow.show();
   }
 
+  //모달창을 닫는 함수
   function modalHide() {
      modalWindow.hide();
   }
 
+  //옵션 체크시 총가격을 바꾸는 함수
+  function optionCheck(optionId) {
+    let checkBox = $('#opCheck'+optionId);
+    let opChecked = checkBox.prop('checked');
+    let opPrice = checkBox.val();
+    let totalPrice = $('#menuTotalPrice').html();
+    if(opChecked) {
+       let newPrice = parseInt(totalPrice)+parseInt(opPrice);
+       $('#menuTotalPrice').html(newPrice);
+    }else{
+       let newPrice = parseInt(totalPrice)-parseInt(opPrice);
+       $('#menuTotalPrice').html(newPrice);
+    }
+  }
+
+  //버튼 클릭시 메뉴를 카트에 담는 함수
+  function addToCart() {
+        let cartMenuOptionDTOList = [];
+
+        $(targetDiv+ ' input[type="checkbox"]').each(function() {
+            let CartMenuOptionDTO = {
+                menuOptionId: $(this).attr('name').split('%').pop(),
+                menu_id: menuId,
+                checked: $(this).val()
+            };
+            cartMenuOptionDTOList.push(CartMenuOptionDTO);
+        })
+        let cartMenuDTO = {
+            menu_id: menuId,
+            count: $('#count'+menuId).val(),
+            cartMenuOptionDTOList: cartMenuOptionDTOList
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/store/cart",
+            data: JSON.stringify(cartMenuDTO),
+            contentType: "application/json",
+            success: function (cartDTO) {
+                console.log(cartDTO);
+                cartList(cartDTO);
+            },
+            error: function (e) {
+               console.log(e)
+            }
+        })
+    }
 </script>
 </html>
