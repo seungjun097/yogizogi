@@ -19,21 +19,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/manager/")
 @RequiredArgsConstructor
+@Transactional
 public class ManagerController {
 
     private final MenuService menuService;
     private final StoreService storeService;
     private final MemberService memberService;
     private final MenuOptionService menuOptionService;
-    @GetMapping("/myStoreList")
+
+    @GetMapping("/update")
     @Transactional
     public String myStoreList(@AuthenticationPrincipal User user, Model model) {
         String email;
-        if(user==null) {
+        if(user.getUsername().isEmpty()) {
             return "main";
         }else {
             email = user.getUsername();
@@ -41,7 +44,10 @@ public class ManagerController {
         Member member = memberService.userFindEmail(email);
         List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
         model.addAttribute("storeDTOList", storeDTOList);
-        return "manager/mystorelist";
+        if(!storeDTOList.isEmpty()) {
+            model.addAttribute("storeDto", storeDTOList.get(0));
+        }
+        return "manager/storeupdate";
     }
 
     @PostMapping("/menu/")
@@ -56,15 +62,41 @@ public class ManagerController {
         }
     }
 
-    @PostMapping("/option/")
+    @GetMapping("update/{storeId}")
     @Transactional
-    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
-        menuOptionService.addOption(optionDTO);
-        try {
-            return new ResponseEntity<String>("옵션저장 성공", HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<String>("메뉴 리스트를 불러오는데 실패.", HttpStatus.OK);
-        }
+    public String storeUpdate(@PathVariable("storeId") Long storeId,
+                              @AuthenticationPrincipal User user,
+                              Model model) {
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(user.getUsername());
+        StoreDTO storeDTO = storeDTOList.stream().filter(storeDto -> storeDto.getId() == storeId)
+                .collect(Collectors.toList()).get(0);
+        model.addAttribute("storeDTOList", storeDTOList);
+        model.addAttribute("storeDto", storeDTO);
+        return "manager/storeupdate";
+    }
 
+    @PostMapping("/option")
+    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
+        System.out.println("추가된 옵션 이름"+optionDTO.getOpName());
+        Long optionId =  menuOptionService.addOption(optionDTO);
+        return new ResponseEntity<String>("옵션저장 성공"+optionId, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/optionDelete/{menuOptionId}")
+    public @ResponseBody ResponseEntity optionDelete( @PathVariable("menuOptionId") Long id) {
+        menuOptionService.deleteOption(id);
+        return new ResponseEntity<String>("옵션삭제 성공", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/menuDelete/{menuId}")
+    public @ResponseBody ResponseEntity menuDelete(@PathVariable("menuId") Long id) {
+        menuService.menuDelete(id);
+        return new ResponseEntity<>("메뉴삭제 성공", HttpStatus.OK);
+    }
+
+    @PostMapping("/modify")
+    public @ResponseBody ResponseEntity menuModify(@RequestBody MenuDTO menuDTO) {
+        menuService.menuModify(menuDTO);
+        return new ResponseEntity<>("메뉴수정 성공", HttpStatus.OK);
     }
 }

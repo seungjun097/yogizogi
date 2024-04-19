@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+  <th:block th:fragment="content">
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb&libraries=services,clusterer,drawing"></script>
+
+<body>
+  <div class="menu-modal-wrapper">
+    <div class="menu-container">
+      <div class="menu-positon">
+        <div class="menu-modal-window">
+          <div class="menu-modal-header">
+            <h4 class="menu-modal-head-text">YOGIZOGI</h4>
+            <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
+          </div>
+          <div class="menu-modal-body">
+            <div class="menu-modal-divide">
+              <img src="/images/제휴FR_20240125_버거킹_오리지널스솔티드에그싱글세트_1080x640.jpg" loading="lazy" alt="" class="menu-modal-img" id="modalMenuImg">
+              <div id="w-node-_7fa41d3a-af4d-8c97-8334-e684d10f9587-0ae922c6" class="menu-modal-body-detail">
+                <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
+                <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
+                <p class="menu-modal-body-paragraph" id="modalMenuDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare,</p>
+                <div class="menu-optionlist">
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                </div>
+                <div class="menu-modal-tp">
+                  <div class="text-block-4">total price $</div>
+                </div>
+              </div>
+            </div>
+            <div class="menu-modal-button">
+              <a href="#" class="menu-modal-btn w-inline-block">
+                <div class="menu-modal-btn-text">Cart</div>
+              </a>
+              <a href="#" class="menu-modal-btn w-inline-block">
+                <div class="menu-modal-btn-text">order</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="w-layout-blockcontainer container w-container">
+      <div class="store_map">
+        <div class="store_detail_wrap">
+          <div class="store_detail2"><img th:src="|/display?fileName=${storeDTO.getImageURL()}|" loading="lazy" alt="" class="image">
+            <div class="div-block-4">
+              <h2>[[${storeDTO.storeName}]]</h2>
+              <div>star score</div>
+              <div>최소주문금액 : [[${storeDTO.minDelivery}]]</div>
+              <div>discount</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map_content">
+          <h4 class="mapheading">찾아 오시는 길</h4>
+          <div id="store_address" th:data-address="${storeDTO.getStoreAddress2()}"></div>
+          <div id="store_Name" th:data-store_name="${storeDTO.storeName}"></div>
+            <div class="div-block-6" id="map">
+                <script>
+                  $(document).ready(function(){
+                    var storeAddress = $("#store_address").data("address");
+                    console.log("storeAdd: "+ storeAddress)
+                    var storeName = $("#store_Name").data("store_name");
+                    console.log("storeName: " + storeName)
+                    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                            mapOption = {
+                              center: new kakao.maps.LatLng(33.25110701, 126.570667), // 지도의 중심좌표
+                              level: 3 // 지도의 확대 레벨
+                            };
+                    // 지도를 생성합니다
+                    var map = new kakao.maps.Map(mapContainer, mapOption);
+                    // 주소-좌표 변환 객체를 생성합니다
+                    var geocoder = new kakao.maps.services.Geocoder();
+                    // 주소로 좌표를 검색합니다
+                    geocoder.addressSearch(storeAddress, function(result, status) {
+                      // 정상적으로 검색이 완료됐으면
+                      if (status === kakao.maps.services.Status.OK) {
+                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                        // 결과값으로 받은 위치를 마커로 표시합니다
+                        var marker = new kakao.maps.Marker({
+                          map: map,
+                          position: coords
+                        });
+                        // 인포윈도우로 장소에 대한 설명을 표시합니다
+                        var infowindow = new kakao.maps.InfoWindow({
+                          content: '<div style="width:150px;text-align:center;padding:3px 0;">' + storeName + '</div>'
+                        });
+                        infowindow.open(map, marker);
+                        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                        map.setCenter(coords);
+                        $(".storePosition").click(function(){
+                          map.panTo(coords);
+                        })
+                      }
+                    });
+                    var userAddress = $("#delivery_address").val();
+                    if(userAddress != "" ) {
+                      $(".userPosition").css("display" , "inline");
+                      // 주소로 좌표를 검색합니다
+                      geocoder.addressSearch(userAddress, function(result, status) {
+                        // 정상적으로 검색이 완료됐으면
+                        if (status === kakao.maps.services.Status.OK) {
+                          coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                          // 결과값으로 받은 위치를 마커로 표시합니다
+                          var marker = new kakao.maps.Marker({
+                            map: map,
+                            position: coords
+                          });
+                          // 인포윈도우로 장소에 대한 설명을 표시합니다
+                          var infowindow = new kakao.maps.InfoWindow({
+                            content: '<div style="width:150px;text-align:center;padding:3px 0;">' + "배달받을위치" + '</div>'
+                          });
+                          infowindow.open(map, marker);
+
+                          $(".userPosition").click(function(){
+                            map.panTo(coords);
+                          })
+                        }
+                      });
+                    }
+                  })
+                </script>
+            </div>
+              <div id="position_box">
+                <button class="storePosition" ><i class="far fa-dot-circle"></i> 가게 위치로</button>
+              </div>
+        </div>
+      </div>
+
+      <div class="maingrid">
+        <div class="detail_sec">
+          <div class="menu_bar">
+            <div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100" class="w-tabs">
+              <div class="w-tab-menu">
+                <a data-w-tab="Tab 1" class="tab_heading w-inline-block w-tab-link w--current">
+                  <div>메뉴</div>
+                </a>
+                <a data-w-tab="Tab 2" class="tab_heading w-inline-block w-tab-link">
+                  <div>리뷰</div>
+                </a>
+                <a data-w-tab="Tab 3" class="tab_heading w-inline-block w-tab-link">
+                  <div>상세정보</div>
+                </a>
+              </div>
+              <div class="w-tab-content">
+                <div data-w-tab="Tab 1" class="tab-pane-tab-1 w-tab-pane">
+                  <div class="menulist">
+                    <div th:each="menu :${storeDTO.menuDTOList}">
+                      <a href="#" class="link-block w-inline-block" th:onclick="'openModal('+${menuStat.index}+')'">
+                        <div class="div-block-5">
+                          <h3>[[${menu.menuName}]]</h3>
+                          <h4>[[${menu.menuPrice}]]원</h4>
+                          <div>[[${menu.menuDesc}]]</div>
+                        </div><img loading="lazy" th:src="|/display?fileName=${menu.getThumbnailURL()}|" alt="" class="image-2">
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div data-w-tab="Tab 2" class="w-tab-pane w--tab-active">
+                  <div class="review-overview">
+                    <div class="text-block-6">total Score</div>
+                    <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                      <div class="text-block">4.0</div>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div class="reveiw_card">
+                      <h3 class="review_title">review title</h3>
+                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                        <div class="text-block">4.0</div>
+                      </div>
+                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div class="reveiw_card">
+                      <h3 class="review_title">review title</h3>
+                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                        <div class="text-block">4.0</div>
+                      </div>
+                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div class="reveiw_card">
+                      <h3 class="review_title">review title</h3>
+                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                        <div class="text-block">4.0</div>
+                      </div>
+                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div class="reveiw_card">
+                      <h3 class="review_title">review title</h3>
+                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                        <div class="text-block">4.0</div>
+                      </div>
+                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div class="reveiw_card">
+                      <h3 class="review_title">review title</h3>
+                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                        <div class="text-block">4.0</div>
+                      </div>
+                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div class="reveiw_card">
+                      <h3 class="review_title">review title</h3>
+                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
+                        <div class="text-block">4.0</div>
+                      </div>
+                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                    </div>
+                  </div>
+                </div>
+                <div data-w-tab="Tab 3" class="w-tab-pane">
+                  <div class="store_inform">
+                    <div class="inform_box">
+                      <h3 class="inform_heading">상호명</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storeName}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">연락처</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storePhone}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">가게주소</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storeAddress1}]] 번지 [[${storeDTO.storeAddress1}]] [[${storeDTO.storeAddress1}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">가게정보</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storeDes}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">영업시간</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.openingTime}]] ~ [[${storeDTO.closingTime}]]</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart_sec">
+          <div class="cartbox">
+            <h4 class="cart_heading">Cart</h4>
+            <div class="cartlist">
+              <div class="cartmenu">
+                <div class="menuhedingwrap">
+                  <h4 class="cartmenuheading">menuName</h4>
+                  <a href="#" class="button w-button">x</a>
+                </div>
+                <div>menuPrice</div>
+                <div class="cart-menu-optionlist">
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                </div>
+                <div>total price</div>
+              </div>
+              <div class="cartmenu">
+                <div class="menuhedingwrap">
+                  <h4 class="cartmenuheading">menuName</h4>
+                  <a href="#" class="button w-button">x</a>
+                </div>
+                <div>menuPrice</div>
+                <div class="cart-menu-optionlist">
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                </div>
+                <div>total price</div>
+              </div>
+              <div class="cartmenu">
+                <div class="menuhedingwrap">
+                  <h4 class="cartmenuheading">menuName</h4>
+                  <a href="#" class="button w-button">x</a>
+                </div>
+                <div>menuPrice</div>
+                <div class="cart-menu-optionlist">
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                  <div class="menu-detail-option">
+                    <div class="option-left">
+                      <div class="option-name">option name</div>
+                      <div class="option-price">option price $</div>
+                    </div>
+                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
+                  </div>
+                </div>
+                <div>total price</div>
+              </div>
+            </div>
+            <div class="cartbtnwrap">
+              <a href="#" class="orderbutton w-inline-block">
+                <div class="text-block-3">Order</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=65fc42eb24b1318121bba199" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="/js/webflow.js" type="text/javascript"></script>
+</body>
+</th:block>
+</th:block>
+
+<script th:inline="javascript">
+
+  const storeDTO = [[${storeDTO}]];
+  const modalWindow = $(".menu-modal-wrapper");
+
+  function openModal(menuIndex) {
+    const menuDTO = storeDTO.menuDTOList[menuIndex];
+
+    $('#modalMenuImg').attr("src", "/display?fileName="+menuDTO.imageURL);
+    $('#modalMenuName').html(menuDTO.menuName);
+    $('#modalMenuPrice').html(menuDTO.menuPrice);
+    $('#modalMenuDesc').html(menuDTO.menuDesc);
+
+    modalWindow.show();
+  }
+
+  function modalHide() {
+     modalWindow.hide();
+  }
+
+</script>
+</html>

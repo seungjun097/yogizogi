@@ -32,4 +32,13 @@ public class StoreRepositoryTest {
         List<Menu> menuList = store.getMenuList();
         menuList.stream().forEach(i-> System.out.println(i.getMenuName()));
     }
+
+    @Test
+    @Transactional
+    public void storeTest() {
+        Member member = memberRepository.findByEmail("green@green.com");
+        List<Store> storeList = storeRepository.findByMember(member);
+        System.out.println(storeList.size());
+        System.out.println(storeList.get(0).getMenuList());
+    }
 }

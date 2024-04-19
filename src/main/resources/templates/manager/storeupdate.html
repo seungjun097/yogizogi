@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+  <th:block th:fragment="content">
+
+    <section class="section">
+      <div class="w-layout-blockcontainer container w-container">
+        <div class="storelistbox">
+          <div class="gray-box">
+            <div th:each="dto:${storeDTOList}">
+            <a th:href="@{'/manager/update/' + ${dto.id}}" class="storeupdatecard w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getThumbnailURL()}|" loading="lazy" alt="" class="storeupdateimg">
+              <h3>[[${dto.storeName}]]</h3>
+              <div class="storeadress">[[${dto.storeDes}]]</div>
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="w-layout-blockcontainer container w-container">
+        <div class="menuupdate">
+          <div th:if="${storeDto != null && storeDto.getMenuDTOList().size() != 0}"
+               th:each="menu: ${storeDto.getMenuDTOList()}" id="menuListView">
+            <div class="menu-update-modal rework">
+              <div class="menu-modal-header">
+                <h4 class="menu-modal-head-text">YOGIZOGI</h4>
+                <div class="delete-btn close-btn" th:onclick="'deleteMenu('+${menu.id}+')'" >delete</div>
+              </div>
+              <div class="menu-update-formblock w-form">
+                <div class="menu-update-form">
+                  <div class="menu-modal-body">
+                    <div class="menu-modal-divide"><img th:src="|/display?fileName=${menu.getImageURL()}|" loading="lazy" alt="">
+                      <div id="w-node-ead3f250-8638-ac37-1d41-e8de00953b32-38f1bc44" class="menu-ubdate-form">
+
+                        <div class="menu-update-opform">
+                          <input type="hidden" th:id="'store_id'+${menu.id}" name = "store_id" th:value="${storeDto.id}">
+                          <input class="input-round w-input" th:id="'menuName'+${menu.id}" name = "menuName" placeholder="menu name" type="text" th:value="${menu.menuName}">
+                          <select required="" class="input-round w-select" th:id="'menuType'+${menu.id}" name = "menuType">
+                            <option value="MAIN" th:selected="${menu.menuType == 'MAIN'}">메인 메뉴</option>
+                            <option value="SIDE" th:selected="${menu.menuType == 'SIDE'}">사이드 메뉴</option>
+                            <option value="ECT" th:selected="${menu.menuType == 'ECT'}">기타</option>
+                          </select>
+                          <input class="input-round w-input" th:id="'menuPrice'+${menu.id}" name = "menuPrice" placeholder="menu price" type="number" th:value="${menu.menuPrice}">
+                          <textarea placeholder="menu description" th:id="'menuDesc'+${menu.id}" name = "menuDesc" maxlength="5000" class="menu-update-textarea w-input" >[[${menu.menuDesc}]]</textarea>
+                        </div>
+
+                        <div class="option-register-form">
+                          <div class="menu-update-price">옵션 추가</div>
+                          <div class="option-input">
+                            <input class="input-round w-input" placeholder="option name" type="text">
+                            <input class="input-round w-input" placeholder="option price" type="number">
+                            <button class="btn-primary" th:id="'opBtn'+${menu.id}" th:onclick="'addOption('+ ${menu.id} +')'">추가</button>
+                          </div>
+                          <div class="option-list-box">
+                            <div th:if="${menu.menuOptionDTOList.size() != 0}"
+                                 th:each="menuOption: ${menu.menuOptionDTOList}">
+                              <div class="menu-update-option">
+                                <div class="option-left">
+                                  <div class="option-name" >[[${menuOption.opName}]]</div>
+                                  <div class="option-price">[[${menuOption.opPrice}]] 원</div>
+                                </div>
+                                <a href="#" class="xbutton-update w-button" th:onclick="'deleteOption(' + ${menuOption.id} + ')'">x</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="meu-update-btn">
+                      <a href="#" class="menu-update-btn w-inline-block">
+                        <div class="menu-update-btntext" th:onclick="'menuUpdateBtn(' + ${menu.id} + ')'">메뉴 수정</div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-update-modal rework">
+            <div class="menu-modal-header">
+              <h4 class="menu-modal-head-text">YOGIZOGI</h4>
+            </div>
+            <div class="menu-update-formblock w-form">
+              <div class="menu-update-form">
+                <div class="menu-modal-body">
+                  <div class="menu-modal-divide">
+                    <div class="storeregisterimgbox">
+                      <div class="image-insert">
+                        <div class="w-embed">
+                          <input type="file" class="store-image-input files" id="fileInput">
+                          <label class="store-image-label" data-browse="Browse"></label>
+                          <div class="uploadResult">
+                            <ul></ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="w-node-_7f843201-413a-1e2b-c485-62248731218e-38f1bc44" class="menu-ubdate-form">
+                      <input type="hidden" name="store_id" id="store_id" th:value="${storeDto.id}">
+                      <div class="menu-update-price">메뉴이름</div>
+                        <input class="input-round w-input" maxlength="256" placeholder="메뉴명" type="text" name="menuName" id="menuName">
+                      <div class="menu-update-price">카테고리</div>
+                        <select id="menuType" name="menuType" class="input-round w-select">
+                          <option value="MAIN">메인메뉴</option>
+                          <option value="SIDE">사이드메뉴</option>
+                          <option value="ECT">기타</option>
+                        </select>
+                      <div class="menu-update-price">메뉴가격</div>
+                      <input class="input-round w-input" maxlength="256" placeholder="메뉴가격" type="number" name="menuPrice" id="menuPrice">
+                      <div class="menu-update-price">상세설명</div>
+                      <textarea placeholder="메뉴에 대해 설명해주세요." maxlength="5000" id="menuDesc" name="menuDesc" class="menu-update-textarea w-input"></textarea>
+                    </div>
+                  </div>
+                  <div class="meu-update-btn">
+                    <a href="#" class="menu-update-btn w-inline-block" onclick="submitForm()">
+                      <div class="menu-update-btntext">메뉴 등록</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </th:block>
+</th:block>
+
+<script th:inline="javascript">
+  $(document).ready(function(e){
+      $(".store-image-input").on("change", function() {
+          let fileName = $(this).val().split("\\").pop();
+          $(this).siblings(".store-image-label").addClass("selected").html(fileName);
+          let formData = new FormData();
+          let inputFile = $(this);
+          let file = inputFile[0].files[0];
+          if (file) {
+              formData.append("uploadFile", file);
+          } else {
+              return;
+          }
+
+          $.ajax({
+              url:'/uploadAjax',
+              type: 'post',
+              data: formData,
+              processData: false,
+              contentType: false,
+              dataType: 'json',
+              success: function(result) {
+                  console.log(result);
+                  showResult(result);
+              },
+              error: function(err) {
+                console.log(err);
+              }
+          })
+      })
+      function showResult(obj) {
+        let str = "";
+        let uploadUL = $(".uploadResult ul");
+        str += "<li>"
+        str += "<div>"
+        str += "<button type='button' data-file='"+obj.imageURL+"' class='btn-warning btn-sm'>X</button>"
+        str += "<img src='/display?fileName="+obj.thumbnailURL+"'>";
+        str += "</div></li>"
+        str += "<input type='hidden' id='imgName' name='imgName' value='"+obj.fileName+"' >";
+        str += "<input type='hidden' id='path' name='path' value='"+obj.folderPath+"' >";
+        str += "<input type='hidden' id='uuid' name='uuid' value='"+obj.uuid+"' >";
+        uploadUL.append(str);
+      }
+  })
+
+
+  //메뉴 추가 버튼 클릭시 아작스로 메뉴를 새로이 추가함
+  function submitForm() {
+      let storeId = $("#store_id").val;
+      let menuData = {
+          store_id: $('#store_id').val(),
+          menuName: $('#menuName').val(),
+          menuType: $('#menuType').val(),
+          menuPrice: $('#menuPrice').val(),
+          menuDesc: $('#menuDesc').val(),
+          imgName: $('#imgName').val(),
+          path: $('#path').val(),
+          uuid: $('#uuid').val()
+      };
+      console.log(menuData);
+      $.ajax({
+          type: "POST",
+          url: "/manager/menu/",
+          data: JSON.stringify(menuData),
+          contentType: "application/json",
+          success: function (menuList) {
+              console.log(menuList)
+              location.reload();
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
+  }
+
+  //버튼 클릭 시 메뉴를 수정하는 함수
+  function menuUpdateBtn(menuId) {
+      let menuData = {
+          id : menuId,
+          store_id: $('#store_id'+menuId).val(),
+          menuName: $('#menuName'+menuId).val(),
+          menuType: $('#menuType'+menuId).val(),
+          menuPrice: $('#menuPrice'+menuId).val(),
+          menuDesc: $('#menuDesc'+menuId).val(),
+      };
+      console.log(menuData);
+      $.ajax({
+          type: "POST",
+          url: "/manager/modify",
+          data: JSON.stringify(menuData),
+          contentType: "application/json",
+          success: function (menuList) {
+              console.log(menuList)
+              location.reload();
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
+  }
+
+  //옵션 추가 버튼 클릭시 옵션 저장
+  function addOption(menuId) {
+
+      let btn = '#opBtn'+menuId;
+      let opName = $(btn).prevAll('input[type="text"]').first().val();
+      let opPrice = $(btn).prevAll('input[type="number"]').first().val();
+
+      let optionData = {
+          menu_id: menuId,
+          opName: opName,
+          opPrice: opPrice
+      };
+
+      $.ajax({
+            type: "POST",
+            url: "/manager/option",
+            data: JSON.stringify(optionData),
+            contentType: "application/json",
+            success: function (optionList) {
+                console.log(optionList);
+                location.reload();
+                btn.scrollIntoView();
+            },
+            error: function (e) {
+               console.log(e)
+            }
+      })
+  }
+
+  function deleteOption(menuOptionId) {
+    $.ajax({
+          url: "/manager/optionDelete/"+menuOptionId,
+          type: "delete",
+          success: function (str) {
+              console.log(str);
+              location.reload();
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
+  }
+
+  function deleteMenu(menuId) {
+  $.ajax({
+          url: "/manager/menuDelete/"+menuId,
+          type: "delete",
+          success: function (str) {
+              console.log(str);
+              location.reload();
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
+  }
+</script>
+</html>

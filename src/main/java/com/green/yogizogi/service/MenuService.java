@@ -12,6 +12,12 @@ import java.util.List;
 public interface MenuService {
     void MenuSave(MenuDTO menuDTO);
 
+    void menuDelete(Long menuId);
+
+    MenuDTO menuSelect(Long menuId);
+
+    void menuModify(MenuDTO menuDTO);
+
     default Menu DtoToEntity(MenuDTO menuDTO) {
         Menu menu = Menu.builder()
                 .menuName(menuDTO.getMenuName())

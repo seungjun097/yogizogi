@@ -25,34 +25,36 @@
                         <button class="btn-primary" id="detail_btn" onclick="showModal(this.getAttribute('value'))" name="detail_btn" th:attr="value=${menu.id}">Show detail</button>
                     </div>
                 </div>
-            </div>
-            <!--메뉴의 상세정보를 나타낼 모달창-->
-            <div th:class="'modal'+${menu.id}+' modal'" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">[[${menu.menuName}]]</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>[[${menu.menuDesc}]]</p>
-                            <h4>[[${menu.menuPrice}]]원</h4>
-                        </div>
-                        <div th:each="option:${menu.menuOptionDTOList}">
-                            <label>[[${option.opName}]]</label>
-                            <label>[[${option.opPrice}]]</label>
-                            <input type="radio" th:name="${option.opName}+${option.id}">
-                        </div>
-                        <div class="quantity">
-                            <button class="decrease">-</button>
-                            <input type="number" class="quantity-input" name="count" id="count" value="1">
-                            <button class="increase">+</button>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                <!--메뉴의 상세정보를 나타낼 모달창-->
+                <div th:class="'modal'+${menu.id}+' modal'" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">[[${menu.menuName}]]</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>[[${menu.menuDesc}]]</p>
+                                <h4>[[${menu.menuPrice}]]원</h4>
+                            </div>
+                            <div th:id="MenuOptionList+${menu.id}">
+                            <div th:each="option:${menu.menuOptionDTOList}">
+                                <label>[[${option.opName}]]</label>
+                                <label>[[${option.opPrice}]]</label>
+                                <input type="checkbox" th:name="${option.opName}+'%'+${option.id}" onclick="checkboxToggle(this)" value="false">
+                            </div>
+                            </div>
+                            <div class="quantity">
+                                <button class="decrease">-</button>
+                                <input type="number" class="quantity-input" name="count" th:id="count+${menu.id}" value="1">
+                                <button class="increase">+</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                <button type="button" onclick="addToCart(this.getAttribute('value'))" class="btn btn-primary" th:attr="value=${menu.id}">카트에 담기</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,7 +62,7 @@
         </div>
 
         <!-- 장바구니 -->
-        <aside id="cart">
+        <aside id="cart" style="width:1000px;">
             <div class="cart">
                 <h2>장바구니</h2>
                 <i class="far fa-trash-alt deliteAll" ></i>
@@ -81,7 +83,6 @@
                 </div>
 
                 <div class="order_btn_box">
-                    <div class="total">장바구니가 비었습니다.</div>
                     <button class="order_btn" disabled>주문하기</button>
                 </div>
             </div>
@@ -295,9 +296,10 @@
                     </div>
                 </div>
             </div>
+        </div>
     </th:block>
 </th:block>
-<script>
+<script th:inline="javascript">
     $(document).ready(function(){
 
         let storeId = [[${storeDTO.id}]];
@@ -413,6 +415,10 @@
                 }
             })
         })
+        //페이지 로드 때 카트 불러오기
+        let cartDTO = [[${cartDTO}]];
+        console.log(cartDTO);
+        cartList(cartDTO);
     })
 
     //단추의 수량조절 버튼
@@ -441,10 +447,97 @@
         }
       });
     });
+
     //메뉴를 눌렀을 때 모달창 뛰우기
     function showModal(menuId) {
         let menuModal = $(".modal"+menuId);
         menuModal.modal("show");
     }
+
+    //옵션메뉴 클릭 시 on/off변경
+   function checkboxToggle(checkbox) {
+        if(checkbox.checked) {
+            checkbox.value = "true";
+        }else{
+            checkbox.value = "false";
+        }
+    }
+
+    //버튼 클릭시 메뉴상세보기에서 카트에 담는 함수
+    function addToCart(menuId) {
+        let targetDiv = "#MenuOptionList" + menuId;
+        let cartMenuOptionDTOList = [];
+        $(targetDiv+ ' input[type="checkbox"]').each(function() {
+            let CartMenuOptionDTO = {
+                menuOptionId: $(this).attr('name').split('%').pop(),
+                menu_id: menuId,
+                checked: $(this).val()
+            };
+            cartMenuOptionDTOList.push(CartMenuOptionDTO);
+        })
+        let cartMenuDTO = {
+            menu_id: menuId,
+            count: $('#count'+menuId).val(),
+            cartMenuOptionDTOList: cartMenuOptionDTOList
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/store/cart",
+            data: JSON.stringify(cartMenuDTO),
+            contentType: "application/json",
+            success: function (cartDTO) {
+                console.log(cartDTO);
+                cartList(cartDTO);
+            },
+            error: function (e) {
+               console.log(e)
+            }
+        })
+    }
+
+    function cartList(cartDTO) {
+        let CartList = $(".cart_list ul");
+        let str = "";
+
+        if(cartDTO.cartMenuDTOList.length != 0) {
+            for (let cartMenu of cartDTO.cartMenuDTOList) {
+                str += "<li><h3>메뉴 : " + cartMenu.menu_name + "</h3>";
+                str += "<div>가격 : " + cartMenu.menu_price + "</div>";
+                str += "<div>수량 : " + cartMenu.count + " </div>";
+                str += "<div> 옵션  </div>";
+                    for (let option of cartMenu.cartMenuOptionDTOList) {
+                        str += "<div>" + option.menuOption_name + "</div>";
+                        str += "<div>" + option.menuOption_price + "</div>";
+                        if(option.checked) {
+                            str += "<input type='checkbox' value=" + option.checked + " checked/>"
+                        }else {
+                            str += "<input type='checkbox' value=" + option.checked + "/>";
+                        }
+                    };
+                str += "<div>합계 : " + cartMenu.menu_price * cartMenu.count + " 원</div>";
+                str += "<button class='cancel_btn' onclick='deleteCartMenu("+cartMenu.cartMenu_id+")'> ｘ </button></li>";
+            }
+        }else {
+            str += "장바구니가 비었습니다.";
+        }
+        CartList.html(str);
+    }
+
+    function deleteCartMenu(cartMenuId) {
+
+        $.ajax({
+            type: "DELETE",
+            url: "/store/cart/delete/"+cartMenuId,
+            contentType: "application/json",
+            success: function (cartDTO) {
+                cartList(cartDTO);
+            },
+            error: function (e) {
+               console.log(e)
+            }
+        })
+    }
+
 </script>
 </html>

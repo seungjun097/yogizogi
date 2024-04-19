@@ -1,9 +1,135 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
-        <h1>메인페이지</h1>
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="search-form w-form">
+                    <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65fc42eb24b1318121bba1a0" data-wf-element-id="3585398e-5210-5018-d628-be643e77115e">
+                        <div class="search-div"><label for="name" class="search_text">Mark</label><input class="search_bar w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"><input type="submit" data-wait="Please wait..." class="search_btn w-button" value="Search"></div>
+                    </form>
+                    <div class="w-form-done">
+                        <div>Thank you! Your submission has been received!</div>
+                    </div>
+                    <div class="w-form-fail">
+                        <div>Oops! Something went wrong while submitting the form.</div>
+                    </div>
+                </div>
+                <!--별점 표시 및 검색 기능 정리-->
+                <div class="category_list">
+                    <a id="w-node-_0ece2735-593d-af76-757f-12bcca9066b4-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Korean.png" loading="lazy" width="Auto" height="Auto" alt="" class="category_img">
+                        <div class="img_name">korean</div>
+                    </a>
+                    <a id="w-node-e7f47c87-b996-8abf-5fc0-be43453b9335-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sushi.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">sushi</div>
+                    </a>
+                    <a id="w-node-_240f2f58-210d-d638-7e9f-ebd7fdb3c006-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Thai.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">thai</div>
+                    </a>
+                    <a id="w-node-bb0a6397-18ee-2fe9-d02e-9321958097d1-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/American.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">hotdog</div>
+                    </a>
+                    <a id="w-node-_9f89a53c-4f06-2b82-b526-f7cf89f32bb2-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Italian.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">italian</div>
+                    </a>
+                    <a id="w-node-_9733c04d-0ffd-76de-329f-0421dbb81fc2-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Pizza.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">pizza</div>
+                    </a>
+                    <a id="w-node-_90f4e41e-2914-9d6c-5dad-9d862bd12df7-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Mexican.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">maxican</div>
+                    </a>
+                    <a id="w-node-f9454491-af22-d632-c5c6-baca0f6865a1-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Asian.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">raman</div>
+                    </a>
+                    <a id="w-node-d8768093-e038-cf83-7fee-9a665364092d-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/FastFood.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">fastfood</div>
+                    </a>
+                    <a id="w-node-e1eaf7f9-fa5a-d7f4-f58e-bd3173ad88f6-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/SoulFood.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">BBQ</div>
+                    </a>
+                    <a id="w-node-d70cbe9b-fc42-549c-30df-98251ec85640-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Smoothie.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">tea</div>
+                    </a>
+                    <a id="w-node-d8dc3e35-567b-f6a8-bbe1-4845bbda871b-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/StreetFood.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">street</div>
+                    </a>
+                    <a id="w-node-d30e77dc-cfbe-5eba-7708-152fc431a09f-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Wings.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">chicken</div>
+                    </a>
+                    <a id="w-node-_852f1e4a-5c17-5182-521e-0150ef51f47a-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sandwich.png" loading="lazy" alt="" class="category_img">
+                        <div class="img_name">sandwich</div>
+                    </a>
+                </div>
+                <div class="sortbydiv">
+                    <a href="#" class="search_btn w-button">distance</a>
+                    <a href="#" class="search_btn w-button">highest rate</a>
+                    <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div class="dropdown-toggle w-dropdown-toggle">
+                            <div class="icon w-icon-dropdown-toggle"></div>
+                            <div>delivery fee</div>
+                        </div>
+                        <nav class="w-dropdown-list">
+                            <a href="#" class="w-dropdown-link">Link 1</a>
+                            <a href="#" class="w-dropdown-link">Link 2</a>
+                            <a href="#" class="w-dropdown-link">Link 3</a>
+                        </nav>
+                    </div>
+                    <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div class="dropdown-toggle w-dropdown-toggle">
+                            <div class="w-icon-dropdown-toggle"></div>
+                            <div>price</div>
+                        </div>
+                        <nav class="w-dropdown-list">
+                            <a href="#" class="w-dropdown-link">Link 1</a>
+                            <a href="#" class="w-dropdown-link">Link 2</a>
+                            <a href="#" class="w-dropdown-link">Link 3</a>
+                        </nav>
+                    </div>
+                    <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div class="dropdown-toggle w-dropdown-toggle">
+                            <div class="w-icon-dropdown-toggle"></div>
+                            <div>rating</div>
+                        </div>
+                        <nav class="w-dropdown-list">
+                            <a href="#" class="w-dropdown-link">Link 1</a>
+                            <a href="#" class="w-dropdown-link">Link 2</a>
+                            <a href="#" class="w-dropdown-link">Link 3</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="menuwrap">
+                    <div th:each="dto:${result.dtoList}">
+                        <a th:href="'/store/detail2/'+${dto.id}" class="sysf-card sysf-card-box w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getImageURL()}|" alt="" class="sysf-card-image sysf-card-image-box">
+                            <div class="sysf-card-text-wrapper sysf-s-p-24">
+                                <div class="sysf-card-title">
+                                    <div class="div-block">
+                                        <h3 class="sysf-heading sysf-xs">[[${dto.storeName}]]</h3>
+                                        <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
+                                            <h3 class="sysf-heading sysf-xs">4.5</h3>
+                                        </div>
+                                    </div>
+                                    <p class="sysf-body-text sysf-m sysf-s-m-b-0">[[${dto.storeDes}]]</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="w-layout-blockcontainer container-2 w-container">
+                <section class="combine-section_clients3">
+                    <div class="combine-padding-global"></div>
+                </section>
+            </div>
+        </section>
     </th:block>
 </th:block>
 </html>
