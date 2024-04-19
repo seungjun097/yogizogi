@@ -4,6 +4,8 @@ import com.green.yogizogi.constant.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -25,4 +27,7 @@ public class Member {
     private String rating;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany
+    private List<Address> addresses;
 }
