@@ -120,7 +120,7 @@
         <section class="section">
             <div class="w-layout-blockcontainer container w-container">
                 <div class="menuwrap">
-                    <div th:each="dto:${storeList}">
+                    <div th:each="dto:${storeList.dtoList}">
                         <a th:href="'/store/detail2/'+${dto.id}" class="sysf-card sysf-card-box w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getImageURL()}|" alt="" class="sysf-card-image sysf-card-image-box">
                             <div class="sysf-card-text-wrapper sysf-s-p-24">
                                 <div class="sysf-card-title">

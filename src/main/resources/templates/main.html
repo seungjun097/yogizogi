@@ -17,8 +17,14 @@
                     </div>
                 </section>
                 <div class="search-form w-form">
-                    <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65fc42eb24b1318121bba1a0" data-wf-element-id="3585398e-5210-5018-d628-be643e77115e">
-                        <div class="search-div"><label for="name" class="search_text">Mark</label><input class="search_bar w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"><input type="submit" data-wait="Please wait..." class="search_btn w-button" value="Search"></div>
+                    <form action="/store/list" id="email-form" name="email-form" data-name="Email Form" method="get"
+                          data-wf-page-id="65fc42eb24b1318121bba1a0" data-wf-element-id="3585398e-5210-5018-d628-be643e77115e" >
+                        <div class="search-div">
+                            <label for="name" class="search_text">Mark</label>
+                            <input class="search_bar w-input" maxlength="256" name="keyword" data-name="Name" placeholder="" type="text" id="name">
+                            <input type="hidden" name="page" value="1">
+                            <input type="submit" data-wait="Please wait..." class="search_btn w-button" value="Search">
+                        </div>
                     </form>
                     <div class="w-form-done">
                         <div>Thank you! Your submission has been received!</div>
