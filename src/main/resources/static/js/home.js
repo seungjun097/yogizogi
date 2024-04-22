@@ -95,20 +95,50 @@ $(".category li").click(function(){
     // categoryType을 이용하여 주소 설정
     let enumType;
     switch (categoryType) {
-        case "CHINA_FOOD":
-            enumType = "CHINA_FOOD";
+        case "KOREAN":
+            enumType = "KOREAN";
             break;
 
-        case "KOREA_FOOD":
-            enumType = "KOREA_FOOD";
+        case "SUSHI":
+            enumType = "SUSHI";
             break;
 
-        case "JAPAN_FOOD":
-            enumType = "JAPAN_FOOD";
+        case "THAI":
+            enumType = "THAI";
             break;
 
-        case "USA_FOOD":
-            enumType = "USA_FOOD";
+        case "HOTDOT":
+            enumType = "HOTDOT";
+            break;
+        case "ITALIAN":
+            enumType = "ITALIAN";
+            break;
+        case "PIZZA":
+            enumType = "PIZZA";
+            break;
+        case "MAXICAN":
+            enumType = "MAXICAN";
+            break;
+        case "RAMAN":
+            enumType = "RAMAN";
+            break;
+        case "FASTFOOD":
+            enumType = "FASTFOOD";
+            break;
+        case "BBQ":
+            enumType = "BBQ";
+            break;
+        case "TEA":
+            enumType = "TEA";
+            break;
+        case "STREET":
+            enumType = "STREET";
+            break;
+        case "CHICKEN":
+            enumType = "CHICKEN";
+            break;
+        case "SANDWICH":
+            enumType = "SANDWICH";
             break;
         case "OTHER_CATEGORY":
             enumType = "OTHER_CATEGORY";

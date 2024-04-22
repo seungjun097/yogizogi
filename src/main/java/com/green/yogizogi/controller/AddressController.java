@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddressController {
 
-    @Autowired
     AddressService addressService;
 
     @PostMapping("/address/save")

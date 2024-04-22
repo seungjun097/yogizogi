@@ -71,13 +71,15 @@ public class StoreController {
         System.out.println(storeDTO.toString());
         Long storeId = storeService.StoreRegister(storeDTO);
         System.out.println("가게 등록 성공 : "+storeId);
-        return "/";
+        return "/main";
     }
 
     @GetMapping("/list")
     public String list(PageRequestDTO dto, Model model) {
-        model.addAttribute("result", storeService.storeListAll(dto));
-        return "/store/storelist";
+        System.out.println("검색컨트롤러작동");
+        System.out.println(dto.toString());
+        model.addAttribute("storeList", storeService.storeListAll(dto));
+        return "/store/maintest";
     }
 
     @GetMapping("/detail/{storeId}")
