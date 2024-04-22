@@ -51,7 +51,7 @@
                           <div class="option-input">
                             <input class="input-round w-input" placeholder="option name" type="text">
                             <input class="input-round w-input" placeholder="option price" type="number">
-                            <button class="btn-primary" th:id="'opBtn'+${menu.id}" th:onclick="'addOption('+ ${menu.id} +')'">추가</button>
+                            <a href="#" class="optionbtn w-button" th:id="'opBtn'+${menu.id}" th:onclick="'addOption('+ ${menu.id} +')'">추가</a>
                           </div>
                           <div class="option-list-box">
                             <div th:if="${menu.menuOptionDTOList.size() != 0}"
@@ -64,14 +64,14 @@
                                 <a href="#" class="xbutton-update w-button" th:onclick="'deleteOption(' + ${menuOption.id} + ')'">x</a>
                               </div>
                             </div>
+                            <div class="meu-update-btn">
+                              <a href="#" class="menu-update-btn w-inline-block">
+                                <div class="menu-update-btntext" th:onclick="'menuUpdateBtn(' + ${menu.id} + ')'">메뉴 수정</div>
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="meu-update-btn">
-                      <a href="#" class="menu-update-btn w-inline-block">
-                        <div class="menu-update-btntext" th:onclick="'menuUpdateBtn(' + ${menu.id} + ')'">메뉴 수정</div>
-                      </a>
                     </div>
                   </div>
                 </div>
@@ -112,12 +112,12 @@
                       <input class="input-round w-input" maxlength="256" placeholder="메뉴가격" type="number" name="menuPrice" id="menuPrice">
                       <div class="menu-update-price">상세설명</div>
                       <textarea placeholder="메뉴에 대해 설명해주세요." maxlength="5000" id="menuDesc" name="menuDesc" class="menu-update-textarea w-input"></textarea>
+                      <div class="meu-update-btn">
+                        <a href="#" class="menu-update-btn w-inline-block" onclick="submitForm()">
+                          <div class="menu-update-btntext">메뉴 등록</div>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <div class="meu-update-btn">
-                    <a href="#" class="menu-update-btn w-inline-block" onclick="submitForm()">
-                      <div class="menu-update-btntext">메뉴 등록</div>
-                    </a>
                   </div>
                 </div>
               </div>

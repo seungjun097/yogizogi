@@ -16,10 +16,18 @@
               <div id="modalMenuId" style="display: none;"></div>
               <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
               <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
-              <p class="menu-modal-body-paragraph" id="modalMenuDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare,</p>
+              <p class="menu-modal-body-paragraph" id="modalMenuDesc">menu Desc</p>
               <div class="menu-optionlist">
               </div>
               <div class="menu-modal-tp">
+                <div class="amoutadd">
+                  <div class="amount">amount</div>
+                  <div class="amountbtndiv">
+                    <a href="#" class="amountbtn left w-button" id="decrease">-</a>
+                      <input type="number" class="amountinput" name="count" value="1" />
+                    <a href="#" class="amountbtn right w-button" id="increase">+</a>
+                  </div>
+                </div>
                 <div class="text-block-4">총 주문금액 : <span id="menuTotalPrice"></span> 원</div>
               </div>
             </div>
@@ -320,6 +328,32 @@ const cartDTO = [[${cartDTO}]];
 
 $(document).ready(function() {
   cartShow();
+
+  $('#decrease').on('click', function() {
+        let quantityInput = $(this).next('.amountinput');
+        let currentValue = parseInt(quantityInput.val());
+        if (currentValue > 1) {
+          quantityInput.val(currentValue - 1);
+        } else {
+          alert('수량은 1보다 작을 수 없습니다!');
+        }
+  });
+
+  $('#increase').on('click', function() {
+        let quantityInput = $(this).prev('.amountinput');
+        let currentValue = parseInt(quantityInput.val());
+        quantityInput.val(currentValue + 1);
+  });
+
+  //수량 변경 시 총가격 변환 함수
+  $('.amountinput').on('change', function() {
+        let quantityInput = $(this);
+        if (quantityInput.val() < 1) {
+          alert('수량은 1보다 작을 수 없습니다!');
+          quantityInput.val(1);
+        }
+
+  });
 });
 
 
@@ -339,7 +373,11 @@ function cartShow(cartDTO) {
       str += "<div class='option-name'>option name</div>"
       str += "<div class='option-price'>option price</div>"
       str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
-      str += "</div><div>total price</div></div>"
+      str += "</div><div class='amoutadd'><div class='amount'>amount</div><div class='amountbtndiv'>"
+      str += "<a href='#' class='amountbtn left w-button' id='decrease'>-</a>"
+      str += "<input type='number' class='amountinput' name='count' value='1' />"
+      str += "<a href='#' class='amountbtn right w-button' id='increase'>+</a></div></div><div>total price</div></div>"
+
       $("#cartList").html(str);
    }
 };
