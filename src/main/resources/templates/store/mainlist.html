@@ -29,7 +29,7 @@
                 </div>
                 <!--별점 표시 및 검색 기능 정리-->
                 <div class="category_list">
-                    <a id="w-node-_0ece2735-593d-af76-757f-12bcca9066b4-21bba1a0" href="/store/KOREA_FOOD/${address1 }" class="img_block w-inline-block"><img src="/images/Korean.png" loading="lazy" width="Auto" height="Auto" alt="" class="category_img">
+                    <a id="w-node-_0ece2735-593d-af76-757f-12bcca9066b4-21bba1a0" data-category ='100' href="/store/KOREA_FOOD/${address1 }" class="img_block w-inline-block"><img src="/images/Korean.png" loading="lazy" width="Auto" height="Auto" alt="" class="category_img">
                         <div class="img_name">KOREA_FOOD</div>
                     </a>
                     <a id="w-node-e7f47c87-b996-8abf-5fc0-be43453b9335-21bba1a0" href="#" class="img_block w-inline-block"><img src="/images/Sushi.png" loading="lazy" alt="" class="category_img">
@@ -114,7 +114,7 @@
         <section class="section">
             <div class="w-layout-blockcontainer container w-container">
                 <div class="menuwrap">
-                    <div th:each="dto:${result.dtoList}">
+                    <div th:each="dto:${storeList}">
                         <a th:href="'/store/detail2/'+${dto.id}" class="sysf-card sysf-card-box w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getImageURL()}|" alt="" class="sysf-card-image sysf-card-image-box">
                             <div class="sysf-card-text-wrapper sysf-s-p-24">
                                 <div class="sysf-card-title">
