@@ -14,6 +14,7 @@
             <img src="" loading="lazy" alt="" class="menu-modal-img" id="modalMenuImg">
             <div id="w-node-_7fa41d3a-af4d-8c97-8334-e684d10f9587-0ae922c6" class="menu-modal-body-detail">
               <div id="modalMenuId" style="display: none;"></div>
+              <div id="modalMenuIndex" style="display: none;"></div>
               <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
               <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
               <p class="menu-modal-body-paragraph" id="modalMenuDesc">menu Desc</p>
@@ -328,31 +329,32 @@ const cartDTO = [[${cartDTO}]];
 
 $(document).ready(function() {
   cartShow();
-
   $('#decrease').on('click', function() {
-        let quantityInput = $(this).next('.amountinput');
-        let currentValue = parseInt(quantityInput.val());
-        if (currentValue > 1) {
-          quantityInput.val(currentValue - 1);
-        } else {
-          alert('수량은 1보다 작을 수 없습니다!');
-        }
+    let quantityInput = $(this).next('.amountinput');
+    let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
   });
 
   $('#increase').on('click', function() {
-        let quantityInput = $(this).prev('.amountinput');
-        let currentValue = parseInt(quantityInput.val());
-        quantityInput.val(currentValue + 1);
+      let quantityInput = $(this).prev('.amountinput');
+      let currentValue = parseInt(quantityInput.val());
+      quantityInput.val(currentValue + 1);
   });
 
   //수량 변경 시 총가격 변환 함수
   $('.amountinput').on('change', function() {
-        let quantityInput = $(this);
-        if (quantityInput.val() < 1) {
-          alert('수량은 1보다 작을 수 없습니다!');
-          quantityInput.val(1);
-        }
-
+      let quantityInput = $(this);
+      if (quantityInput.val() < 1) {
+        alert('수량은 1보다 작을 수 없습니다!');
+        quantityInput.val(1);
+      }
+      let menuIndex = $("#modalMenuIndex").val();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
   });
 });
 
@@ -375,7 +377,7 @@ function cartShow(cartDTO) {
       str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
       str += "</div><div class='amoutadd'><div class='amount'>amount</div><div class='amountbtndiv'>"
       str += "<a href='#' class='amountbtn left w-button' id='decrease'>-</a>"
-      str += "<input type='number' class='amountinput' name='count' value='1' />"
+      str += "<input type='number' class='amountinput' name='count' value='1'/>"
       str += "<a href='#' class='amountbtn right w-button' id='increase'>+</a></div></div><div>total price</div></div>"
 
       $("#cartList").html(str);
@@ -386,6 +388,7 @@ function cartShow(cartDTO) {
   function openModal(menuIndex) {
     const menuDTO = storeDTO.menuDTOList[menuIndex];
 
+    $('#modalMenuIndex').val(menuIndex);
     $('#modalMenuImg').attr("src", "/display?fileName="+menuDTO.imageURL);
     $('#modalMenuName').html(menuDTO.menuName);
     $('#modalMenuPrice').html(menuDTO.menuPrice+" 원");
@@ -405,6 +408,26 @@ function cartShow(cartDTO) {
     }
     $(".menu-optionlist").html(str);
     modalWindow.show();
+  }
+
+  //옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function totalAmountShow(menuIndex) {
+    const menuDTO = storeDTO.menuDTOList[menuIndex];
+    let totalPrice = 0;
+    let menuPrice = menuDTO.menuPrice;
+    totalPrice += parseInt(menuPrice);
+    for (int i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+      let optionId = menuDTO.menuOptionDTOList[i].id;
+      let checkBox = $('#opCheck'+optionId);
+      let opChecked = checkBox.prop('checked');
+      let opPrice = checkBox.val();
+      if(opChecked) {
+        totalPrice += parseInt(opPrice);
+      }
+    }
+    let amount = $(.amountinput).val();
+    totalPrice = totalPrice*parseInt(amount);
+    $('#menuTotalPrice').html(newPrice);
   }
 
   //모달창을 닫는 함수

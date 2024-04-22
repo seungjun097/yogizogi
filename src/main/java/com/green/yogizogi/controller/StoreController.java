@@ -58,7 +58,7 @@ public class StoreController {
     @GetMapping("/register")
     public String StoreUpdate(@AuthenticationPrincipal User user, Model model) {
         if(user==null) {
-            return "main";
+            return "redirect:/";
         }else {
             Member member = memberService.userFindEmail(user.getUsername());
             model.addAttribute("member_id", member.getId());
@@ -71,7 +71,7 @@ public class StoreController {
         System.out.println(storeDTO.toString());
         Long storeId = storeService.StoreRegister(storeDTO);
         System.out.println("가게 등록 성공 : "+storeId);
-        return "/";
+        return "redirect:/";
     }
 
     @GetMapping("/list")

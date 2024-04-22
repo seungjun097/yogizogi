@@ -16,5 +16,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByStore(Store store); //기본키이기 때문에 메소드 추가
     
     //리뷰삭제
-    void deleteByMember(Member member); //리뷰만 삭제할 수 있도록 메소드 하나
+    void deleteByMember(Member member);//리뷰만 삭제할 수 있도록 메소드 하나
 }
