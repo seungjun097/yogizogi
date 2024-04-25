@@ -328,12 +328,18 @@ const modalWindow = $(".menu-modal-wrapper");
 const cartDTO = [[${cartDTO}]];
 
 $(document).ready(function() {
-  cartShow();
-  $('#decrease').on('click', function() {
+  console.log(cartDTO);
+  cartShow(cartDTO);
+});
+
+$('#decrease').on('click', function() {
     let quantityInput = $(this).next('.amountinput');
     let currentValue = parseInt(quantityInput.val());
     if (currentValue > 1) {
       quantityInput.val(currentValue - 1);
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
     } else {
       alert('수량은 1보다 작을 수 없습니다!');
     }
@@ -343,6 +349,9 @@ $(document).ready(function() {
       let quantityInput = $(this).prev('.amountinput');
       let currentValue = parseInt(quantityInput.val());
       quantityInput.val(currentValue + 1);
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
   });
 
   //수량 변경 시 총가격 변환 함수
@@ -352,12 +361,10 @@ $(document).ready(function() {
         alert('수량은 1보다 작을 수 없습니다!');
         quantityInput.val(1);
       }
-      let menuIndex = $("#modalMenuIndex").val();
+      let menuIndex = $("#modalMenuIndex").html();
       if(menuIndex == null) { menuIndex = 0 };
       totalAmountShow(menuIndex);
   });
-});
-
 
 //cartDTO의 정보를 뿌리는 함수
 function cartShow(cartDTO) {
@@ -365,21 +372,29 @@ function cartShow(cartDTO) {
       $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
    }else {
       let str = "";
-      str += "<div class='cartmenu'><div class='menuhedingwrap'>"
-      str += "<h4 class='cartmenuheading'>menuName</h4>"
-      str += "<a href='#' class='button w-button'>x</a></div>"
-      str += "<div>menuPrice</div>"
-      str += "<div class='cart-menu-optionlist'>"
-      str += "<div class='menu-detail-option'>"
-      str += "<div class='option-left'>"
-      str += "<div class='option-name'>option name</div>"
-      str += "<div class='option-price'>option price</div>"
-      str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
-      str += "</div><div class='amoutadd'><div class='amount'>amount</div><div class='amountbtndiv'>"
-      str += "<a href='#' class='amountbtn left w-button' id='decrease'>-</a>"
-      str += "<input type='number' class='amountinput' name='count' value='1'/>"
-      str += "<a href='#' class='amountbtn right w-button' id='increase'>+</a></div></div><div>total price</div></div>"
-
+      for(let cartMenu of cartDTO.cartMenuDTOList) {
+        str += "<div class='cartmenu'><div class='menuhedingwrap'>"
+        str += "<div name ='cartMenuId'>"+cartMenu.cartMenu_id+"</div>"
+        str += "<h4 class='cartmenuheading'>"+cartMenu.menu_name+"</h4>"
+        str += "<a href='#' class='button w-button' onclick='cartMenuDel("+cartMenu.cartMenu_id+")'>x</a></div>"
+        str += "<div>"+cartMenu.menu_price+"</div>"
+        str += "<div class='cart-menu-optionlist'>"
+        for(let cartMenuOp of cartMenu.cartMenuOptionDTOList) {
+          str += "<div class='menu-detail-option'>"
+          str += "<div class='option-left'>"
+          str += "<div class='option-name'>"+cartMenuOp.menuOption_name+"</div>"
+          str += "<div class='option-price'>"+cartMenuOp.menuOption_price+"</div>"
+          if(cartMenuOp.checked) {
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' checked></div></div>"
+          }else {
+            str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
+          }
+        }
+        str += "</div><div class='amoutadd'><div class='amount'>총 개수 : "+cartMenu.count+"</div><div class='amountbtndiv'>"
+        str += "<a href='#' class='amountbtn left w-button' id='decrease'>-</a>"
+        str += "<input type='number' class='amountinput' name='count' value='1'/>"
+        str += "<a href='#' class='amountbtn right w-button' id='increase'>+</a></div></div><div>total price</div></div>"
+      }
       $("#cartList").html(str);
    }
 };
@@ -388,7 +403,8 @@ function cartShow(cartDTO) {
   function openModal(menuIndex) {
     const menuDTO = storeDTO.menuDTOList[menuIndex];
 
-    $('#modalMenuIndex').val(menuIndex);
+    $('.amountinput').val(1);
+    $('#modalMenuIndex').html(menuIndex);
     $('#modalMenuImg').attr("src", "/display?fileName="+menuDTO.imageURL);
     $('#modalMenuName').html(menuDTO.menuName);
     $('#modalMenuPrice').html(menuDTO.menuPrice+" 원");
@@ -416,7 +432,7 @@ function cartShow(cartDTO) {
     let totalPrice = 0;
     let menuPrice = menuDTO.menuPrice;
     totalPrice += parseInt(menuPrice);
-    for (int i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+    for (let i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
       let optionId = menuDTO.menuOptionDTOList[i].id;
       let checkBox = $('#opCheck'+optionId);
       let opChecked = checkBox.prop('checked');
@@ -425,9 +441,9 @@ function cartShow(cartDTO) {
         totalPrice += parseInt(opPrice);
       }
     }
-    let amount = $(.amountinput).val();
+    let amount = $('.amountinput').val();
     totalPrice = totalPrice*parseInt(amount);
-    $('#menuTotalPrice').html(newPrice);
+    $('#menuTotalPrice').html(totalPrice);
   }
 
   //모달창을 닫는 함수
@@ -436,51 +452,73 @@ function cartShow(cartDTO) {
   }
 
   //옵션 체크시 총가격을 바꾸는 함수
-  function optionCheck(optionId) {
-    let checkBox = $('#opCheck'+optionId);
-    let opChecked = checkBox.prop('checked');
-    let opPrice = checkBox.val();
-    let totalPrice = $('#menuTotalPrice').html();
-    if(opChecked) {
-       let newPrice = parseInt(totalPrice)+parseInt(opPrice);
-       $('#menuTotalPrice').html(newPrice);
-    }else{
-       let newPrice = parseInt(totalPrice)-parseInt(opPrice);
-       $('#menuTotalPrice').html(newPrice);
-    }
+  function optionCheck() {
+    let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
   }
 
   //버튼 클릭시 메뉴를 카트에 담는 함수
   function addToCart() {
-        let cartMenuOptionDTOList = [];
+      let menuIndex = $("#modalMenuIndex").html();
+      const menuDTO = storeDTO.menuDTOList[menuIndex];
+      let menuId = menuDTO.id;
+      let cartMenuOptionDTOList = [];
 
-        $(targetDiv+ ' input[type="checkbox"]').each(function() {
-            let CartMenuOptionDTO = {
-                menuOptionId: $(this).attr('name').split('%').pop(),
-                menu_id: menuId,
-                checked: $(this).val()
-            };
-            cartMenuOptionDTOList.push(CartMenuOptionDTO);
-        })
-        let cartMenuDTO = {
-            menu_id: menuId,
-            count: $('#count'+menuId).val(),
-            cartMenuOptionDTOList: cartMenuOptionDTOList
-        }
+      for (let i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+        let optionId = menuDTO.menuOptionDTOList[i].id;
+        let checkBox = $('#opCheck'+optionId);
+        let opChecked = checkBox.prop('checked');
+        let CartMenuOptionDTO = {
+              menuOptionId: optionId,
+              menu_id: menuId,
+              checked: opChecked
+        };
+        cartMenuOptionDTOList.push(CartMenuOptionDTO);
+      }
 
-        $.ajax({
-            type: "POST",
-            url: "/store/cart",
-            data: JSON.stringify(cartMenuDTO),
-            contentType: "application/json",
-            success: function (cartDTO) {
-                console.log(cartDTO);
-                cartList(cartDTO);
-            },
-            error: function (e) {
-               console.log(e)
-            }
-        })
+      let cartMenuDTO = {
+          menu_id: menuId,
+          count: $('.amountinput').val(),
+          cartMenuOptionDTOList: cartMenuOptionDTOList
+      }
+
+      $.ajax({
+          type: "POST",
+          url: "/store/cart",
+          data: JSON.stringify(cartMenuDTO),
+          contentType: "application/json",
+          success: function (cartDTO) {
+              console.log(cartDTO);
+              cartShow(cartDTO);
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
     }
+
+  //카트메뉴 삭제 버튼 함수
+  function cartMenuDel(cartMenuId) {
+
+  let data = {
+    cartMenuId: cartMenuId
+  };
+
+  $.ajax({
+    type: 'POST',
+    url: 'cart/delete', // 서버 URL을 입력해야 합니다.
+    data: JSON.stringify(data),
+    contentType: 'application/json',
+    success: function(response) {
+      // 성공 시 실행할 코드
+      console.log('전송 성공');
+    },
+    error: function(error) {
+      // 실패 시 실행할 코드
+      console.error('전송 실패');
+    }
+  });
+  }
 </script>
 </html>
