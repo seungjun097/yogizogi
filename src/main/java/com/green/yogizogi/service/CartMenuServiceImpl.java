@@ -1,5 +1,6 @@
 package com.green.yogizogi.service;
 
+import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.CartMenuOptionDTO;
 import com.green.yogizogi.entity.*;
@@ -19,11 +20,12 @@ public class CartMenuServiceImpl implements CartMenuService{
     private final MemberRepository memberRepository;
     private final MenuRepository menuRepository;
     private final MenuOptionRepository menuOptionRepository;
+    private final CartService cartService;
 
     //email과 cartmenu dto 받아서 카트 메뉴 등록하는 과정
     @Override
     @Transactional
-    public Long CartMenuRegister(String email, CartMenuDTO cartMenuDTO) {
+    public void CartMenuRegister(String email, CartMenuDTO cartMenuDTO) {
         Member member = memberRepository.findByEmail(email);
         Cart cart;
         //해당 멤버에게 카트가 없으면 카트를 만듬
@@ -59,14 +61,11 @@ public class CartMenuServiceImpl implements CartMenuService{
            cartMenu.addCount(cartMenuDTO.getCount());
            cartMenuRepository.save(cartMenu);
         }
-        return cart.getId();
     }
 
     @Override
-    public Long cartMenuDelete(Long cartMenuId) {
-        CartMenu cartMenu = cartMenuRepository.findById(cartMenuId).get();
-        Long cartId = cartMenu.getCart().getId();
-        cartMenuRepository.delete(cartMenu);
-        return cartId;
+    @Transactional
+    public void cartMenuDelete(Long cartMenuId) {
+        cartMenuRepository.deleteById(cartMenuId);
     }
 }

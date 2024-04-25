@@ -97,24 +97,6 @@ public class StoreController {
         return "store/storedetail";
     }
 
-    //카트 및 카트 메뉴 생성
-    @PostMapping("/cart")
-    public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
-                                                     @AuthenticationPrincipal User user) {
-        String email = user.getUsername();
-        Long cartId = cartMenuService.CartMenuRegister(email, cartMenuDTO);
-        //여기까지 저장은 되는데
-        CartDTO cartDTO = cartService.cartFindById(cartId);
-        return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/cart/delete/{cartMenuId}")
-    public @ResponseBody ResponseEntity cartMenuDelete(@PathVariable("cartMenuId") Long cartMenuId) {
-        Long cartId = cartMenuService.cartMenuDelete(cartMenuId);
-        CartDTO cartDTO = cartService.cartFindById(cartId);
-        return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
-    }
-
     @GetMapping("/detail2/{storeId}")
     @Transactional
     public String storeDetatilview2(@PathVariable("storeId") Long storeId,

@@ -306,6 +306,11 @@
               </div>-->
 
             </div>
+            <div class="cartamount">
+              <div class="cartline"></div>
+              <div class="delivery-fee">+ delivery fee $</div>
+              <div class="amounttext">total price $</div>
+            </div>
             <div class="cartbtnwrap">
               <a href="#" class="orderbutton w-inline-block">
                 <div class="text-block-3">Order</div>
@@ -330,6 +335,11 @@ const cartDTO = [[${cartDTO}]];
 $(document).ready(function() {
   console.log(cartDTO);
   cartShow(cartDTO);
+  if(cartDTO != null) {
+    for(let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
+      cartAmountShow(i);
+    }
+  }
 });
 
 $('#decrease').on('click', function() {
@@ -372,12 +382,13 @@ function cartShow(cartDTO) {
       $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
    }else {
       let str = "";
-      for(let cartMenu of cartDTO.cartMenuDTOList) {
+      for(let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
+        let cartMenu = cartDTO.cartMenuDTOList[i];
         str += "<div class='cartmenu'><div class='menuhedingwrap'>"
-        str += "<div name ='cartMenuId'>"+cartMenu.cartMenu_id+"</div>"
+        str += "<div name ='cartMenuId'></div>"
         str += "<h4 class='cartmenuheading'>"+cartMenu.menu_name+"</h4>"
         str += "<a href='#' class='button w-button' onclick='cartMenuDel("+cartMenu.cartMenu_id+")'>x</a></div>"
-        str += "<div>"+cartMenu.menu_price+"</div>"
+        str += "<div>메뉴 가격 : "+cartMenu.menu_price+"</div>"
         str += "<div class='cart-menu-optionlist'>"
         for(let cartMenuOp of cartMenu.cartMenuOptionDTOList) {
           str += "<div class='menu-detail-option'>"
@@ -385,15 +396,18 @@ function cartShow(cartDTO) {
           str += "<div class='option-name'>"+cartMenuOp.menuOption_name+"</div>"
           str += "<div class='option-price'>"+cartMenuOp.menuOption_price+"</div>"
           if(cartMenuOp.checked) {
-            str += "</div><div class='checkbox w-embed'><input type='checkbox' checked></div></div>"
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' "
+            str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' checked /></div></div>"
           }else {
-            str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' "
+            str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' /></div></div>"
           }
         }
         str += "</div><div class='amoutadd'><div class='amount'>총 개수 : "+cartMenu.count+"</div><div class='amountbtndiv'>"
-        str += "<a href='#' class='amountbtn left w-button' id='decrease'>-</a>"
-        str += "<input type='number' class='amountinput' name='count' value='1'/>"
-        str += "<a href='#' class='amountbtn right w-button' id='increase'>+</a></div></div><div>total price</div></div>"
+        str += "<a href='#' class='amountbtn left w-button' onclick='cartDecrease("+i+")'-</a>"
+        str += "<input type='number' class='amountinput' id='Cartamountinput"+i+"' name='count' value='1'/>"
+        str += "<a href='#' class='amountbtn right w-button' onclick='cartIncrease("+i+")'>+</a></div>"
+        str += "</div><div id='CartMenuTp"+i+"'>total price</div></div>"
       }
       $("#cartList").html(str);
    }
@@ -485,7 +499,7 @@ function cartShow(cartDTO) {
 
       $.ajax({
           type: "POST",
-          url: "/store/cart",
+          url: "/cart/insert",
           data: JSON.stringify(cartMenuDTO),
           contentType: "application/json",
           success: function (cartDTO) {
@@ -501,24 +515,65 @@ function cartShow(cartDTO) {
   //카트메뉴 삭제 버튼 함수
   function cartMenuDel(cartMenuId) {
 
-  let data = {
+  var data = {
     cartMenuId: cartMenuId
   };
 
   $.ajax({
     type: 'POST',
-    url: 'cart/delete', // 서버 URL을 입력해야 합니다.
+    url: '/cart/delete', // 서버 URL을 입력해야 합니다.
     data: JSON.stringify(data),
-    contentType: 'application/json',
-    success: function(response) {
-      // 성공 시 실행할 코드
-      console.log('전송 성공');
+    contentType: "application/json",
+    dataType: "json",
+    success: function(cartDTO) {
+    console.log("삭제 성공");
+    cartShow(cartDTO);
     },
     error: function(error) {
-      // 실패 시 실행할 코드
-      console.error('전송 실패');
+      console.error('삭제 실패');
     }
   });
   }
+
+  //카트에 담긴 옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function cartAmountShow(index) {
+    let CartMenuDTO = cartDTO.cartMenuDTOList[index];
+    let totalPrice = 0;
+    let menuPrice = CartMenuDTO.menu_price;
+    totalPrice += parseInt(menuPrice);
+    console.log(totalPrice);
+    for (let i = 0; i < CartMenuDTO.cartMenuOptionDTOList.length; i++) {
+      let ctOptionId = CartMenuDTO.cartMenuOptionDTOList[i].menuOptionId;
+      let checkBox = $('#ctOpCheck'+ctOptionId);
+      let opChecked = checkBox.prop('checked');
+      let opPrice = checkBox.val();
+      if(opChecked) {
+        totalPrice += parseInt(opPrice);
+      }
+    }
+    let amount = $('#Cartamountinput'+index).val();
+    totalPrice = totalPrice*parseInt(amount);
+    $('#CartMenuTp'+index).html(totalPrice);
+  }
+
+   //카트 수량 변경 버튼
+  function cartIncrease(index) {
+    quantityInput = $('#Cartamountinput'+index);
+    let currentValue = parseInt(quantityInput.val());
+    quantityInput.val(currentValue + 1);
+    cartAmountShow(index);
+  }
+
+  function cartDecrease(index) {
+  quantityInput = $('#Cartamountinput'+index);
+  let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
+    cartAmountShow(index);
+  }
+
 </script>
 </html>

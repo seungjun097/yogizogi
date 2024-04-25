@@ -17,7 +17,7 @@ public class CartMenuOption {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "cartMenuOption_seq")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cartmenu_id")
     private CartMenu cartMenu;
 
