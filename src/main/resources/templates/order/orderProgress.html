@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="sysf-modal-wrapper">
+    <div class="sysf-container">
+        <div class="sysf-wrapper-m">
+            <div class="sysf-modal">
+                <div class="sysf-modal-header">
+                    <div class="sysf-modal-header-title">address</div>
+                    <div class="material-icons-2 sysf-icon-close closeBtn">close</div>
+                </div>
+                <div class="sysf-modal-content">
+                    <div class="w-form">
+                        <div id="email-form" name="email-form" data-name="Email Form" data-wf-page-id="660faa92d6efb355e798c4d1" data-wf-element-id="ebf8a01b-2cf1-1db5-a43f-d7aec22b847e">
+                            <label class="modal_label">이름</label>
+                            <input class="modal_input w-input" type="text" name="name" id="name">
+                            <label class="modal_label">연락처</label>
+                            <input class="modal_input w-input" type="text" name="phone" id="phone">
+                            <label class="modal_label">우편주소</label>
+                            <input class="modal_input w-input" type="text" name="storeAddress1" id="storeAddress1">
+                            <a href="#" class="sysf-button sysf-small sysf-outline w-inline-block" onclick="sample6_execDaumPostcode()">
+                                <div class="sysf-button-text closeBtn">우편번호 찾기</div>
+                            </a>
+                            <label class="modal_label">도로명주소</label>
+                            <input class="modal_input w-input" type="text" name="storeAddress2" id="storeAddress2">
+                            <label class="modal_label">상세주소</label>
+                            <input class="modal_input w-input" type="text" name="storeAddress3" id="storeAddress3">
+                        </div>
+                    </div>
+                    <div class="sysf-modal-buttons-wrapper">
+                        <a href="#" class="sysf-button sysf-small sysf-outline w-inline-block">
+                            <div class="sysf-button-text closeBtn">닫기</div>
+                        </a>
+                        <a href="#" class="sysf-button sysf-small sysf-s-m-l-8 w-inline-block">
+                            <div class="sysf-button-text" id="addAddressButton">주소 추가</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="adress_div">
+                    <div class="address_select">
+                        <div class="address_text">배송지 선택</div>
+                        <div class="adress_name_btn">
+                            <div class="select-form w-form">
+                                <form id="wf-form-Select-Form" name="wf-form-Select-Form" data-name="Select Form" method="get" class="sysf-form" data-wf-page-id="660faa92d6efb355e798c4d1" data-wf-element-id="527459af-92ed-2cb4-a252-e87669ece1b6"><select id="select-1" name="select-1" data-name="select-1" class="sysf-select sysf-medium w-select">
+                                    <option value="">Select one...</option>
+                                    <option value="First">First Choice</option>
+                                    <option value="Second">Second Choice</option>
+                                    <option value="Third">Third Choice</option>
+                                </select></form>
+                            </div>
+                            <a href="#" class="adress_insert_btn w-button">주소 추가하기</a>
+                        </div>
+                    </div>
+                    <div class="address_show">
+                        <div class="address_current">order adderss</div>
+                        <div class="name_phone_text">
+                            <div class="name_text">name</div>
+                            <div class="phone_text">010-1234-5678</div>
+                        </div>
+                        <div class="adress_detail">korea ulsan north .......................</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="orderlist">
+                    <div class="orderlist_top_menu">
+                        <div class="top_text">StoreName 1 </div>
+                    </div>
+                    <div class="orderlist_show">
+                        <div class="order_sumery"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="ordermenuimg">
+                            <div class="div-block-9">
+                                <h3 class="orderlist_menutext">menu name</h3>
+                                <div class="order_option_price">option1 price</div>
+                                <div class="order_option_price">option1 price</div>
+                                <div class="order_option_price">option1 price</div>
+                                <div class="div-block-10">
+                                    <div class="text_price">price</div>
+                                    <div class="text_blank"> / </div>
+                                    <div class="text_count">count</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charge_show">
+                        <div class="price_summery">
+                            <div class="price_text_number">
+                                <div class="price_text">total menu price</div>
+                                <div class="order_price">20000$</div>
+                            </div>
+                            <div class="price_text_number">
+                                <div class="price_text">discount</div>
+                                <div class="order_price">0$</div>
+                            </div>
+                            <div class="price_text_number">
+                                <div class="price_text">delivery fee</div>
+                                <div class="order_price">3000$</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order_totalprice">
+                        <div class="price_text_number">
+                            <div class="price_text">order price</div>
+                            <div class="order_price">20000$</div>
+                        </div>
+                    </div>
+                    <div class="order_btrn">
+                        <a href="#" class="order_bigbtn w-button">order</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</th:block>
+</body>
+
+<script th:inline="javascript">
+    const modalWindow = $(".sysf-modal-wrapper");
+    let cartDTO = [[${cartDTO}]];
+
+    $(document).ready(function() {
+        console.log(cartDTO);
+    })
+
+    //버튼 클릭시 모달 창 열림
+    $('.adress_insert_btn').on('click', function() {
+        modalWindow.show();
+    })
+
+    //버튼 클릭 시 모달 창 닫힘
+    $('.closeBtn').on('click', function() {
+        modalWindow.hide();
+    })
+
+    function sample6_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                    document.getElementById("storeAddress3").value = extraAddr;
+                } else {
+                    document.getElementById("storeAddress3").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('storeAddress1').value = data.zonecode;
+                document.getElementById("storeAddress2").value = addr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("storeAddress3").focus();
+            }
+        }).open();
+    }
+
+    $('#addAddressButton').click(function() {
+            // 회원 입력 데이터 수집
+            let addressData = {
+                storeAddress1 : $('#storeAddress1').val(),
+                storeAddress2 : $('#storeAddress2').val(),
+                storeAddress3 : $('#storeAddress3').val()
+            };
+            console.log(addressData);
+
+            // Ajax 요청 보내기
+            $.ajax({
+                type: 'POST',
+                url: '/address/save', // 주소 저장을 처리하는 서버 엔드포인트
+                data: JSON.stringify(addressData), // 데이터를 JSON 형식으로 변환
+                contentType: 'application/json', // Content-Type을 application/json으로 설정
+                success: function(response) {
+                    // 주소 추가 성공 시 처리
+                    alert('주소가 성공적으로 저장되었습니다.');
+                    // 저장된 주소 목록을 화면에 업데이트
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    // 주소 저장 실패 시 처리
+                    alert('주소 저장에 실패하였습니다. 에러 메시지: ' + error);
+                }
+            });
+    });
+
+</script>
+</html>

@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AddressDTO {
     private Long address_id;
+    private String name;
+    private String phone;
     private String storeAddress1;
     private String storeAddress2;
     private String storeAddress3;

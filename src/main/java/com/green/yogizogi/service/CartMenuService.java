@@ -7,4 +7,8 @@ public interface CartMenuService {
     void CartMenuRegister(String email, CartMenuDTO cartMenuDTO);
 
     void cartMenuDelete(Long cartMenuId);
+
+    void cartMenuCountUpdate(Long cartMenuId, int count);
+
+    void cartMenuOptionChecked(Long cartOptionId, boolean checked);
 }

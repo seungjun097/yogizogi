@@ -2,6 +2,7 @@ package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
+import com.green.yogizogi.dto.CartMenuOptionDTO;
 import com.green.yogizogi.service.CartMenuService;
 import com.green.yogizogi.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -9,15 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/cart")
 public class CartController {
@@ -29,7 +26,7 @@ public class CartController {
                                                      @AuthenticationPrincipal User user) {
         String email = user.getUsername();
         cartMenuService.CartMenuRegister(email, cartMenuDTO);
-        //여기까지 저장은 되는데
+        //여기까지 저장은 되는데 return할 때 왜 업데이트 되지 않은 카트를 리턴할까?
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
     }
@@ -43,5 +40,22 @@ public class CartController {
         String email = user.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/countUpdate")
+    public @ResponseBody ResponseEntity cartCountUpdate(@RequestBody CartMenuDTO cartMenuDTO) {
+        Long cartMenuId = cartMenuDTO.getCartMenu_id();
+        int count = cartMenuDTO.getCount();
+        cartMenuService.cartMenuCountUpdate(cartMenuId, count);
+        return new ResponseEntity<String>("카운트 변경 성공", HttpStatus.OK);
+    }
+
+    @PostMapping("/optionChecked")
+    public @ResponseBody ResponseEntity optionChecked(@RequestBody CartMenuOptionDTO cartMenuOptionDTO) {
+        Long menuOptionId = cartMenuOptionDTO.getMenuOptionId();
+        boolean checked = cartMenuOptionDTO.isChecked();
+        System.out.println("카트체크변경 : "+menuOptionId+"체크여부 : "+checked);
+        cartMenuService.cartMenuOptionChecked(menuOptionId, checked);
+        return new ResponseEntity<String>("체크 변경 성공", HttpStatus.OK);
     }
 }

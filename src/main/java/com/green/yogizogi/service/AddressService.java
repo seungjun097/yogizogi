@@ -17,6 +17,8 @@ public interface AddressService {
 
     default Address dtoToEntity(AddressDTO addressDTO){
         Address address = Address.builder()
+                .phone(addressDTO.getPhone())
+                .name(addressDTO.getName())
                 .address1(addressDTO.getStoreAddress1())
                 .address2(addressDTO.getStoreAddress2())
                 .address3(addressDTO.getStoreAddress3())
@@ -26,6 +28,9 @@ public interface AddressService {
 
     default AddressDTO entityToDto(Address address) {
         AddressDTO addressDTO = AddressDTO.builder()
+                .name(address.getName())
+                .phone(address.getPhone())
+                .address_id(address.getId())
                 .storeAddress1(address.getAddress1())
                 .storeAddress2(address.getAddress2())
                 .storeAddress3(address.getAddress3())

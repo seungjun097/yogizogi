@@ -34,13 +34,7 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public Long register(AddressDTO addressDTO) {
-        Address address = Address.builder()
-                .address1(addressDTO.getStoreAddress1())
-                .address2(addressDTO.getStoreAddress2())
-                .address3(addressDTO.getStoreAddress3())
-                .build();
-
-        Address savedAddress = addressRepository.save(address);
+        Address savedAddress = addressRepository.save(dtoToEntity(addressDTO));
         return savedAddress.getId();
     }
 

@@ -43,6 +43,9 @@ public class CartMenuServiceImpl implements CartMenuService{
             CartMenu cartMenu = CartMenu.builder()
                     .cart(cart)
                     .menu(menu)
+                    .path(menu.getPath())
+                    .uuid(menu.getUuid())
+                    .imgName(menu.getImgName())
                     .count(cartMenuDTO.getCount())
                     .build();
             cartMenuRepository.save(cartMenu);
@@ -68,4 +71,23 @@ public class CartMenuServiceImpl implements CartMenuService{
     public void cartMenuDelete(Long cartMenuId) {
         cartMenuRepository.deleteById(cartMenuId);
     }
+
+    @Override
+    public void cartMenuCountUpdate(Long cartMenuId, int count) {
+        CartMenu cartMenu = cartMenuRepository.findById(cartMenuId).get();
+        cartMenu.updateCount(count);
+        cartMenuRepository.save(cartMenu);
+    }
+
+    @Override
+    public void cartMenuOptionChecked(Long cartOptionId, boolean checked) {
+        CartMenuOption cartMenuOption = cartMenuOptionRepository.findById(cartOptionId).get();
+        if(checked) {
+            cartMenuOption.CheckOn();
+        }else{
+            cartMenuOption.CheckOff();
+        }
+        cartMenuOptionRepository.save(cartMenuOption);
+    }
+
 }

@@ -18,6 +18,8 @@ public class Address extends BaseEntity{
     @Column(name = "address_id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "myAddress_seq")
     private Long id;
+    private String name;
+    private String phone;
     private String address1;
     private String address2;
     private String address3;
