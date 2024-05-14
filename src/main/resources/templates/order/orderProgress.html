@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <div class="sysf-modal-wrapper">
     <div class="sysf-container">
         <div class="sysf-wrapper-m">
@@ -16,14 +19,14 @@
                             <label class="modal_label">연락처</label>
                             <input class="modal_input w-input" type="text" name="phone" id="phone">
                             <label class="modal_label">우편주소</label>
-                            <input class="modal_input w-input" type="text" name="storeAddress1" id="storeAddress1">
-                            <a href="#" class="sysf-button sysf-small sysf-outline w-inline-block" onclick="sample6_execDaumPostcode()">
-                                <div class="sysf-button-text closeBtn">우편번호 찾기</div>
-                            </a>
+                            <div class="address1boxbtn">
+                                <input class="modal_input2 w-input" name="address1" id="address1" type="text">
+                                <a href="#" class="address1btn w-button" onclick="sample6_execDaumPostcode()">우편번호</a>
+                            </div>
                             <label class="modal_label">도로명주소</label>
-                            <input class="modal_input w-input" type="text" name="storeAddress2" id="storeAddress2">
+                            <input class="modal_input w-input" type="text" name="address2" id="address2">
                             <label class="modal_label">상세주소</label>
-                            <input class="modal_input w-input" type="text" name="storeAddress3" id="storeAddress3">
+                            <input class="modal_input w-input" type="text" name="address3" id="address3">
                         </div>
                     </div>
                     <div class="sysf-modal-buttons-wrapper">
@@ -48,12 +51,15 @@
                         <div class="address_text">배송지 선택</div>
                         <div class="adress_name_btn">
                             <div class="select-form w-form">
-                                <form id="wf-form-Select-Form" name="wf-form-Select-Form" data-name="Select Form" method="get" class="sysf-form" data-wf-page-id="660faa92d6efb355e798c4d1" data-wf-element-id="527459af-92ed-2cb4-a252-e87669ece1b6"><select id="select-1" name="select-1" data-name="select-1" class="sysf-select sysf-medium w-select">
-                                    <option value="">Select one...</option>
-                                    <option value="First">First Choice</option>
-                                    <option value="Second">Second Choice</option>
-                                    <option value="Third">Third Choice</option>
-                                </select></form>
+                                <div id="wf-form-Select-Form" name="wf-form-Select-Form" class="sysf-form">
+                                    <select id="addressSelect" name="select-1" class="sysf-select sysf-medium w-select">
+                                        <div th:if="${addressDTOList != null}">
+                                            <option th:each="addressDTO, addressDTOState : ${addressDTOList}" th:value="${addressDTOState.index}"
+                                                th:text="${'우편번호 : '+addressDTO.address1+'  '+addressDTO.address2+' '+addressDTO.address3}"></option>
+                                        </div>
+                                        <option th:unless="${addressDTOList != null}">---배송지를 추가해주세요.---</option>
+                                    </select>
+                                </div>
                             </div>
                             <a href="#" class="adress_insert_btn w-button">주소 추가하기</a>
                         </div>
@@ -73,19 +79,22 @@
             <div class="w-layout-blockcontainer container w-container">
                 <div class="orderlist">
                     <div class="orderlist_top_menu">
-                        <div class="top_text">StoreName 1 </div>
+                        <div class="top_text">[[${storeName}]] </div>
                     </div>
                     <div class="orderlist_show">
-                        <div class="order_sumery"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="ordermenuimg">
-                            <div class="div-block-9">
-                                <h3 class="orderlist_menutext">menu name</h3>
-                                <div class="order_option_price">option1 price</div>
-                                <div class="order_option_price">option1 price</div>
-                                <div class="order_option_price">option1 price</div>
-                                <div class="div-block-10">
-                                    <div class="text_price">price</div>
-                                    <div class="text_blank"> / </div>
-                                    <div class="text_count">count</div>
+                        <div th:each = "menuDTO : ${cartDTO.cartMenuDTOList}">
+                            <div class="order_sumery">
+                                <img th:src="|/display?fileName=${menuDTO.getThumbnailURL()}|" loading="lazy" alt="" class="ordermenuimg">
+                                <div class="div-block-9">
+                                    <h3 class="orderlist_menutext">[[${menuDTO.menu_name}]]</h3>
+                                    <div th:each = "optionDTO : ${menuDTO.cartMenuOptionDTOList}">
+                                        <div th:if = "${optionDTO.checked}" class="order_option_price">선택 : [[${optionDTO.menuOption_name+"  "+optionDTO.menuOption_price}]] 원</div>
+                                    </div>
+                                    <div class="div-block-10">
+                                        <div class="text_price">메뉴 가격 : [[${menuDTO.menu_price}]] 원</div>
+                                        <div class="text_blank"> / </div>
+                                        <div class="text_count">[[${menuDTO.count}]] 개</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -93,27 +102,27 @@
                     <div class="charge_show">
                         <div class="price_summery">
                             <div class="price_text_number">
-                                <div class="price_text">total menu price</div>
-                                <div class="order_price">20000$</div>
+                                <div class="price_text">총 메뉴가격</div>
+                                <div class="order_price" id="totalMenuPrice">20000$</div>
                             </div>
                             <div class="price_text_number">
-                                <div class="price_text">discount</div>
-                                <div class="order_price">0$</div>
+                                <div class="price_text">할인금액</div>
+                                <div class="order_price">0 원</div>
                             </div>
                             <div class="price_text_number">
-                                <div class="price_text">delivery fee</div>
-                                <div class="order_price">3000$</div>
+                                <div class="price_text">배달요금</div>
+                                <div class="order_price">[[${deliveryTip}]] 원</div>
                             </div>
                         </div>
                     </div>
                     <div class="order_totalprice">
                         <div class="price_text_number">
-                            <div class="price_text">order price</div>
-                            <div class="order_price">20000$</div>
+                            <div class="price_text">총 주문금액</div>
+                            <div class="order_price" id="allTotalPrice">20000$</div>
                         </div>
                     </div>
                     <div class="order_btrn">
-                        <a href="#" class="order_bigbtn w-button">order</a>
+                        <a href="#" class="order_bigbtn w-button" id="orderBtn">order</a>
                     </div>
                 </div>
             </div>
@@ -121,13 +130,21 @@
     </th:block>
 </th:block>
 </body>
-
 <script th:inline="javascript">
+
     const modalWindow = $(".sysf-modal-wrapper");
     let cartDTO = [[${cartDTO}]];
+    let addressDTOList = [[${addressDTOList}]];
+    let addressIndex = 0;
+    let allTotalPrice = 0;
 
     $(document).ready(function() {
-        console.log(cartDTO);
+        if(addressDTOList != null) {
+            selectAddressShow(addressIndex);
+        }else {
+            $('.address_show').html("새로운 주소를 추가해주세요.");
+        }
+        cartAmountShow(cartDTO);
     })
 
     //버튼 클릭시 모달 창 열림
@@ -173,16 +190,16 @@
                         extraAddr = ' (' + extraAddr + ')';
                     }
                     // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("storeAddress3").value = extraAddr;
+                    document.getElementById("address3").value = extraAddr;
                 } else {
-                    document.getElementById("storeAddress3").value = '';
+                    document.getElementById("address3").value = '';
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('storeAddress1').value = data.zonecode;
-                document.getElementById("storeAddress2").value = addr;
+                document.getElementById('address1').value = data.zonecode;
+                document.getElementById("address2").value = addr;
                 // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("storeAddress3").focus();
+                document.getElementById("address3").focus();
             }
         }).open();
     }
@@ -190,9 +207,11 @@
     $('#addAddressButton').click(function() {
             // 회원 입력 데이터 수집
             let addressData = {
-                storeAddress1 : $('#storeAddress1').val(),
-                storeAddress2 : $('#storeAddress2').val(),
-                storeAddress3 : $('#storeAddress3').val()
+                name : $('#name').val(),
+                phone : $('#phone').val(),
+                address1 : $('#address1').val(),
+                address2 : $('#address2').val(),
+                address3 : $('#address3').val()
             };
             console.log(addressData);
 
@@ -205,7 +224,6 @@
                 success: function(response) {
                     // 주소 추가 성공 시 처리
                     alert('주소가 성공적으로 저장되었습니다.');
-                    // 저장된 주소 목록을 화면에 업데이트
                     location.reload();
                 },
                 error: function(xhr, status, error) {
@@ -215,5 +233,115 @@
             });
     });
 
+    //주소를 바꿀 때 주소의 인덱스 값을 받아 배송지 표기를 바꾸는 함수
+    $("#addressSelect").on('change', function() {
+        if(addressDTOList != null) {
+            let index = $("#addressSelect").val();
+            addressIndex = parseInt(index);
+            selectAddressShow(addressIndex);
+        }else {
+            $('.address_show').html("새로운 주소를 추가해주세요.");
+        }
+    })
+
+    function selectAddressShow(index) {
+        let address = addressDTOList[index];
+        let phone = address.phone;
+        let phoneChange = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        //let phoneChange = phone.substring(0, 3)+"-"+phone.substring(3, 7)+"-"+phone.substring(7);
+        let str = "";
+
+        str += "<div class='address_current'>배송지</div>"
+        str += "<div class='name_phone_text'><div class='name_text'>"+address.name+"</div>"
+        str += "<div class='phone_text'>"+phoneChange+"</div></div>"
+        str += "<div class='adress_detail'>우편번호 : "+address.address1+"  "+address.address2+" "+address.address3+"</div>"
+
+        $('.address_show').html(str);
+    }
+
+  //메뉴 가격을 표기하는 함수
+  function cartAmountShow(cartDTO) {
+    if(cartDTO != null) {
+      let cartTotalPrice = 0;
+      for(let index = 0; index < cartDTO.cartMenuDTOList.length; index++) {
+        let CartMenuDTO = cartDTO.cartMenuDTOList[index];
+        let totalPrice = 0;
+        let menuPrice = CartMenuDTO.menu_price;
+        totalPrice += parseInt(menuPrice);
+        for (let i = 0; i < CartMenuDTO.cartMenuOptionDTOList.length; i++) {
+          let ctOption = CartMenuDTO.cartMenuOptionDTOList[i];
+          let opChecked = ctOption.checked;
+          let opPrice = ctOption.menuOption_price;
+          if(opChecked) {
+            totalPrice += parseInt(opPrice);
+          }
+        }
+        let amount = CartMenuDTO.count;
+        totalPrice = totalPrice*parseInt(amount);
+        cartTotalPrice += totalPrice;
+      }
+      $('#totalMenuPrice').html(cartTotalPrice+' 원');
+      let deliveryTip = [[${deliveryTip}]];
+      allTotalPrice = cartTotalPrice+deliveryTip;
+      $('#allTotalPrice').html(allTotalPrice+' 원');
+    }else {
+      $('#allTotalPrice').html('0 원');
+    }
+  };
+
+    //결제 창 뛰우기
+
+    $('#orderBtn').on('click' ,function() {
+        payment();
+    })
+
+    function payment() {
+
+        let addressDTO = addressDTOList[addressIndex];
+        let storeName = [[${storeName}]];
+        let userEmail = [[${userEmail}]];
+        order_uuid = self.crypto.randomUUID();
+
+        const data = {
+            //인풋 타입 중 라디오에서 체크된 것 확인
+            pay_method: $("input[type='radio']:checked").val(),
+            order_uuid: order_uuid,
+            userEmail : userEmail,
+            storeName: storeName,
+            buyer_name: addressDTO.name,
+            buyer_tel: addressDTO.phone,
+            address1 : addressDTO.address1,
+            address2 : addressDTO.address2,
+            address3 : addressDTO.address3,
+            totalPrice : allTotalPrice
+        }
+        paymentCard(data);
+    }
+
+  function paymentCard(data) {
+
+	IMP.init("imp14866823");
+
+	IMP.request_pay({ // param
+		pg: "html5_inicis",
+	  	pay_method: data.pay_method,
+	  	merchant_uid: data.order_uuid,
+	  	name: data.storeName,
+	  	amount: data.totalPrice,
+	   	buyer_email: data.userEmail,
+	   	buyer_name: data.buyer_name,
+	  	buyer_tel: data.buyer_tel,
+	  	buyer_addr: data.address2 + " " + data.address3,
+	  	buyer_postcode: data.address1
+  	},
+	function (rsp) { // callback
+		if (rsp.success) {
+		    console.log(rsp);
+		} else {
+          // 결제 실패 시 로직,
+          console.log(rsp);
+		}
+	});
+  }
 </script>
 </html>

@@ -280,8 +280,8 @@
               <div class="amounttext" id="allPrice">최종 주문 금액</div>
             </div>
             <div class="cartbtnwrap">
-              <a href="/order/orderProgress" class="orderbutton w-inline-block">
-                <div class="text-block-3" onclick="">Order</div>
+              <a th:href="@{'/order/orderProgress/' + ${storeDTO.id}}" class="orderbutton w-inline-block" onclick="moveOrderProcess()">
+                <div class="text-block-3" >Order</div>
               </a>
             </div>
           </div>
@@ -466,11 +466,9 @@ function cartShow(cartDTO) {
           url: "/cart/insert",
           data: JSON.stringify(cartMenuDTO),
           contentType: "application/json",
-          dataType: "json",
-          success: function (cartResult) {
-              cartDTO = cartResult;
-              console.log(cartResult);
-              cartShow(cartResult);
+          success: function () {
+              console.log("카트 담기 성공");
+              cartDTOCall();
           },
           error: function (e) {
              console.log(e)
@@ -601,6 +599,23 @@ function cartShow(cartDTO) {
       },
       error: function(error) {
         console.error('변경 실패');
+      }
+    });
+  }
+
+  function cartDTOCall() {
+    $.ajax({
+      type: 'POST',
+      url: '/cart/cartList',
+      dataType: "json",
+      success: function(cartResult) {
+        console.log(cartResult);
+        cartDTO = cartResult;
+        cartShow(cartResult);
+        cartAmountShow(cartResult);
+      },
+      error: function(error) {
+        console.error('카트 불러오기 실패');
       }
     });
   }

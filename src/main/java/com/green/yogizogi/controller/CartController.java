@@ -26,9 +26,7 @@ public class CartController {
                                                      @AuthenticationPrincipal User user) {
         String email = user.getUsername();
         cartMenuService.CartMenuRegister(email, cartMenuDTO);
-        //여기까지 저장은 되는데 return할 때 왜 업데이트 되지 않은 카트를 리턴할까?
-        CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
-        return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/delete")
@@ -57,5 +55,12 @@ public class CartController {
         System.out.println("카트체크변경 : "+menuOptionId+"체크여부 : "+checked);
         cartMenuService.cartMenuOptionChecked(menuOptionId, checked);
         return new ResponseEntity<String>("체크 변경 성공", HttpStatus.OK);
+    }
+
+    @PostMapping("/cartList")
+    public @ResponseBody ResponseEntity cartListShow(@AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 }

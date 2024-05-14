@@ -26,5 +26,4 @@ public class Address extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    private LocalDateTime orderDate; //주문일
 }

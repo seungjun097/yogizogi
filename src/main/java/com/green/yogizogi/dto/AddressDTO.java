@@ -15,7 +15,7 @@ public class AddressDTO {
     private Long address_id;
     private String name;
     private String phone;
-    private String storeAddress1;
-    private String storeAddress2;
-    private String storeAddress3;
+    private String address1;
+    private String address2;
+    private String address3;
 }

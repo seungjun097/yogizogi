@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,8 +43,15 @@ public class AddressServiceImpl implements AddressService{
     @Transactional
     public List<AddressDTO> addressList(String email) {
         Member member = memberRepository.findByEmail(email);
+        List<AddressDTO> addressDTOList = new ArrayList<>();
         List<Address> addressList = addressRepository.findByMember(member);
-        return addressList.stream().map(address->entityToDto(address)).collect(Collectors.toList());
+        if (addressList.isEmpty()) {
+            return addressDTOList;
+        }else {
+            addressDTOList = addressList.stream()
+                    .map(address->entityToDto(address)).collect(Collectors.toList());
+            return addressDTOList;
+        }
     }
 
 }

@@ -20,8 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddressController {
 
-    @Autowired
-    AddressService addressService;
+    private final AddressService addressService;
 
     @PostMapping("/address/save")
     public @ResponseBody ResponseEntity getMemberByEmail(@RequestBody AddressDTO addressDTO, Principal principal) {
