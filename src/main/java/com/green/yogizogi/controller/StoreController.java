@@ -42,7 +42,7 @@ public class StoreController {
         model.addAttribute("storeList", storeList);
         System.out.println("storeList: " + storeList);
 
-        return "store/store";
+        return "/store/mainlist";
     }
 
     @GetMapping("/")
@@ -76,8 +76,10 @@ public class StoreController {
 
     @GetMapping("/list")
     public String list(PageRequestDTO dto, Model model) {
-        model.addAttribute("result", storeService.storeListAll(dto));
-        return "/store/storelist";
+        System.out.println("검색컨트롤러작동");
+        System.out.println(dto.toString());
+        model.addAttribute("storeList", storeService.storeListAll(dto));
+        return "/store/maintest";
     }
 
     @GetMapping("/detail/{storeId}")
