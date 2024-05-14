@@ -469,6 +469,8 @@ function cartShow(cartDTO) {
           success: function () {
               console.log("카트 담기 성공");
               cartDTOCall();
+              modalWindow.hide();
+
           },
           error: function (e) {
              console.log(e)
@@ -497,6 +499,7 @@ function cartShow(cartDTO) {
 
     },
     error: function(error) {
+      console.log(error);
       console.error('삭제 실패');
     }
   });
@@ -596,6 +599,7 @@ function cartShow(cartDTO) {
       dataType: "text",
       success: function(response) {
         console.log(response);
+        cartDTOCall();
       },
       error: function(error) {
         console.error('변경 실패');

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -25,6 +26,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/").permitAll()
+                .anyRequest().permitAll()
+        );
+
         http.formLogin(login -> login
                 .loginPage("/member/login")
                 .defaultSuccessUrl("/")
@@ -36,12 +43,8 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
         );
 
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/manager/menu").permitAll()
-                .anyRequest().permitAll()
-        );
         http.csrf(cs -> cs.disable());
+
         return http.build();
     }
 
