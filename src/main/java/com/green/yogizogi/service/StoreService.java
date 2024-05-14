@@ -48,7 +48,6 @@ public interface StoreService {
     }
 
     //store엔티티를 storeDTO바꾸며 store의 menu리스트도 menudto리스트로 바꿔 넣는다.
-    @Transactional
     default StoreDTO entityToDto(Store store) {
         StoreDTO storeDTO = StoreDTO.builder()
                 .id(store.getId())

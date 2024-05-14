@@ -14,6 +14,7 @@
             <img src="" loading="lazy" alt="" class="menu-modal-img" id="modalMenuImg">
             <div id="w-node-_7fa41d3a-af4d-8c97-8334-e684d10f9587-0ae922c6" class="menu-modal-body-detail">
               <div id="modalMenuId" style="display: none;"></div>
+              <div id="modalMenuIndex" style="display: none;"></div>
               <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
               <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
               <p class="menu-modal-body-paragraph" id="modalMenuDesc">menu Desc</p>
@@ -21,7 +22,7 @@
               </div>
               <div class="menu-modal-tp">
                 <div class="amoutadd">
-                  <div class="amount">amount</div>
+                  <div class="amount">수량</div>
                   <div class="amountbtndiv">
                     <a href="#" class="amountbtn left w-button" id="decrease">-</a>
                       <input type="number" class="amountinput" name="count" value="1" />
@@ -272,42 +273,15 @@
             <h4 class="cart_heading">Cart</h4>
             <div class="cartlist" id="cartList">
 
-              <!--<div class="cartmenu">
-                <div class="menuhedingwrap">
-                  <h4 class="cartmenuheading">menuName</h4>
-                  <a href="#" class="button w-button">x</a>
-                </div>
-                <div>menuPrice</div>
-                <div class="cart-menu-optionlist">
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                  <div class="menu-detail-option">
-                    <div class="option-left">
-                      <div class="option-name">option name</div>
-                      <div class="option-price">option price $</div>
-                    </div>
-                    <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                  </div>
-                </div>
-                <div>total price</div>
-              </div>-->
-
+            </div>
+            <div class="cartamount">
+              <div class="cartline"></div>
+              <div class="delivery-fee" id="deliveryTip">배달 요금 : [[${storeDTO.deliveryTip}]] 원</div>
+              <div class="amounttext" id="allPrice">최종 주문 금액</div>
             </div>
             <div class="cartbtnwrap">
-              <a href="#" class="orderbutton w-inline-block">
-                <div class="text-block-3">Order</div>
+              <a th:href="@{'/order/orderProgress/' + ${storeDTO.id}}" class="orderbutton w-inline-block" onclick="moveOrderProcess()">
+                <div class="text-block-3" >Order</div>
               </a>
             </div>
           </div>
@@ -322,40 +296,49 @@
 </th:block>
 
 <script th:inline="javascript">
-const storeDTO = [[${storeDTO}]];
+let storeDTO = [[${storeDTO}]];
 const modalWindow = $(".menu-modal-wrapper");
-const cartDTO = [[${cartDTO}]];
+let cartDTO = [[${cartDTO}]];
 
 $(document).ready(function() {
-  cartShow();
+  console.log(cartDTO);
+  cartShow(cartDTO);
+  cartAmountShow(cartDTO);
+});
 
-  $('#decrease').on('click', function() {
-        let quantityInput = $(this).next('.amountinput');
-        let currentValue = parseInt(quantityInput.val());
-        if (currentValue > 1) {
-          quantityInput.val(currentValue - 1);
-        } else {
-          alert('수량은 1보다 작을 수 없습니다!');
-        }
+$('#decrease').on('click', function() {
+    let quantityInput = $(this).next('.amountinput');
+    let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
   });
 
   $('#increase').on('click', function() {
-        let quantityInput = $(this).prev('.amountinput');
-        let currentValue = parseInt(quantityInput.val());
-        quantityInput.val(currentValue + 1);
+      let quantityInput = $(this).prev('.amountinput');
+      let currentValue = parseInt(quantityInput.val());
+      quantityInput.val(currentValue + 1);
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
   });
 
   //수량 변경 시 총가격 변환 함수
   $('.amountinput').on('change', function() {
-        let quantityInput = $(this);
-        if (quantityInput.val() < 1) {
-          alert('수량은 1보다 작을 수 없습니다!');
-          quantityInput.val(1);
-        }
-
+      let quantityInput = $(this);
+      if (quantityInput.val() < 1) {
+        alert('수량은 1보다 작을 수 없습니다!');
+        quantityInput.val(1);
+      }
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
   });
-});
-
 
 //cartDTO의 정보를 뿌리는 함수
 function cartShow(cartDTO) {
@@ -363,21 +346,33 @@ function cartShow(cartDTO) {
       $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
    }else {
       let str = "";
-      str += "<div class='cartmenu'><div class='menuhedingwrap'>"
-      str += "<h4 class='cartmenuheading'>menuName</h4>"
-      str += "<a href='#' class='button w-button'>x</a></div>"
-      str += "<div>menuPrice</div>"
-      str += "<div class='cart-menu-optionlist'>"
-      str += "<div class='menu-detail-option'>"
-      str += "<div class='option-left'>"
-      str += "<div class='option-name'>option name</div>"
-      str += "<div class='option-price'>option price</div>"
-      str += "</div><div class='checkbox w-embed'><input type='checkbox'></div></div>"
-      str += "</div><div class='amoutadd'><div class='amount'>amount</div><div class='amountbtndiv'>"
-      str += "<a href='#' class='amountbtn left w-button' id='decrease'>-</a>"
-      str += "<input type='number' class='amountinput' name='count' value='1' />"
-      str += "<a href='#' class='amountbtn right w-button' id='increase'>+</a></div></div><div>total price</div></div>"
-
+      for(let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
+        let cartMenu = cartDTO.cartMenuDTOList[i];
+        str += "<div class='cartmenu'><div class='menuhedingwrap'>"
+        str += "<div name ='cartMenuId'></div>"
+        str += "<h4 class='cartmenuheading'>"+cartMenu.menu_name+"</h4>"
+        str += "<a href='#' class='button w-button' onclick='cartMenuDel("+cartMenu.cartMenu_id+")'>x</a></div>"
+        str += "<div>메뉴 가격 : "+cartMenu.menu_price+" 원</div>"
+        str += "<div class='cart-menu-optionlist'>"
+        for(let cartMenuOp of cartMenu.cartMenuOptionDTOList) {
+          str += "<div class='menu-detail-option'>"
+          str += "<div class='option-left'>"
+          str += "<div class='option-name'>"+cartMenuOp.menuOption_name+"</div>"
+          str += "<div class='option-price'>"+cartMenuOp.menuOption_price+" 원</div>"
+          if(cartMenuOp.checked) {
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' onchange='checkChange("+cartMenuOp.menuOptionId+")' "
+            str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' checked /></div></div>"
+          }else {
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' onchange='checkChange("+cartMenuOp.menuOptionId+")' "
+            str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' /></div></div>"
+          }
+        }
+        str += "</div><div class='amoutadd'><div class='amount'>수량</div><div class='amountbtndiv'>"
+        str += "<a href='#' class='amountbtn left w-button' onclick='cartDecrease("+i+")'>-</a>"
+        str += "<input type='number' class='amountinput' id='Cartamountinput"+i+"' name='count' value='"+cartMenu.count+"'/>"
+        str += "<a href='#' class='amountbtn right w-button' onclick='cartIncrease("+i+")'>+</a></div>"
+        str += "</div><div>총 금액 : <span id='CartMenuTp"+i+"'>total price</span></div></div>"
+      }
       $("#cartList").html(str);
    }
 };
@@ -386,6 +381,8 @@ function cartShow(cartDTO) {
   function openModal(menuIndex) {
     const menuDTO = storeDTO.menuDTOList[menuIndex];
 
+    $('.amountinput').val(1);
+    $('#modalMenuIndex').html(menuIndex);
     $('#modalMenuImg').attr("src", "/display?fileName="+menuDTO.imageURL);
     $('#modalMenuName').html(menuDTO.menuName);
     $('#modalMenuPrice').html(menuDTO.menuPrice+" 원");
@@ -407,57 +404,220 @@ function cartShow(cartDTO) {
     modalWindow.show();
   }
 
+  //옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function totalAmountShow(menuIndex) {
+    const menuDTO = storeDTO.menuDTOList[menuIndex];
+    let totalPrice = 0;
+    let menuPrice = menuDTO.menuPrice;
+    totalPrice += parseInt(menuPrice);
+    for (let i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+      let optionId = menuDTO.menuOptionDTOList[i].id;
+      let checkBox = $('#opCheck'+optionId);
+      let opChecked = checkBox.prop('checked');
+      let opPrice = checkBox.val();
+      if(opChecked) {
+        totalPrice += parseInt(opPrice);
+      }
+    }
+    let amount = $('.amountinput').val();
+    totalPrice = totalPrice*parseInt(amount);
+    $('#menuTotalPrice').html(totalPrice);
+  }
+
   //모달창을 닫는 함수
   function modalHide() {
      modalWindow.hide();
   }
 
   //옵션 체크시 총가격을 바꾸는 함수
-  function optionCheck(optionId) {
-    let checkBox = $('#opCheck'+optionId);
-    let opChecked = checkBox.prop('checked');
-    let opPrice = checkBox.val();
-    let totalPrice = $('#menuTotalPrice').html();
-    if(opChecked) {
-       let newPrice = parseInt(totalPrice)+parseInt(opPrice);
-       $('#menuTotalPrice').html(newPrice);
-    }else{
-       let newPrice = parseInt(totalPrice)-parseInt(opPrice);
-       $('#menuTotalPrice').html(newPrice);
-    }
+  function optionCheck() {
+    let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
   }
 
   //버튼 클릭시 메뉴를 카트에 담는 함수
   function addToCart() {
-        let cartMenuOptionDTOList = [];
+      let menuIndex = $("#modalMenuIndex").html();
+      const menuDTO = storeDTO.menuDTOList[menuIndex];
+      let menuId = menuDTO.id;
+      let cartMenuOptionDTOList = [];
 
-        $(targetDiv+ ' input[type="checkbox"]').each(function() {
-            let CartMenuOptionDTO = {
-                menuOptionId: $(this).attr('name').split('%').pop(),
-                menu_id: menuId,
-                checked: $(this).val()
-            };
-            cartMenuOptionDTOList.push(CartMenuOptionDTO);
-        })
-        let cartMenuDTO = {
-            menu_id: menuId,
-            count: $('#count'+menuId).val(),
-            cartMenuOptionDTOList: cartMenuOptionDTOList
-        }
+      for (let i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+        let optionId = menuDTO.menuOptionDTOList[i].id;
+        let checkBox = $('#opCheck'+optionId);
+        let opChecked = checkBox.prop('checked');
+        let CartMenuOptionDTO = {
+              menuOptionId: optionId,
+              menu_id: menuId,
+              checked: opChecked
+        };
+        cartMenuOptionDTOList.push(CartMenuOptionDTO);
+      }
 
-        $.ajax({
-            type: "POST",
-            url: "/store/cart",
-            data: JSON.stringify(cartMenuDTO),
-            contentType: "application/json",
-            success: function (cartDTO) {
-                console.log(cartDTO);
-                cartList(cartDTO);
-            },
-            error: function (e) {
-               console.log(e)
-            }
-        })
+      let cartMenuDTO = {
+          menu_id: menuId,
+          count: $('.amountinput').val(),
+          cartMenuOptionDTOList: cartMenuOptionDTOList
+      }
+
+      $.ajax({
+          type: "POST",
+          url: "/cart/insert",
+          data: JSON.stringify(cartMenuDTO),
+          contentType: "application/json",
+          success: function () {
+              console.log("카트 담기 성공");
+              cartDTOCall();
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
     }
+
+  //카트메뉴 삭제 버튼 함수
+  function cartMenuDel(cartMenuId) {
+
+  var data = {
+    cartMenuId: cartMenuId
+  };
+
+  $.ajax({
+    type: 'POST',
+    url: '/cart/delete', // 서버 URL을 입력해야 합니다.
+    data: JSON.stringify(data),
+    contentType: "application/json",
+    dataType: "json",
+    success: function(cartResult) {
+      console.log("삭제 성공");
+      cartDTO = cartResult;
+      cartShow(cartResult);
+      cartAmountShow(cartResult);
+
+    },
+    error: function(error) {
+      console.error('삭제 실패');
+    }
+  });
+  }
+
+  //카트에 담긴 옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function cartAmountShow(cartDTO) {
+    if(cartDTO != null) {
+      let cartTotalPrice = 0;
+      for(let index = 0; index < cartDTO.cartMenuDTOList.length; index++) {
+        let CartMenuDTO = cartDTO.cartMenuDTOList[index];
+        let totalPrice = 0;
+        let menuPrice = CartMenuDTO.menu_price;
+        totalPrice += parseInt(menuPrice);
+        console.log(totalPrice);
+        for (let i = 0; i < CartMenuDTO.cartMenuOptionDTOList.length; i++) {
+          let ctOptionId = CartMenuDTO.cartMenuOptionDTOList[i].menuOptionId;
+          let checkBox = $('#ctOpCheck'+ctOptionId);
+          let opChecked = checkBox.prop('checked');
+          let opPrice = checkBox.val();
+          if(opChecked) {
+            totalPrice += parseInt(opPrice);
+          }
+        }
+        let amount = $('#Cartamountinput'+index).val();
+        totalPrice = totalPrice*parseInt(amount);
+        $('#CartMenuTp'+index).html(totalPrice);
+        cartTotalPrice += totalPrice;
+      }
+      cartTotalPrice += storeDTO.deliveryTip;
+      $('#allPrice').html('총 주문금액 : '+cartTotalPrice+' 원');
+    }else {
+      $('#allPrice').html('총 주문금액 : 0 원');
+    }
+  }
+
+   //카트 수량 변경 버튼
+  function cartIncrease(index) {
+    quantityInput = $('#Cartamountinput'+index);
+    let currentValue = parseInt(quantityInput.val());
+    quantityInput.val(currentValue + 1);
+    cartAmountChange(index);
+    cartAmountShow(cartDTO);
+  }
+
+  function cartDecrease(index) {
+  quantityInput = $('#Cartamountinput'+index);
+  let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+      cartAmountChange(index);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
+    cartAmountShow(cartDTO);
+  }
+
+  //카트의 메뉴 수량 변경 시 수량 변화 반영
+  function cartAmountChange(index) {
+    let count = $('#Cartamountinput'+index).val();
+    let cartMenuId = cartDTO.cartMenuDTOList[index].cartMenu_id;
+
+    var data = {
+      cartMenu_id: cartMenuId,
+      count: count
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/countUpdate', // 서버 URL을 입력해야 합니다.
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "text",
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(error) {
+        console.error('변경 실패');
+      }
+    });
+  }
+  //카트 체크 변환 시 체크 변화 반영
+  function checkChange(MenuOptionId) {
+    let checkBox = $('#ctOpCheck'+MenuOptionId);
+    let checked = checkBox.prop('checked');
+
+    var data = {
+      menuOptionId: MenuOptionId,
+      checked: checked
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/optionChecked', // 서버 URL을 입력해야 합니다.
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "text",
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(error) {
+        console.error('변경 실패');
+      }
+    });
+  }
+
+  function cartDTOCall() {
+    $.ajax({
+      type: 'POST',
+      url: '/cart/cartList',
+      dataType: "json",
+      success: function(cartResult) {
+        console.log(cartResult);
+        cartDTO = cartResult;
+        cartShow(cartResult);
+        cartAmountShow(cartResult);
+      },
+      error: function(error) {
+        console.error('카트 불러오기 실패');
+      }
+    });
+  }
 </script>
 </html>

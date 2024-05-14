@@ -25,6 +25,6 @@ public class Cart {
     private Member member;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+            orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartMenu> cartMenuList = new ArrayList<>();
 }

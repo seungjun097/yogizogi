@@ -19,8 +19,9 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class AddressController {
+  
+    private final AddressService addressService;
 
-    AddressService addressService;
 
     @PostMapping("/address/save")
     public @ResponseBody ResponseEntity getMemberByEmail(@RequestBody AddressDTO addressDTO, Principal principal) {

@@ -58,7 +58,7 @@ public class StoreController {
     @GetMapping("/register")
     public String StoreUpdate(@AuthenticationPrincipal User user, Model model) {
         if(user==null) {
-            return "main";
+            return "redirect:/";
         }else {
             Member member = memberService.userFindEmail(user.getUsername());
             model.addAttribute("member_id", member.getId());
@@ -71,7 +71,7 @@ public class StoreController {
         System.out.println(storeDTO.toString());
         Long storeId = storeService.StoreRegister(storeDTO);
         System.out.println("가게 등록 성공 : "+storeId);
-        return "/main";
+        return "redirect:/";
     }
 
     @GetMapping("/list")
@@ -97,24 +97,6 @@ public class StoreController {
         model.addAttribute("storeDTO", storeDTO);
 
         return "store/storedetail";
-    }
-
-    //카트 및 카트 메뉴 생성
-    @PostMapping("/cart")
-    public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
-                                                     @AuthenticationPrincipal User user) {
-        String email = user.getUsername();
-        Long cartId = cartMenuService.CartMenuRegister(email, cartMenuDTO);
-        //여기까지 저장은 되는데
-        CartDTO cartDTO = cartService.cartFindById(cartId);
-        return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/cart/delete/{cartMenuId}")
-    public @ResponseBody ResponseEntity cartMenuDelete(@PathVariable("cartMenuId") Long cartMenuId) {
-        Long cartId = cartMenuService.cartMenuDelete(cartMenuId);
-        CartDTO cartDTO = cartService.cartFindById(cartId);
-        return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
     }
 
     @GetMapping("/detail2/{storeId}")

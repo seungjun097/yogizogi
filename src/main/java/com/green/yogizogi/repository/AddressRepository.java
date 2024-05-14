@@ -9,5 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
-    List<Address> findByMember(Member member);
+    @Query("select a from Address a where a.member = :member order by a.regDate desc")
+    List<Address> findByMember(@Param("member") Member member);
 }

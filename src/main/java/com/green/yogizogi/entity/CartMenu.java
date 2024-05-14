@@ -28,9 +28,14 @@ public class CartMenu {
     @JoinColumn(name = "menu_id")
     private Menu menu;
     private int count;
+    
+    //이미지 주소
+    private String uuid;
+    private String imgName;
+    private String path;
 
     @OneToMany(mappedBy = "cartMenu", cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartMenuOption> cartMenuOptionList = new ArrayList<>();
 
     public void addCount(int count) {
