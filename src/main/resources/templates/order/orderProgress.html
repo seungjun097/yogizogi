@@ -3,6 +3,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <div class="sysf-modal-wrapper">
     <div class="sysf-container">
         <div class="sysf-wrapper-m">
@@ -327,7 +328,7 @@
 	  	pay_method: data.pay_method,
 	  	merchant_uid: data.order_uuid,
 	  	name: data.storeName,
-	  	amount: data.totalPrice,
+	  	amount: 100,
 	   	buyer_email: data.userEmail,
 	   	buyer_name: data.buyer_name,
 	  	buyer_tel: data.buyer_tel,
