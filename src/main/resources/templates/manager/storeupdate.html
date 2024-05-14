@@ -191,11 +191,12 @@
       console.log(menuData);
       $.ajax({
           type: "POST",
-          url: "/manager/menu/",
+          url: "/manager/menu",
           data: JSON.stringify(menuData),
           contentType: "application/json",
+          dataType: 'json',
           success: function (menuList) {
-              console.log(menuList)
+              console.log(menuList);
               location.reload();
           },
           error: function (e) {

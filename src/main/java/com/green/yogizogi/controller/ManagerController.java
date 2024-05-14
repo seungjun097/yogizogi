@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/manager/")
+@RequestMapping("/manager")
 @RequiredArgsConstructor
 @Transactional
 public class ManagerController {
@@ -50,7 +50,7 @@ public class ManagerController {
         return "manager/storeupdate";
     }
 
-    @PostMapping("/menu/")
+    @PostMapping("/menu")
     @Transactional
     public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) {
         menuService.MenuSave(menuDTO);
@@ -62,7 +62,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("update/{storeId}")
+    @GetMapping("/update/{storeId}")
     @Transactional
     public String storeUpdate(@PathVariable("storeId") Long storeId,
                               @AuthenticationPrincipal User user,

@@ -38,6 +38,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/manager/menu").permitAll()
                 .anyRequest().permitAll()
         );
         http.csrf(cs -> cs.disable());
