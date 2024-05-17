@@ -125,6 +125,9 @@
                     <div class="order_btrn">
                         <a href="#" class="order_bigbtn w-button" id="orderBtn">order</a>
                     </div>
+                    <div class="order_btrn">
+                        <a href="#" class="order_bigbtn w-button" id="paymentCancelBtn">cancel</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -147,17 +150,15 @@
             $('.address_show').html("새로운 주소를 추가해주세요.");
         }
         cartAmountShow(cartDTO);
-        console.log(allTotalPrice);
-        console.log(order_uuid);
-        $.ajax({
-                url: "order/prepare",
-                method: "post",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    merchant_uid: order_uuid, // 가맹점 주문번호
-                    amount: allTotalPrice // 결제 예정금액
-                })
-            });
+        //$.ajax({
+        //        url: "/order/prepare",
+        //        method: "post",
+        //        contentType: "application/json",
+        //        data: JSON.stringify({
+        //            merchant_uid: order_uuid, // 가맹점 주문번호
+        //            amount: allTotalPrice // 결제 예정금액
+        //        })
+        // });
     })
 
     //버튼 클릭시 모달 창 열림
@@ -339,7 +340,7 @@
 	  	pay_method: data.pay_method,
 	  	merchant_uid: data.order_uuid,
 	  	name: data.storeName,
-	  	amount: 100,
+	  	amount: data.totalPrice,
 	   	buyer_email: data.userEmail,
 	   	buyer_name: data.buyer_name,
 	  	buyer_tel: data.buyer_tel,
@@ -351,7 +352,7 @@
 		    console.log(rsp);
 		    let data = {
                 imp_uid: rsp.imp_uid,            // 결제 고유번호
-                merchant_uid: rsp.merchant_uid,   // 주문번호
+                merchant_uid: rsp.merchant_uid,  // 주문번호
                 amount: rsp.paid_amount
             }
             $.ajax({
@@ -361,12 +362,15 @@
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(data)
             }).done(function (data) {
-                console.log(data);//주문 금액이 들어있음
+                // 주문 금액이 들어있음
+
                 // 위의 rsp.paid_amount 와 data.response.amount를 비교한후 로직 실행 (import 서버검증)
                 if (rsp.paid_amount == data.response.amount) {
+                    console.log(data);
                     alert("결제 및 결제검증완료");
                 } else {
                     alert("결제 검증 실패");
+                    orderCancel(rsp.merchant_uid);
                 }
             });
 		} else {
@@ -375,5 +379,25 @@
 		}
 	});
   }
+
+  $('#paymentCancelBtn').on('click', function() {
+    let id = "4de02342-cb32-4c98-9c7f-8fe58702890d"
+    orderCancel(id)
+  });
+
+function orderCancel(merchant_uid){
+    $.ajax({
+        type: "POST",
+        url: "/payment/cancel",
+        data: merchant_uid,
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            alert("결제가 취소되었습니다.");
+        },
+        error: function (error) {
+            alert("결제 취소 실패");
+        }
+    })
+}
 </script>
 </html>

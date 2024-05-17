@@ -1,31 +1,48 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.PaymentDTO;
+import com.green.yogizogi.service.RefundService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/payment")
-public class PaymentController {
+@RequiredArgsConstructor
+public class PaymentController{
+
+    private final RefundService refundService;
+
     private IamportClient iamportClient;
 
-    public PaymentController() {
-        this.iamportClient = new IamportClient("3203513003174067",
-                "e4DO0V56Rl76Nd2Khr2PUbwwJ60pipNllSo6hQQ6jRDSxLvtJqVdx9X4z14GtQk7Tp67oo2qRgRCvDN3");
-    }
+    @Value("${imp.api.key}")
+    private String apikey;
+    @Value("${imp.api.secretKey}")
+    private String secretKey;
 
+    @PostConstruct
+    public void init() {
+        this.iamportClient = new IamportClient(apikey, secretKey);
+    }
     @PostMapping("/verification")
     private IamportResponse<Payment> paymentByImpUid(@RequestBody PaymentDTO paymentDTO) throws IamportResponseException, IOException {
         System.out.println(paymentDTO);
         return iamportClient.paymentByImpUid(paymentDTO.getImp_uid());
+    }
+
+    @PostMapping("/cancel")
+    public @ResponseBody ResponseEntity orderCancel(@RequestBody String merchant_uid) throws IOException {
+        String token = refundService.getToken(apikey, secretKey);
+        refundService.refundRequest(token, merchant_uid, "cancel");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
