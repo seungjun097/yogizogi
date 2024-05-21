@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
+
         <section class="section">
             <div class="w-layout-blockcontainer container w-container">
                 <div class="myorderlist">
@@ -20,12 +21,50 @@
                                     <div>메뉴가격 : 10000원 </div>
                                 </div>
                                 <div>배달비 : 4000 원</div>
-                                <h4 class="ordertotalprice">총 주문금액 : 30000 원</h4>
+                                <h4 id="ordertotalprice" class="ordertotalprice">총 주문금액 : 30000 원</h4>
                             </div>
                             <div class="orderbtnwrap">
                                 <a href="#" class="orderdetailbtn w-button">주문 상세보기</a>
-                                <a href="#" class="orderdetailbtn w-button">리뷰 쓰기</a>
+                                <button type="button" class="orderdetailbtn btn btn-info w-button addReviewBtn">리뷰 쓰기</button>
                             </div>
+                            <div class="list-group reviewList">
+
+                            </div>
+
+                            <!-- 모달 -->
+                            <div class="reviewModal modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">가게 리뷰</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label>작성자 ID</label>
+                                                <input type="text" class="form-control" name="member_id" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>평점</label>
+                                                <input type="text" class="form-control" name="grade" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>리뷰 내용</label>
+                                                <input type="text" class="form-control" name="text" />
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
+                                            <button type="button" class="btn btn-primary reviewModifyBtn">수정</button>
+                                            <button type="button" class="btn btn-primary reviewDeleteBtn">삭제</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -33,5 +72,134 @@
         </section>
     </th:block>
 </th:block>
-</body>
+<script th:inline="javascript">
+    let storeId = 21;
+    $(document).ready(function(){
+
+
+        let reviewList = $(".reviewList");
+        //페이지가 열리면 리뷰 데이터 가져오기!
+        function getStoreReviews(){
+            $.getJSON("/reviews/"+storeId+"/all", function(arr){
+                let str="";
+                //서버가 보내준 list &ndash;&gt; 자바스크립트 배열로 변환됨 arr(어떤 이름을 지어주든 상관 x)
+                $.each(arr,function(idx,review){
+                    str += "<div class='card-body' data-reviewnum='"+review.reviewnum+"' data-member-id='"+review.member_id+"'>";
+                    str += "<h5 class='card-title'><span class='reviewtext'>"+review.text+"</span> 평점 : <span class='reviewgrade'>"+review.grade+"</span></h5>";
+                    str += "<h6 class='card-subtitle mb-2 text-muted'>"+review.nickname+"</h6>";
+                    str += "<p class='card-text'>"+review.regDate+"</p>";
+                    str += "</div>";
+                })
+                reviewList.html(str);
+            })
+        }
+        getStoreReviews();
+
+        let reviewModal = $(".reviewModal");
+        //리뷰 등록 버튼 클릭시 모달창 보이기
+        $(".addReviewBtn").click(function(){
+            console.log("모달창 보이기 작동");
+            //모든 버튼 보이기
+            $(".modal-footer button").show();
+            console.log("버튼보이기 작동");
+            //삭제, 수정 버튼 숨기기
+            $(".reviewDeleteBtn, .reviewModifyBtn").hide();
+            reviewModal.show();
+        })
+
+        //save클릭시 서버로 등록 요청 post, /reviews/+storeId, json데이터 전송
+        //자바스크립트 객체 --> json
+        let inputMember_id = $("input[name='member_id']");
+        let inputGrade = $("input[name='grade']");
+        let inputText = $("input[name='text']");
+        $(".reviewSaveBtn").click(function(){
+            console.log("세이브버튼클릭");
+            let data = {
+                //앞은 다 문자열이다. : 뒤가 변수
+                storeId: storeId,
+                grade: inputGrade.val(),
+                text: inputText.val(),
+                member_id: inputMember_id.val()
+            }
+            console.log(data)
+            $.ajax({
+                url:'/reviews/'+storeId,
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        let reviewnum; //변수 선언 이벤트 바깥에다 하기
+        //리뷰선택시 모달창 보이기
+        $(".reviewList").on("click",".card-body",function(){
+            let target = $(this); //this = 클릭한 대상
+
+            console.log(target);
+            reviewnum = target.data("reviewnum");
+            inputMember_id.val(target.data("member_id"));
+            //inputMember_id는 readonly 속성지정
+            inputMember_id.attr("readonly", true);
+            let reviewtext = target.find(".reviewtext").text();
+            let reviewgrade = target.find(".reviewgrade").text();
+            inputText.val(reviewtext);
+            inputGrade.val(reviewgrade);
+            //모든 버튼 숨기기
+            $(".modal-footer button").hide();
+            //삭제, 수정 버튼 나타내기
+            $(".reviewDeleteBtn, .reviewModifyBtn").show();
+            reviewModal.show();
+        })
+
+        //수정버튼 클릭했을때 서버로 수정요청 ajax요청
+        $(".reviewModifyBtn").click(function(){
+            let data = {
+                reviewnum: reviewnum,
+                storeId: storeId,
+                grade: inputGrade.val(),
+                text: inputText.val(),
+                member_id: inputMember_id.val()
+            }
+            $.ajax({
+                url:'/reviews/'+storeId+'/'+reviewnum,
+                type:'put',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        //삭제버튼 클릭시 삭제 요청
+        $(".reviewDeleteBtn").click(function(){
+            let data = {reviewnum: reviewnum};
+            $.ajax({
+                url:'/reviews/'+storeId+'/'+reviewnum,
+                type:'delete',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function(result){
+                    console.log(result);
+                    self.location.reload(); //등록성공하면 새로고침
+                }
+            })
+        })
+
+        $(".close, .btn-secondary").click(function(){
+            reviewModal.hide();
+        })
+    })
+
+
+</script>
+
 </html>
