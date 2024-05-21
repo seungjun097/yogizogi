@@ -2014,6 +2014,119 @@ a {
   margin-bottom: 0;
 }
 
+.myorderlist {
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  flex-flow: column;
+  margin-top: 30px;
+  padding-left: 40px;
+  padding-right: 40px;
+  display: flex;
+}
+
+.ordercard {
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 20px 2px rgba(0, 0, 0, .2);
+}
+
+.ordercard_flexrow {
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  display: flex;
+}
+
+.ordercard_thumnail {
+  border-radius: 10px;
+  width: 150px;
+  height: 150px;
+}
+
+.orderlistheading {
+  border-bottom: 2px solid var(--main_gray);
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.orderdesc {
+  grid-column-gap: 2px;
+  grid-row-gap: 2px;
+  flex-flow: column;
+  width: 65%;
+  display: flex;
+}
+
+.orderstorename {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.ordermenunp {
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+  display: flex;
+}
+
+.ordertotalprice {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.orderstoretime {
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  align-items: flex-end;
+  display: flex;
+}
+
+.orderbtnwrap {
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  flex-flow: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 15%;
+  display: flex;
+}
+
+.orderdetailbtn {
+  background-color: var(--gray-black);
+  border-radius: 10px;
+}
+
+.cartlistmenu {
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  background-color: #fff;
+  border-radius: 10px;
+  flex-flow: column;
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+}
+
+.div-block-11 {
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  display: flex;
+}
+
+.image-7 {
+  border-radius: 10px;
+  width: 150px;
+  height: 150px;
+}
+
+.div-block-12 {
+  width: 85%;
+}
+
+.cartmenulistheading {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 @media screen and (max-width: 991px) {
   .uui-footer04_top-wrapper {
     grid-row-gap: 2rem;

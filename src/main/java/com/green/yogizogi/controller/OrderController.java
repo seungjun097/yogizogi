@@ -23,6 +23,12 @@ public class OrderController {
     private final CartService cartService;
     private final AddressService addressService;
 
+    @GetMapping("/orderList")
+    public String orderPage(@AuthenticationPrincipal User user) {
+
+        return "order/orderList";
+    }
+
     @GetMapping("/orderProgress/{storeId}")
     public String getSignUp(@PathVariable("storeId") Long storeId,
                             @AuthenticationPrincipal User user, Model model) {

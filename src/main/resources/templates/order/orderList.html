@@ -2,6 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
     <th:block th:fragment="content">
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="myorderlist">
+                    <div class="orderlistheading">
+                        <h2 class="orderhead">My orderList</h2>
+                    </div>
+                    <div class="ordercard">
+                        <div class="ordercard_flexrow"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="ordercard_thumnail">
+                            <div class="orderdesc">
+                                <div class="orderstoretime">
+                                    <h3 class="orderstorename">가게 이름</h3>
+                                    <div class="ordertime">주문 시간</div>
+                                </div>
+                                <div class="ordermenunp">
+                                    <div>메뉴이름 : 테스트이름 </div>
+                                    <div>메뉴가격 : 10000원 </div>
+                                </div>
+                                <div>배달비 : 4000 원</div>
+                                <h4 class="ordertotalprice">총 주문금액 : 30000 원</h4>
+                            </div>
+                            <div class="orderbtnwrap">
+                                <a href="#" class="orderdetailbtn w-button">주문 상세보기</a>
+                                <a href="#" class="orderdetailbtn w-button">리뷰 쓰기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </th:block>
 </th:block>
 </body>
