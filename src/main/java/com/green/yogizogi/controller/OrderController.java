@@ -1,8 +1,10 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.*;
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.AddressService;
 import com.green.yogizogi.service.CartService;
+import com.green.yogizogi.service.MemberService;
 import com.green.yogizogi.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +24,14 @@ public class OrderController {
     private final StoreService storeService;
     private final CartService cartService;
     private final AddressService addressService;
+    private final MemberService memberService;
 
     @GetMapping("/orderList")
-    public String orderPage(@AuthenticationPrincipal User user) {
-
+    public String orderPage(@AuthenticationPrincipal User user,Model model) {
+        String email = user.getUsername();
+        Member member = memberService.userFindEmail(email);
+        Long memberId = member.getId();
+        model.addAttribute("memberId", memberId);
         return "order/orderList";
     }
 
