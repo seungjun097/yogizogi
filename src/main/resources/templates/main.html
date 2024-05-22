@@ -174,5 +174,29 @@
     document.getElementById("w-node-d30e77dc-cfbe-5eba-7708-152fc431a09f-21bba1a0").href = "/store/CHICKEN/" + encodeURIComponent(address1Value);
     document.getElementById("w-node-_852f1e4a-5c17-5182-521e-0150ef51f47a-21bba1a0").href = "/store/SANDWICH/" + encodeURIComponent(address1Value);
 </script>
+<script type="text/javascript">
+    // 페이지가 로드될 때 실행되는 함수
+    $(document).ready(function() {
+        // 카테고리 링크를 클릭할 때마다 실행되는 함수
+        $(".img_block").click(function(event) {
+            // 기본 동작(링크 이동) 방지
+            event.preventDefault();
+
+            // 링크의 href 속성값 가져오기
+            var href = $(this).attr("href");
+            // 링크의 data-category 속성값 가져오기
+            var category = $(this).data("category");
+
+            // address1 값이 undefined 인지 확인
+            if (typeof address1 === 'undefined') {
+                // 주소를 입력해주세요 알림 표시
+                alert("왼쪽상단에 주소를 먼저 입력해주세요");
+            } else {
+                // address1 값이 정의되어 있으면 링크 이동
+                window.location.href = href;
+            }
+        });
+    });
+</script>
 <script src="/js/home.js"></script>
 </html>
