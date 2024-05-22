@@ -1496,8 +1496,8 @@ a {
   border-radius: 10px;
   margin-top: 60px;
   margin-bottom: 60px;
-  margin-left: 40px;
-  margin-right: 40px;
+  margin-left: 100px;
+  margin-right: 100px;
   display: block;
   position: -webkit-sticky;
   position: sticky;
@@ -2131,6 +2131,23 @@ a {
 .cartmenulistheading {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.cartHeadcardText {
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  background-color: #fdfdfd;
+  border-radius: 10px;
+  margin: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.cartHeadingText {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 @media screen and (max-width: 991px) {
