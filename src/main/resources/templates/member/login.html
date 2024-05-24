@@ -44,7 +44,16 @@
           </a>
         </div>
       </div>
+      </div>
     </section>
   </th:block>
 </th:block>
+<script type="text/javascript">
+    // Thymeleaf에서 전달된 메시지를 JavaScript 변수에 할당
+    var message = [[${memberLogin}]];
+    // 메시지가 비어있지 않은 경우 알람 창에 메시지 표시
+    if (!message) {
+        alert("로그인하세요");
+    }
+</script>
 </html>

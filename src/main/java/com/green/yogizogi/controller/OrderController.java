@@ -1,6 +1,7 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.*;
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.AddressService;
 import com.green.yogizogi.service.CartService;
 import com.green.yogizogi.service.OrderService;
@@ -59,5 +60,7 @@ public class OrderController {
         model.addAttribute("addressDTOList", addressDTOList);
         return "order/orderProgress";
     }
+
+
 
 }

@@ -17,7 +17,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,7 +103,13 @@ public class StoreController {
     @Transactional
     public String storeDetatilview2(@PathVariable("storeId") Long storeId,
                                    @AuthenticationPrincipal User user,
-                                   Model model) {
+                                    Model model) {
+        boolean memberLogin = true;
+        if (user == null) {
+            memberLogin = false;
+            model.addAttribute("memberLogin", memberLogin);
+            return "/member/login";
+        }
         System.out.println("가게 아이디 조회 : "+storeId);
         //로그인한 유저 아이디로 카트DTO 불러오기
         String email = user.getUsername();
@@ -110,9 +118,9 @@ public class StoreController {
         //스토어 아이디로 스토어DTO 불러오기
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
+        model.addAttribute("memberLogin", memberLogin);
         List<ReviewDTO> reviewDTOList = reviewService.getListOfStore(storeId);
         model.addAttribute("reviewDTOList", reviewDTOList);
-
         return "store/storedetail2";
     }
 }
