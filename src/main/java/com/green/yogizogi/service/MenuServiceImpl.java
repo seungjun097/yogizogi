@@ -15,6 +15,14 @@ import org.springframework.stereotype.Service;
 public class MenuServiceImpl implements MenuService{
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
+
+    @Override
+    public Long findStoreByMenuId(Long menu_id) {
+        Menu menu = menuRepository.findById(menu_id).get();
+        Store store = menu.getStore();
+        return store.getId();
+    }
+
     @Override
     public void MenuSave(MenuDTO menuDTO) {
         Store store = storeRepository.findById(menuDTO.getStore_id()).get();

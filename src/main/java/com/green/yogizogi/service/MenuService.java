@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface MenuService {
+
+    Long findStoreByMenuId(Long menu_id);
     void MenuSave(MenuDTO menuDTO);
 
     void menuDelete(Long menuId);

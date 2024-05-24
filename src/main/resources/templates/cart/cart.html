@@ -5,51 +5,11 @@
     <section class="section">
       <div class="w-layout-blockcontainer container w-container">
         <div class="bigcartmenu">
-          <a href="#" class="cartHeadcardText w-inline-block"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="storeupdateimg">
-            <h3 class="cartHeadingText">스토어 이름</h3>
-            <div class="storeadress">스토어 주소</div>
+          <a href="#" class="cartHeadcardText w-inline-block"><img th:src="|/display?fileName=${storeDTO.getThumbnailURL()}|" loading="lazy" alt="" class="storeupdateimg">
+            <h3 class="cartHeadingText">[[${storeDTO.storeName}]]</h3>
+            <div class="storeadress">[[${storeDTO.storeAddress1+" "+storeDTO.storeAddress2+" "+storeDTO.storeAddress3}]]</div>
           </a>
           <div class="cartlist" id="cartList">
-            <!--<div class="cartlistmenu">
-              <div class="div-block-11"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="image-7">
-                <div class="div-block-12">
-                  <div class="menuhedingwrap">
-                    <h4 class="cartmenulistheading">메뉴 이름</h4>
-                    <a href="#" class="button w-button">x</a>
-                  </div>
-                  <div>메뉴가격</div>
-                  <div class="cart-menu-optionlist">
-                    <div class="menu-detail-option">
-                      <div class="option-left">
-                        <div class="option-name">옵션 이름</div>
-                        <div class="option-price">옵션 가격</div>
-                      </div>
-                      <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                    </div>
-                    <div class="menu-detail-option">
-                      <div class="option-left">
-                        <div class="option-name">옵션 이름</div>
-                        <div class="option-price">옵션 가격</div>
-                      </div>
-                      <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                    </div>
-                    <div class="menu-detail-option">
-                      <div class="option-left">
-                        <div class="option-name">옵션 이름</div>
-                        <div class="option-price">옵션 가격</div>
-                      </div>
-                      <div class="checkbox w-embed"><input type="checkbox" checked=""></div>
-                    </div>
-                  </div>
-                  <div class="amountbtndiv">
-                    <a href="#" class="amountbtn left w-button" onclick="cartDecrease(0)">-</a>
-                    <input type="number" class="amountinput" id="Cartamountinput0" name="count" value="1">
-                    <a href="#" class="amountbtn right w-button" onclick="cartIncrease(0)">+</a>
-                  </div>
-                  <div> 총 메뉴 가격</div>
-                </div>
-              </div>
-            </div>-->
           </div>
           <div class="menuplus"></div>
           <div class="cartamount">
@@ -84,8 +44,9 @@
         let str = "";
         for(let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
           let cartMenu = cartDTO.cartMenuDTOList[i];
+          let imgUrl = cartMenu.thumbnailURL;
           str += "<div class='cartmenu'><div class='div-block-11'>"
-          str += "<img src='#' loading='lazy' alt='' class='image-7'>"
+          str += "<img src='/display?fileName="+imgUrl+"' loading='lazy' alt='' class='image-7'>"
           str += "<div class='div-block-12'><div class='menuhedingwrap'>"
           str += "<div name ='cartMenuId'></div>"
           str += "<h4 class='cartmenuheading'>"+cartMenu.menu_name+"</h4>"

@@ -3,8 +3,11 @@ package com.green.yogizogi.controller;
 import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.CartMenuOptionDTO;
+import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.service.CartMenuService;
 import com.green.yogizogi.service.CartService;
+import com.green.yogizogi.service.MenuService;
+import com.green.yogizogi.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +25,19 @@ import java.util.Map;
 public class CartController {
     private final CartMenuService cartMenuService;
     private final CartService cartService;
+    private final MenuService menuService;
+    private final StoreService storeService;
 
     @GetMapping("/cart")
     public String cartPage(@AuthenticationPrincipal User user ,Model model) {
         String email = user.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
+        if(cartDTO != null) {
+            Long menu_id = cartDTO.getCartMenuDTOList().get(0).getMenu_id();
+            Long store_id = menuService.findStoreByMenuId(menu_id);
+            StoreDTO storeDTO = storeService.findStore(store_id);
+            model.addAttribute("storeDTO", storeDTO);
+        }
         model.addAttribute("cartDTO", cartDTO);
         return "cart/cart";
     }
