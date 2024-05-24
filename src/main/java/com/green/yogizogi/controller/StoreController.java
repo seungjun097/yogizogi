@@ -4,12 +4,10 @@ import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
+import com.green.yogizogi.dto.ReviewDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.service.CartMenuService;
-import com.green.yogizogi.service.CartService;
-import com.green.yogizogi.service.MemberService;
-import com.green.yogizogi.service.StoreService;
+import com.green.yogizogi.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,8 +30,8 @@ import java.util.stream.Collectors;
 public class StoreController {
     private final StoreService storeService;
     private final MemberService memberService;
-    private final CartMenuService cartMenuService;
     private final CartService cartService;
+    private final ReviewService reviewService;
 
     //카테고리 주소로 주위가게리스트 검색
     @GetMapping("/{category}/{address1}")
@@ -121,6 +119,8 @@ public class StoreController {
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
         model.addAttribute("memberLogin", memberLogin);
+        List<ReviewDTO> reviewDTOList = reviewService.getListOfStore(storeId);
+        model.addAttribute("reviewDTOList", reviewDTOList);
         return "store/storedetail2";
     }
 }

@@ -125,9 +125,6 @@
                     <div class="order_btrn">
                         <a href="#" class="order_bigbtn w-button" id="orderBtn">order</a>
                     </div>
-                    <div class="order_btrn">
-                        <a href="#" class="order_bigbtn w-button" id="paymentCancelBtn">cancel</a>
-                    </div>
                 </div>
             </div>
         </section>
@@ -139,6 +136,7 @@
     const modalWindow = $(".sysf-modal-wrapper");
     let cartDTO = [[${cartDTO}]];
     let addressDTOList = [[${addressDTOList}]];
+    let storeId = [[${storeId}]];
     let addressIndex = 0;
     let allTotalPrice = 0;
     let order_uuid = self.crypto.randomUUID();
@@ -363,11 +361,11 @@
                 data: JSON.stringify(data)
             }).done(function (data) {
                 // 주문 금액이 들어있음
-
                 // 위의 rsp.paid_amount 와 data.response.amount를 비교한후 로직 실행 (import 서버검증)
                 if (rsp.paid_amount == data.response.amount) {
                     console.log(data);
                     alert("결제 및 결제검증완료");
+                    orderCreate(data);
                 } else {
                     alert("결제 검증 실패");
                     orderCancel(rsp.merchant_uid);
@@ -380,24 +378,55 @@
 	});
   }
 
-  $('#paymentCancelBtn').on('click', function() {
-    let id = "4de02342-cb32-4c98-9c7f-8fe58702890d"
-    orderCancel(id)
-  });
+function orderCreate(data) {
+      let merchantUid = data.response.merchantUid;
+      let totalPrice = data.response.amount;
+      let address_id = addressDTOList[addressIndex].address_id;
+      let orderMenuDTOList = [];
 
-function orderCancel(merchant_uid){
-    $.ajax({
-        type: "POST",
-        url: "/payment/cancel",
-        data: merchant_uid,
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-            alert("결제가 취소되었습니다.");
-        },
-        error: function (error) {
-            alert("결제 취소 실패");
+      for (let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
+        let cartMenuDTO = cartDTO.cartMenuDTOList[i];
+        let menuPrice = cartMenuDTO.menu_price;
+        let count = cartMenuDTO.count;
+        let selectOp = "";
+
+        for (let i = 0; i < cartMenuDTO.cartMenuOptionDTOList.length; i++) {
+            cartOpDTO = cartMenuDTO.cartMenuOptionDTOList[i];
+            if(cartOpDTO.checked) {
+                menuPrice += cartOpDTO.menuOption_price;
+                selectOp += cartOpDTO.menuOption_name+"%"+cartOpDTO.menuOption_price;
+            }
         }
-    })
+
+        let orderMenuDTO = {
+              menuPrice : menuPrice,
+              menuName : cartMenuDTO.menu_name,
+              selectOp :  selectOp,
+              count : count
+        };
+        orderMenuDTOList.push(orderMenuDTO);
+      }
+
+      let orderDTO = {
+          store_id: storeId,
+          merchant_uid : merchantUid,
+          orderMenuDTOList : orderMenuDTOList,
+          totalPrice : totalPrice,
+          address_id : address_id
+      }
+      console.log(orderDTO);
+      $.ajax({
+          type: "POST",
+          url: "/order/orderCreate",
+          data: JSON.stringify(orderDTO),
+          contentType: "application/json",
+          success: function (response) {
+              console.log("주문 저장 완료");
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
 }
 </script>
 </html>
