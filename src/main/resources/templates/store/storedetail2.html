@@ -175,56 +175,28 @@
                 <div data-w-tab="Tab 2" class="w-tab-pane w--tab-active">
                   <div class="review-overview">
                     <div class="text-block-6">total Score</div>
-                    <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
-                      <div class="text-block">4.0</div>
-                    </div>
-                  </div>
-                  <div class="reviewlist">
-                    <div class="reveiw_card">
-                      <h3 class="review_title">review title</h3>
-                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
-                        <div class="text-block">4.0</div>
+                    <div class="star_score">
+                      <div class="star_rating">
+                            <span th:each="starValue : ${#numbers.sequence(1, 5)}"
+                                  th:class="${starValue le 5} ? 'star on' : 'star'"
+                                  th:value="${starValue}"> </span>
                       </div>
-                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+                      <div class="text-block">5.0</div>
                     </div>
                   </div>
                   <div class="reviewlist">
-                    <div class="reveiw_card">
-                      <h3 class="review_title">review title</h3>
-                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
-                        <div class="text-block">4.0</div>
+                    <div th:each="reviewDTO : ${reviewDTOList}">
+                      <div class="reveiw_card">
+                        <h3 class="review_title">[[${reviewDTO.nickname}]]</h3>
+                        <div class="star_rating">
+                            <span th:each="starValue : ${#numbers.sequence(1, 5)}"
+                                  th:class="${starValue le reviewDTO.grade} ? 'star on' : 'star'"
+                                  th:value="${starValue}"> </span>
+                            <div class="text-block">[[${reviewDTO.grade}]].0</div>
+                        </div>
+                        <p class="paragraph">[[${reviewDTO.text}]]</p>
                       </div>
-                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
                     </div>
-                  </div>
-                  <div class="reviewlist">
-                    <div class="reveiw_card">
-                      <h3 class="review_title">review title</h3>
-                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
-                        <div class="text-block">4.0</div>
-                      </div>
-                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-                    </div>
-                  </div>
-                  <div class="reviewlist">
-                    <div class="reveiw_card">
-                      <h3 class="review_title">review title</h3>
-                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
-                        <div class="text-block">4.0</div>
-                      </div>
-                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-                    </div>
-                  </div>
-                  <div class="reviewlist">
-                    <div class="reveiw_card">
-                      <h3 class="review_title">review title</h3>
-                      <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
-                        <div class="text-block">4.0</div>
-                      </div>
-                      <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-                    </div>
-                  </div>
-                  <div class="reviewlist">
                     <div class="reveiw_card">
                       <h3 class="review_title">review title</h3>
                       <div class="star_score"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-4"><img src="images/Rounded-Star.png" loading="lazy" sizes="23px" srcset="images/Rounded-Star-p-500.png 500w, images/Rounded-Star-p-800.png 800w, images/Rounded-Star-p-1080.png 1080w, images/Rounded-Star-p-1600.png 1600w, images/Rounded-Star-p-2000.png 2000w, images/Rounded-Star-p-2600.png 2600w, images/Rounded-Star-p-3200.png 3200w, images/Rounded-Star.png 3358w" alt="" class="image-5">
