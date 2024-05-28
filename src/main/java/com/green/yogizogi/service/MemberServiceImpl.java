@@ -4,7 +4,6 @@ import com.green.yogizogi.dto.SignupDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +43,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
 
-    @Override
+    /*@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(username);
         if(member == null) {
@@ -57,5 +54,14 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
+    }*/
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(username);
+        if(member == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new PrincipalDetails(member);
     }
 }
