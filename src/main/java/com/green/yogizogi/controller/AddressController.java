@@ -3,11 +3,13 @@ package com.green.yogizogi.controller;
 import com.green.yogizogi.dto.AddressDTO;
 import com.green.yogizogi.entity.Address;
 import com.green.yogizogi.service.AddressService;
+import com.green.yogizogi.service.PrincipalDetails;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,8 @@ public class AddressController {
 
 
     @PostMapping("/address/save")
-    public @ResponseBody ResponseEntity getMemberByEmail(@RequestBody AddressDTO addressDTO, Principal principal) {
-        String userEmail = principal.getName(); // 현재 로그인한 사용자의 이메일을 가져옴
+    public @ResponseBody ResponseEntity getMemberByEmail(@RequestBody AddressDTO addressDTO, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String userEmail = principalDetails.getUsername(); // 현재 로그인한 사용자의 이메일을 가져옴
         Long addressId;
         try {
             addressId = addressService.getMemberByEmail(addressDTO, userEmail);
@@ -36,8 +38,8 @@ public class AddressController {
     }
 
     @GetMapping("/address")
-    public String AddressForm(Model model, Principal principal) {
-        String userEmail = principal.getName();
+    public String AddressForm(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String userEmail = principalDetails.getUsername();
         model.addAttribute("addressDTO", new AddressDTO());
         List<AddressDTO> addressDTOList = addressService.addressList(userEmail);
         model.addAttribute("addressDTOList", addressDTOList);

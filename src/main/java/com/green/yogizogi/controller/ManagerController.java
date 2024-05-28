@@ -4,10 +4,7 @@ import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.service.MemberService;
-import com.green.yogizogi.service.MenuOptionService;
-import com.green.yogizogi.service.MenuService;
-import com.green.yogizogi.service.StoreService;
+import com.green.yogizogi.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,12 +31,12 @@ public class ManagerController {
 
     @GetMapping("/update")
     @Transactional
-    public String myStoreList(@AuthenticationPrincipal User user, Model model) {
+    public String myStoreList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         String email;
-        if(user.getUsername().isEmpty()) {
+        if(principalDetails.getUsername().isEmpty()) {
             return "main";
         }else {
-            email = user.getUsername();
+            email = principalDetails.getUsername();
         }
         Member member = memberService.userFindEmail(email);
         List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
@@ -65,9 +62,9 @@ public class ManagerController {
     @GetMapping("/update/{storeId}")
     @Transactional
     public String storeUpdate(@PathVariable("storeId") Long storeId,
-                              @AuthenticationPrincipal User user,
+                              @AuthenticationPrincipal PrincipalDetails principalDetails,
                               Model model) {
-        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(user.getUsername());
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(principalDetails.getUsername());
         StoreDTO storeDTO = storeDTOList.stream().filter(storeDto -> storeDto.getId() == storeId)
                 .collect(Collectors.toList()).get(0);
         model.addAttribute("storeDTOList", storeDTOList);

@@ -2,10 +2,7 @@ package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.*;
 import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.service.AddressService;
-import com.green.yogizogi.service.CartService;
-import com.green.yogizogi.service.OrderService;
-import com.green.yogizogi.service.StoreService;
+import com.green.yogizogi.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +26,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/orderList")
-    public String orderPage(@AuthenticationPrincipal User user, Model model) {
-        String email = user.getUsername();
+    public String orderPage(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        String email = principalDetails.getUsername();
         List<OrderListDTO> orderListDTOList = orderService.orderList(email);
         model.addAttribute("orderDTOList", orderListDTOList);
         return "order/orderList";
@@ -38,17 +35,17 @@ public class OrderController {
 
     @PostMapping("/orderCreate")
     public @ResponseBody ResponseEntity orderCreate(@RequestBody OrderDTO orderDTO,
-                                                    @AuthenticationPrincipal User user) {
-        String email = user.getUsername();
+                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String email = principalDetails.getUsername();
         orderService.orderCreate(orderDTO, email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/orderProgress/{storeId}")
     public String getSignUp(@PathVariable("storeId") Long storeId,
-                            @AuthenticationPrincipal User user, Model model) {
+                            @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         System.out.println("주소요청 성공");
-        String email = user.getUsername();
+        String email = principalDetails.getName();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         model.addAttribute("cartDTO", cartDTO);
         model.addAttribute("userEmail", email);

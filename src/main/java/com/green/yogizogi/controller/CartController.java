@@ -4,10 +4,7 @@ import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.CartMenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
-import com.green.yogizogi.service.CartMenuService;
-import com.green.yogizogi.service.CartService;
-import com.green.yogizogi.service.MenuService;
-import com.green.yogizogi.service.StoreService;
+import com.green.yogizogi.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +26,8 @@ public class CartController {
     private final StoreService storeService;
 
     @GetMapping("/cart")
-    public String cartPage(@AuthenticationPrincipal User user ,Model model) {
-        String email = user.getUsername();
+    public String cartPage(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         if(cartDTO != null) {
             Long menu_id = cartDTO.getCartMenuDTOList().get(0).getMenu_id();
@@ -44,19 +41,19 @@ public class CartController {
 
     @PostMapping("/insert")
     public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
-                                                     @AuthenticationPrincipal User user) {
-        String email = user.getUsername();
+                                                     @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String email = principalDetails.getUsername();
         cartMenuService.CartMenuRegister(email, cartMenuDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/delete")
     public @ResponseBody ResponseEntity cartMenuDelete(@RequestBody Map<String, Object> data,
-                                         @AuthenticationPrincipal User user) {
+                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Long cartMenuId = Long.parseLong(data.get("cartMenuId").toString());
         System.out.println("삭제 요청시 카트 메뉴 아이디 : "+cartMenuId);
         cartMenuService.cartMenuDelete(cartMenuId);
-        String email = user.getUsername();
+        String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
     }
@@ -79,8 +76,8 @@ public class CartController {
     }
 
     @PostMapping("/cartList")
-    public @ResponseBody ResponseEntity cartListShow(@AuthenticationPrincipal User user) {
-        String email = user.getUsername();
+    public @ResponseBody ResponseEntity cartListShow(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }

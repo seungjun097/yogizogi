@@ -56,11 +56,11 @@ public class StoreController {
 
     //가게추가 페이지 이동
     @GetMapping("/register")
-    public String StoreUpdate(@AuthenticationPrincipal User user, Model model) {
-        if(user==null) {
+    public String StoreUpdate(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        if(principalDetails==null) {
             return "redirect:/";
         }else {
-            Member member = memberService.userFindEmail(user.getUsername());
+            Member member = memberService.userFindEmail(principalDetails.getUsername());
             model.addAttribute("member_id", member.getId());
             return "store/storeRegister";
         }
@@ -82,37 +82,20 @@ public class StoreController {
         return "/store/maintest";
     }
 
-    @GetMapping("/detail/{storeId}")
-    @Transactional
-    public String storeDetatilview(@PathVariable("storeId") Long storeId,
-                                   @AuthenticationPrincipal User user,
-                                   Model model) {
-        System.out.println("가게 아이디 조회 : "+storeId);
-        //로그인한 유저 아이디로 카트DTO 불러오기
-        String email = user.getUsername();
-        CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
-        model.addAttribute("cartDTO", cartDTO);
-        //스토어 아이디로 스토어DTO 불러오기
-        StoreDTO storeDTO = storeService.findStore(storeId);
-        model.addAttribute("storeDTO", storeDTO);
-
-        return "store/storedetail";
-    }
-
     @GetMapping("/detail2/{storeId}")
     @Transactional
     public String storeDetatilview2(@PathVariable("storeId") Long storeId,
-                                   @AuthenticationPrincipal User user,
+                                   @AuthenticationPrincipal PrincipalDetails principalDetails,
                                     Model model) {
         boolean memberLogin = true;
-        if (user == null) {
+        if (principalDetails == null) {
             memberLogin = false;
             model.addAttribute("memberLogin", memberLogin);
             return "/member/login";
         }
         System.out.println("가게 아이디 조회 : "+storeId);
         //로그인한 유저 아이디로 카트DTO 불러오기
-        String email = user.getUsername();
+        String email = principalDetails.getName();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         model.addAttribute("cartDTO", cartDTO);
         //스토어 아이디로 스토어DTO 불러오기
