@@ -1,5 +1,6 @@
 package com.green.yogizogi.repository;
 
+import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Menu;
 import com.green.yogizogi.entity.Store;
@@ -40,5 +41,12 @@ public class StoreRepositoryTest {
         List<Store> storeList = storeRepository.findByMember(member);
         System.out.println(storeList.size());
         System.out.println(storeList.get(0).getMenuList());
+    }
+
+    @Test
+    @Transactional
+    public void storetest2() {
+        List<MainStoreDTO> result = storeRepository.findStoreWithReviewGrade();
+        result.stream().forEach(dto -> System.out.println(dto.toString()));
     }
 }

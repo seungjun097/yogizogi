@@ -3,6 +3,7 @@ package com.green.yogizogi.service;
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
+import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
@@ -23,6 +24,8 @@ public interface StoreService {
 
     //주소 카테고리값으로 주변가게 찾기
     public List<StoreDTO> getStoresByCategoryAndAddress(StoreCategory category, int address);
+
+    List<MainStoreDTO> StoreAndAvgListAll();
 
     List<StoreDTO> storeFindMemberEmail(String email);
 
