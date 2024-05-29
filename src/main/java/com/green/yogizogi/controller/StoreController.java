@@ -109,7 +109,6 @@ public class StoreController {
         }
         model.addAttribute("starAvg", starAvg);
         model.addAttribute("reviewDTOList", reviewDTOList);
-
         return "store/storedetail2";
     }
 }

@@ -120,14 +120,14 @@
         <section class="section">
             <div class="w-layout-blockcontainer container w-container">
                 <div class="menuwrap">
-                    <div th:each="dto:${result.dtoList}">
+                    <div th:each="dto:${storeDTOList}">
                         <a th:href="'/store/detail2/'+${dto.id}" class="sysf-card sysf-card-box w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getImageURL()}|" alt="" class="sysf-card-image sysf-card-image-box">
                             <div class="sysf-card-text-wrapper sysf-s-p-24">
                                 <div class="sysf-card-title">
                                     <div class="div-block">
-                                        <h3 class="sysf-heading sysf-xs">[[${dto.storeName}]]</h3>
+                                        <h3 class="sysf-heading sysf-xs">[[${dto.store_name}]]</h3>
                                         <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
-                                            <h3 class="sysf-heading sysf-xs">4.5</h3>
+                                            <h3 class="sysf-heading sysf-xs">[[${dto.avgGrade}]]</h3>
                                         </div>
                                     </div>
                                     <p class="sysf-body-text sysf-m sysf-s-m-b-0">[[${dto.storeDes}]]</p>
