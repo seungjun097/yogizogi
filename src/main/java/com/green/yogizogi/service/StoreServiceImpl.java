@@ -5,9 +5,11 @@ import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.StoreDTO;
 
+import com.green.yogizogi.entity.Likes;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.QStore;
 import com.green.yogizogi.entity.Store;
+import com.green.yogizogi.repository.LikesRepository;
 import com.green.yogizogi.repository.MemberRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -21,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Name;
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final MemberRepository memberRepository;
+    private final LikesRepository likesRepository;
 
     @Override
     @Transactional
@@ -73,6 +78,17 @@ public class StoreServiceImpl implements StoreService {
         List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
         return storeDTOList;
     }
+
+    @Override
+    public String isLikes(Long storeId, String email) {
+        Member member = memberRepository.findByEmail(email);
+        Likes likes = likesRepository.findByMemberIdAndStoreId(member.getId(), storeId);
+        if(likes != null) {
+            return "Y";
+        }
+        return "N";
+    }
+
     private BooleanBuilder getSearch(PageRequestDTO requestDTO){
         String keyword = requestDTO.getKeyword();
         BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -89,4 +105,18 @@ public class StoreServiceImpl implements StoreService {
         return booleanBuilder;
     }
 
+    @Transactional
+    public void likes(Long storeId, String likes, Long userId) {
+
+        Likes likes1 = likesRepository.findByMemberIdAndStoreId(userId, storeId);
+        if(likes1 == null) {
+            likes1 = Likes.builder()
+                    .store(storeRepository.findById(storeId).get())
+                    .member(memberRepository.findById(userId).get())
+                    .build();
+            likesRepository.save(likes1);
+        } else {
+            likesRepository.delete(likes1);
+        }
+    }
 }
