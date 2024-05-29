@@ -36,6 +36,7 @@ public class StoreDTO {
     private String uuid;
     private String imgName;
     private String path;
+    private int isLikes;
 
     @Builder.Default
     List<MenuDTO> menuDTOList = new ArrayList<>();

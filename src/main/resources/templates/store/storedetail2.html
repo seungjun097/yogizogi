@@ -68,6 +68,16 @@
               </div>
               <div>최소주문금액 : [[${storeDTO.minDelivery}]]</div>
               <div>discount</div>
+
+              <div class="inf2">
+    <span th:if="${likes == 'Y'}">
+        <i class="fas fa-heart"></i> 찜
+    </span>
+                <span th:unless="${likes == 'Y'}">
+        <i class="far fa-heart"></i> 찜
+    </span>
+              </div>
+
             </div>
           </div>
         </div>
@@ -593,5 +603,41 @@ function cartShow(cartDTO) {
       }
     });
   }
+// 찜하기
+$(".inf2 i").click(function(){
+  let likes ="";
+  console.log("찜하기클릭")
+
+  if($(this).hasClass("far")) {
+    likes = "on";
+  } else {
+    likes = "off";
+  }
+
+  const data = {
+    storeId  : storeDTO.id,
+    likes : likes
+  }
+  console.log("data.id:"+data.storeId);
+  $.ajax({
+    url: "/store/likes",
+    type: "POST",
+    data: JSON.stringify(data),
+    contentType: "application/json",
+    dataType: "text"
+  })
+          .done(function(result){
+            console.log(result);
+
+            if(likes == "on") {
+              $(".inf2 i").removeClass("far").addClass("fas");
+            } else {
+              $(".inf2 i").removeClass("fas").addClass("far");
+            }
+          })
+          .fail(function(error){
+            alert(error.responseText);
+          })
+}) // 찜
 </script>
 </html>

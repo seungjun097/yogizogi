@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface StoreService {
+    void likes(Long storeId, String likes, Long userId);
 
     StoreDTO findStore(Long store_id);
 
@@ -27,6 +28,8 @@ public interface StoreService {
     List<MainStoreDTO> StoreAndAvgListAll();
 
     List<StoreDTO> storeFindMemberEmail(String email);
+
+    String isLikes(Long storeId, String email);
 
     default Store DtoToEntity(StoreDTO storeDTO) {
         Store store = Store.builder()

@@ -2,10 +2,7 @@ package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.constant.StoreCategory;
-import com.green.yogizogi.dto.CartDTO;
-import com.green.yogizogi.dto.CartMenuDTO;
-import com.green.yogizogi.dto.ReviewDTO;
-import com.green.yogizogi.dto.StoreDTO;
+import com.green.yogizogi.dto.*;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.*;
 import jakarta.transaction.Transactional;
@@ -14,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -109,6 +107,21 @@ public class StoreController {
         }
         model.addAttribute("starAvg", starAvg);
         model.addAttribute("reviewDTOList", reviewDTOList);
+        String likes = storeService.isLikes(storeId, email);
+        model.addAttribute("likes", likes);
         return "store/storedetail2";
+    }
+    @PostMapping("/likes")
+    public @ResponseBody ResponseEntity<String> likes(@RequestBody LikeDTO likeDTO,
+                                                      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        if(principalDetails == null) {
+            return ResponseEntity.badRequest().body("회원만 가능합니다");
+        }
+
+        String userEmail = principalDetails.getUsername();
+        Member member = memberService.userFindEmail(userEmail);
+        Long userId = member.getId();
+        storeService.likes(likeDTO.getStoreId(), likeDTO.getLikes(), userId);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }
