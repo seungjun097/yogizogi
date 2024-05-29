@@ -13,8 +13,8 @@ public class MainController {
     private final StoreService storeService;
 
     @GetMapping("/")
-    public String mainPage(PageRequestDTO dto, Model model) {
-        model.addAttribute("result", storeService.storeListAll(dto));
+    public String mainPage(Model model) {
+        model.addAttribute("storeDTOList", storeService.StoreAndAvgListAll());
         return "main";
     }
 }
