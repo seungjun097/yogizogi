@@ -30,8 +30,24 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         log.info("getAttributes : {}", oAuth2User.getAttributes());
 
         String provider = userRequest.getClientRegistration().getRegistrationId();
-        String providerId = oAuth2User.getAttribute("sub");
+
+        OAuth2UserInfo oAuth2UserInfo = null;
+
+        if (provider.equals("google")) {
+            log.info("구글 로그인");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        } else if(provider.equals("naver")) {
+            log.info("네이버 로그인");
+            oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttributes());
+        } else if(provider.equals("kakao")) {
+            log.info("카카오 로그인");
+            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+        }
+
+        String providerId = oAuth2UserInfo.getProviderId();
+        String email = oAuth2UserInfo.getEmail();
         String loginId = provider + "_" + providerId;
+        String nickname = oAuth2UserInfo.getName();
 
         Optional<Member> optionalMember = memberRepository.findOptionalByEmail(loginId);
         Member member;
@@ -39,7 +55,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         if(optionalMember.isEmpty()) {
             member = Member.builder()
                     .email(loginId)
-                    .nickname(oAuth2User.getAttribute("name"))
+                    .nickname(nickname)
                     .provider(provider)
                     .providerId(providerId)
                     .role(Role.USER)
