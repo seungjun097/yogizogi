@@ -3,6 +3,7 @@ package com.green.yogizogi.service;
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
+import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.dto.StoreDTO;
 
 import com.green.yogizogi.entity.Member;
@@ -48,8 +49,6 @@ public class StoreServiceImpl implements StoreService {
         return resultDTO;
     }
 
-
-
     @Override
     public Long StoreRegister(StoreDTO storeDTO) {
         Store store = DtoToEntity(storeDTO);
@@ -66,6 +65,13 @@ public class StoreServiceImpl implements StoreService {
         List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
         return storeDTOList;
     }
+
+    @Override
+    public List<MainStoreDTO> StoreAndAvgListAll() {
+        List<MainStoreDTO> storeDTOList = storeRepository.findStoreWithReviewGrade();
+        return storeDTOList;
+    }
+
     @Override
     @Transactional
     public List<StoreDTO> storeFindMemberEmail(String email) {

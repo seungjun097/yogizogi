@@ -48,7 +48,6 @@ public class Store {
     private int delivery_time;
     @Column
     private int delivery_tip;
-    @Lob
     @Column
     private String storeDes;
 
