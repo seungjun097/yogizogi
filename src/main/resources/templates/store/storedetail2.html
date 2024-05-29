@@ -60,7 +60,12 @@
           <div class="store_detail2"><img th:src="|/display?fileName=${storeDTO.getImageURL()}|" loading="lazy" alt="" class="image">
             <div class="div-block-4">
               <h2>[[${storeDTO.storeName}]]</h2>
-              <div>star score</div>
+              <div class="star_rating">
+                            <span th:each="starValue : ${#numbers.sequence(1, 5)}"
+                                  th:class="${starValue le starAvg} ? 'star on' : 'star'"
+                                  th:value="${starAvg}"> </span>
+                <span>[[${starAvg}]]</span>
+              </div>
               <div>최소주문금액 : [[${storeDTO.minDelivery}]]</div>
               <div>discount</div>
             </div>
@@ -178,10 +183,10 @@
                     <div class="star_score">
                       <div class="star_rating">
                             <span th:each="starValue : ${#numbers.sequence(1, 5)}"
-                                  th:class="${starValue le 5} ? 'star on' : 'star'"
-                                  th:value="${starValue}"> </span>
+                                  th:class="${starValue le starAvg} ? 'star on' : 'star'"
+                                  th:value="${starAvg}"> </span>
                       </div>
-                      <div class="text-block">5.0</div>
+                      <div class="text-block">[[${starAvg}]]</div>
                     </div>
                   </div>
                   <div class="reviewlist">

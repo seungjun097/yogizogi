@@ -103,7 +103,13 @@ public class StoreController {
         model.addAttribute("storeDTO", storeDTO);
         model.addAttribute("memberLogin", memberLogin);
         List<ReviewDTO> reviewDTOList = reviewService.getListOfStore(storeId);
+        Double starAvg = reviewService.storeAvgGrade(storeId);
+        if(starAvg == null) {
+            starAvg = 0.0;
+        }
+        model.addAttribute("starAvg", starAvg);
         model.addAttribute("reviewDTOList", reviewDTOList);
+
         return "store/storedetail2";
     }
 }
