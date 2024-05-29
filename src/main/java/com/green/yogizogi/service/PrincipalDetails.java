@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -26,32 +27,14 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         this.attributes = attributes;
     }
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Collection<GrantedAuthority> collect = new ArrayList<>();
-//        collect.add(() -> {
-//            return member.getRole().toString();
-//        });
-//
-//        return collect;
-//    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-
-        // 사용자의 역할을 가져옵니다.
-        Role role = member.getRole();
-
-        // 권한 정보를 SimpleGrantedAuthority 객체로 변환하여 컬렉션에 추가합니다.
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.toString()));
-
-        return authorities;
+        return List.of(() -> member.getRole().toString());
     }
 
     @Override
     public String getName() {
-        return member.getEmail();
+        return member.getNickname();
     }
 
     @Override
