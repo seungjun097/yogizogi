@@ -71,4 +71,6 @@ public class Store {
         menu.setStore(this);
     }
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<Likes> likes = new ArrayList<>();
 }

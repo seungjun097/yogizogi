@@ -26,8 +26,4 @@ public class Likes extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public Likes(Member member, Store store) {
-        this.member = member;
-        this.store = store;
-    }
 }
