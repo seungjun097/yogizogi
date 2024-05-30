@@ -108,7 +108,7 @@ public class StoreController {
         model.addAttribute("reviewDTOList", reviewDTOList);
         String likes = storeService.isLikes(storeId, email);
         model.addAttribute("likes", likes);
-        return "store/storedetail2";
+        return "store/storedetail";
     }
     @PostMapping("/likes")
     public @ResponseBody ResponseEntity<String> likes(@RequestBody LikeDTO likeDTO,

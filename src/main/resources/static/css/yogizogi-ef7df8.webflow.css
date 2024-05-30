@@ -629,14 +629,18 @@ a {
 }
 
 .div-block-4 {
+  width: 100%;
   padding-left: 25px;
   display: flex;
-  flex-d
+  flex-direction: column;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
 }
 
 .image {
   aspect-ratio: auto;
   object-fit: cover;
+  border-radius: 10px;
   width: 35vh;
 }
 
@@ -677,6 +681,7 @@ a {
   width: 30vh;
   margin: 10px;
   padding: 10px;
+  border-radius: 10px;
 }
 
 .link-block {
@@ -2221,10 +2226,17 @@ a {
 .storeDetailHeadLike{
     display: flex;
     justify-content: space-between;
+    margin-top: 15px;
 }
 
-.storeDetailShowContent{
+.storeDetailHead2{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
 
+.fa-heart{
+    margin-top: 10px;
+    margin-right: 20px;
 }
 
 @media screen and (max-width: 991px) {
