@@ -97,6 +97,8 @@ public class StoreServiceImpl implements StoreService {
         return "N";
     }
 
+
+
     private BooleanBuilder getSearch(PageRequestDTO requestDTO){
         String keyword = requestDTO.getKeyword();
         BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -126,5 +128,13 @@ public class StoreServiceImpl implements StoreService {
         } else {
             likesRepository.delete(likes1);
         }
+    }
+    @Override
+    public List<StoreDTO> likeList(String email) {
+        Member member = memberRepository.findByEmail(email);
+        Long memberId = member.getId();
+        List<Store> likeList = likesRepository.findLikedStoresByMemberId(memberId);
+        List<StoreDTO> likeListDTO = likeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
+        return likeListDTO;
     }
 }

@@ -4,6 +4,7 @@ import com.green.yogizogi.constant.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,4 +35,5 @@ public class Member {
 
     @OneToMany
     private List<Address> addresses;
+
 }
