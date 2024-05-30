@@ -123,4 +123,9 @@ public class StoreController {
         storeService.likes(likeDTO.getStoreId(), likeDTO.getLikes(), userId);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public String searchPage() {
+        return "store/mainfirst";
+    }
 }
