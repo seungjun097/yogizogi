@@ -86,9 +86,11 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    @Transactional
     public String isLikes(Long storeId, String email) {
-        Member member = memberRepository.findByEmail(email);
-        Likes likes = likesRepository.findByMemberIdAndStoreId(member.getId(), storeId);
+        Long memberId = memberRepository.findByEmail(email).getId();
+        System.out.println(memberId);
+        Likes likes = likesRepository.findByMemberIdAndStoreId(memberId, storeId);
         if(likes != null) {
             return "Y";
         }

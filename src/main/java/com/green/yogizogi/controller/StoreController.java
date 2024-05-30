@@ -93,13 +93,12 @@ public class StoreController {
         }
         System.out.println("가게 아이디 조회 : "+storeId);
         //로그인한 유저 아이디로 카트DTO 불러오기
-        String email = principalDetails.getName();
+        String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         model.addAttribute("cartDTO", cartDTO);
         //스토어 아이디로 스토어DTO 불러오기
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
-        model.addAttribute("memberLogin", memberLogin);
         List<ReviewDTO> reviewDTOList = reviewService.getListOfStore(storeId);
         Double starAvg = reviewService.storeAvgGrade(storeId);
         if(starAvg == null) {

@@ -630,6 +630,8 @@ a {
 
 .div-block-4 {
   padding-left: 25px;
+  display: flex;
+  flex-d
 }
 
 .image {
@@ -2214,6 +2216,15 @@ a {
     flex-direction: column;
     grid-column-gap: 20px;
     grid-row-gap: 20px;
+}
+
+.storeDetailHeadLike{
+    display: flex;
+    justify-content: space-between;
+}
+
+.storeDetailShowContent{
+
 }
 
 @media screen and (max-width: 991px) {

@@ -45,7 +45,7 @@ public class OrderController {
     public String getSignUp(@PathVariable("storeId") Long storeId,
                             @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         System.out.println("주소요청 성공");
-        String email = principalDetails.getName();
+        String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         model.addAttribute("cartDTO", cartDTO);
         model.addAttribute("userEmail", email);
