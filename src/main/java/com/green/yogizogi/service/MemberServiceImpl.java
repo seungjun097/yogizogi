@@ -29,6 +29,15 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
+    public Long edit(SignupDTO signupDTO) {
+        Member member = signUpDTOtoEntity(signupDTO);
+        member.setId(signupDTO.getId());
+        member.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
+        member = memberRepository.save(member);
+        return member.getId();
+    }
+
+    @Override
     public String userEmailChk(String email) {
         int result = memberRepository.findByUserCount(email).intValue();
         if(result != 0) {
