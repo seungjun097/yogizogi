@@ -72,7 +72,9 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/fonts/**"),
                 new AntPathRequestMatcher("/icons/**"),
                 new AntPathRequestMatcher("/img/**"),
-                new AntPathRequestMatcher("/js/**")
+                new AntPathRequestMatcher("/images/**"),
+                new AntPathRequestMatcher("/js/**"),
+                new AntPathRequestMatcher("/layout/**")
         );
     }
 }
