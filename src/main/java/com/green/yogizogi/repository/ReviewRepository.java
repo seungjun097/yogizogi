@@ -5,6 +5,8 @@ import com.green.yogizogi.entity.Review;
 import com.green.yogizogi.entity.Store;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,5 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByStore(Store store); //기본키이기 때문에 메소드 추가
     
     //리뷰삭제
-    void deleteByMember(Member member); //리뷰만 삭제할 수 있도록 메소드 하나
+    void deleteByMember(Member member);//리뷰만 삭제할 수 있도록 메소드 하나
+
+    @Query("select ROUND(AVG(r.grade), 1) from Review r where r.store = :store")
+    Double totalStarEvg(@Param("store") Store store);
 }

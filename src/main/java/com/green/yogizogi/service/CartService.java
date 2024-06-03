@@ -4,8 +4,6 @@ import com.green.yogizogi.dto.CartDTO;
 import com.green.yogizogi.dto.CartMenuDTO;
 import com.green.yogizogi.dto.CartMenuOptionDTO;
 import com.green.yogizogi.entity.Cart;
-import com.green.yogizogi.entity.CartMenuOption;
-import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,6 @@ public interface CartService {
 
     CartDTO cartFindById(Long cartId);
 
-    @Transactional
     default CartDTO entityToDTO(Cart cart) {
         List<CartMenuDTO> cartMenuDTOList = new ArrayList<>();
         CartDTO cartDTO = CartDTO.builder()
@@ -32,6 +29,9 @@ public interface CartService {
                         .menu_name(cartMenu.getMenu().getMenuName())
                         .menu_price(cartMenu.getMenu().getMenuPrice())
                         .count(cartMenu.getCount())
+                        .path(cartMenu.getPath())
+                        .uuid(cartMenu.getUuid())
+                        .imgName(cartMenu.getImgName())
                         .build();
                 List<CartMenuOptionDTO> cartMenuOptionDTOList = new ArrayList<>();
                 if(cartMenu.getCartMenuOptionList() != null) {

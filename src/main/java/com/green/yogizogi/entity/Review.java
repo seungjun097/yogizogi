@@ -17,9 +17,13 @@ public class Review extends BaseEntity{
     private Long reviewnum;
     private String text;
     private int grade; //평점
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
     private Store store;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public void changeGrade(int grade){

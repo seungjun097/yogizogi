@@ -1,543 +1,643 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<div class="menu-modal-wrapper">
+  <div class="menu-container">
+    <div class="menu-positon">
+      <div class="menu-modal-window">
+        <div class="menu-modal-header">
+          <h4 class="menu-modal-head-text">YOGIZOGI</h4>
+          <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
+        </div>
+        <div class="menu-modal-body">
+          <div class="menu-modal-divide">
+            <img src="" loading="lazy" alt="" class="menu-modal-img" id="modalMenuImg">
+            <div id="w-node-_7fa41d3a-af4d-8c97-8334-e684d10f9587-0ae922c6" class="menu-modal-body-detail">
+              <div id="modalMenuId" style="display: none;"></div>
+              <div id="modalMenuIndex" style="display: none;"></div>
+              <h4 class="menu-modal-body-title" id="modalMenuName">menu name</h4>
+              <div class="menu-modal-body-price" id="modalMenuPrice">menu price $</div>
+              <p class="menu-modal-body-paragraph" id="modalMenuDesc">menu Desc</p>
+              <div class="menu-optionlist">
+              </div>
+              <div class="menu-modal-tp">
+                <div class="amoutadd">
+                  <div class="amount">수량</div>
+                  <div class="amountbtndiv">
+                    <a href="#" class="amountbtn left w-button" id="decrease">-</a>
+                      <input type="number" class="amountinput" name="count" value="1" />
+                    <a href="#" class="amountbtn right w-button" id="increase">+</a>
+                  </div>
+                </div>
+                <div class="text-block-4">총 주문금액 : <span id="menuTotalPrice"></span> 원</div>
+              </div>
+            </div>
+          </div>
+          <div class="menu-modal-button">
+            <a href="#" class="menu-modal-btn w-inline-block" onclick="addToCart()">
+              <div class="menu-modal-btn-text">Cart</div>
+            </a>
+            <a href="#" class="menu-modal-btn w-inline-block">
+              <div class="menu-modal-btn-text">order</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
-    <th:block th:fragment="content">
-        <script type="text/javascript"
-                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb&libraries=services,clusterer,drawing"></script>
-        <link rel="stylesheet" type="text/css" href="/testcss/detail.css">
-        <h1>가게정보</h1>
-        <div class="form-group">
-            <label>가게이름</label>
-            <input type="hidden" id="storeId" name="storeId" th:value="storeDTO.id">
-            <input type="text" class="form-control" id="storeName" name="storeName" th:value="${storeDTO.storeName}"/>
-        </div>
-        <div class="form-group">
-            <label>가게 핸드폰 번호</label>
-            <input type="text" class="form-control" id="storePhone" name="storePhone" th:value="${storeDTO.storePhone}"/>
-        </div>
-            <div th:each="menu:${storeDTO.menuDTOList}">
-                <div class="w-layout-blockcontainer container w-container">
-                    <div class="menu_card"><img th:src="|/display?fileName=${menu.getThumbnailURL()}|" loading="lazy" id="w-node-_965acd6c-d97a-bac4-78c1-b1ddcae45480-78d18556" alt="">
-                        <div id="w-node-_6da358a5-3905-9059-f47d-c14a375d859d-78d18556" class="menu_content">
-                            <h3 id="menuName">[[${menu.menuName}]]</h3>
-                            <h4>[[${menu.menuPrice}]]원</h4>
-                            <p>[[${menu.menuDesc}]]</p>
-                            <button class="btn-primary" id="detail_btn" onclick="showModal(this.getAttribute('value'))" name="detail_btn" th:attr="value=${menu.id}">Show detail</button>
-                        </div>
-                    </div>
+  <th:block th:fragment="content">
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb&libraries=services,clusterer,drawing"></script>
+
+<body>
+  <section>
+    <div class="w-layout-blockcontainer container w-container">
+      <div class="store_map">
+        <div class="store_detail_wrap">
+          <div class="store_detail2"><img th:src="|/display?fileName=${storeDTO.getImageURL()}|" loading="lazy" alt="" class="image">
+            <div class="div-block-4">
+              <div class="storeDetailHeadLike">
+                <h2 CLASS="storeDetailHead2">[[${storeDTO.storeName}]]</h2>
+                <div class="inf2">
+                  <span th:if="${likes == 'Y'}">
+                      <i class="fas fa-heart"></i>
+                  </span>
+                  <span th:unless="${likes == 'Y'}">
+                      <i class="far fa-heart"></i>
+                  </span>
                 </div>
-                <!--메뉴의 상세정보를 나타낼 모달창-->
-                <div th:class="'modal'+${menu.id}+' modal'" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">[[${menu.menuName}]]</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>[[${menu.menuDesc}]]</p>
-                                <h4>[[${menu.menuPrice}]]원</h4>
-                            </div>
-                            <div th:id="MenuOptionList+${menu.id}">
-                            <div th:each="option:${menu.menuOptionDTOList}">
-                                <label>[[${option.opName}]]</label>
-                                <label>[[${option.opPrice}]]</label>
-                                <input type="checkbox" th:name="${option.opName}+'%'+${option.id}" onclick="checkboxToggle(this)" value="false">
-                            </div>
-                            </div>
-                            <div class="quantity">
-                                <button class="decrease">-</button>
-                                <input type="number" class="quantity-input" name="count" th:id="count+${menu.id}" value="1">
-                                <button class="increase">+</button>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                                <button type="button" onclick="addToCart(this.getAttribute('value'))" class="btn btn-primary" th:attr="value=${menu.id}">카트에 담기</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
+              <div class="star_rating">
+                            <span th:each="starValue : ${#numbers.sequence(1, 5)}"
+                                  th:class="${starValue le starAvg} ? 'star on' : 'star'"
+                                  th:value="${starAvg}"> </span>
+                <span>[[${starAvg}]]</span>
+              </div>
+              <div>최소주문금액 : [[${storeDTO.minDelivery}]]</div>
+              <div>[[${storeDTO.storeDes}]]</div>
             </div>
-
-        <!-- 장바구니 -->
-        <aside id="cart" style="width:1000px;">
-            <div class="cart">
-                <h2>장바구니</h2>
-                <i class="far fa-trash-alt deliteAll" ></i>
-
-                <div class="cart_list">
-                    <ul>
-                        <!--
-                        <li>
-                            <h3>메뉴</h3>
-                                  <div>가격</div>
-                                  <div>수량 : 0 </div>
-                                  <div> 옵션  </div>
-                                  <div>합계 : 0원</div>
-                                  <button class="cancle_btn"> ｘ </button>
-                        </li>
-                                  -->
-                    </ul>
-                </div>
-
-                <div class="order_btn_box">
-                    <button class="order_btn" disabled>주문하기</button>
-                </div>
-            </div>
-
-        </aside>
-        <div class="alarm">장바구니에 담았습니다</div>
-        <!-- 장바구니 -->
-
-
-        <main>
-            <div class="offset"></div>
-            <ul class="tab ">
-                <li class="select">메뉴</li>
-                <li>정보</li>
-                <li>리뷰</li>
-            </ul>
-
-
-            <!-- 메뉴 탭 -->
-            <ul class="menu">
-
-
-
-            </ul>
-            <!-- 메뉴 탭 -->
-
-
-            <!-- 정보 탭 -->
-            <ul class="info" >
-                <li>
-                    <div>
-                        <h2>찾아 오시는 길</h2>
-                        <div id="store_address" th:data-address="${storeDTO.getStoreAddress2()}"></div>
-                        <div id="store_Name" th:data-store_name="${storeDTO.storeName}"></div>
-                        <div id="map" style="width:500px;height:400px;">
-                            <script>
-                                $(document).ready(function(){
-                                    var storeAddress = $("#store_address").data("address");
-                                    console.log("storeAdd: "+ storeAddress)
-                                    var storeName = $("#store_Name").data("store_name");
-                                    console.log("storeName: " + storeName)
-                                    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                                        mapOption = {
-                                            center: new kakao.maps.LatLng(33.25110701, 126.570667), // 지도의 중심좌표
-                                            level: 3 // 지도의 확대 레벨
-                                        };
-                                    // 지도를 생성합니다
-                                    var map = new kakao.maps.Map(mapContainer, mapOption);
-                                    // 주소-좌표 변환 객체를 생성합니다
-                                    var geocoder = new kakao.maps.services.Geocoder();
-                                    // 주소로 좌표를 검색합니다
-                                    geocoder.addressSearch(storeAddress, function(result, status) {
-                                        // 정상적으로 검색이 완료됐으면
-                                        if (status === kakao.maps.services.Status.OK) {
-                                            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                                            // 결과값으로 받은 위치를 마커로 표시합니다
-                                            var marker = new kakao.maps.Marker({
-                                                map: map,
-                                                position: coords
-                                            });
-                                            // 인포윈도우로 장소에 대한 설명을 표시합니다
-                                            var infowindow = new kakao.maps.InfoWindow({
-                                                content: '<div style="width:150px;text-align:center;padding:3px 0;">' + storeName + '</div>'
-                                            });
-                                            infowindow.open(map, marker);
-                                            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                                            map.setCenter(coords);
-                                            $(".storePosition").click(function(){
-                                                map.panTo(coords);
-                                            })
-                                        }
-                                    });
-                                    var userAddress = $("#delivery_address").val();
-                                    console.log(userAddress);
-                                    if(userAddress != "" ) {
-                                        $(".userPosition").css("display" , "inline");
-                                        // 주소로 좌표를 검색합니다
-                                        geocoder.addressSearch(userAddress, function(result, status) {
-                                            // 정상적으로 검색이 완료됐으면
-                                            if (status === kakao.maps.services.Status.OK) {
-                                                coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                                                // 결과값으로 받은 위치를 마커로 표시합니다
-                                                var marker = new kakao.maps.Marker({
-                                                    map: map,
-                                                    position: coords
-                                                });
-                                                // 인포윈도우로 장소에 대한 설명을 표시합니다
-                                                var infowindow = new kakao.maps.InfoWindow({
-                                                    content: '<div style="width:150px;text-align:center;padding:3px 0;">' + "배달받을위치" + '</div>'
-                                                });
-                                                infowindow.open(map, marker);
-
-                                                $(".userPosition").click(function(){
-                                                    map.panTo(coords);
-                                                })
-                                            }
-                                        });
-                                    }
-                                })
-                            </script>
-                        </div>
-                            <div id="position_box">
-                                <button class="storePosition" ><i class="far fa-dot-circle"></i> 가게 위치로</button>
-                                <button class="userPosition"> <i class="far fa-dot-circle"></i> 내 위치로</button>
-                            </div>
-                        <h2>위치안내</h2>
-                        <div th:text="${storeDTO.getStoreAddress2()}"></div>
-                    </div>
-                </li>
-
-                <li>
-                    <div>
-                        <h2>가게 소개</h2>
-                        <div th:text="${storeDTO.getStoreDes()}"></div>
-                    </div>
-                </li>
-
-                <li>
-                    <div>
-                        <h2>영업 정보</h2>
-
-                        <div class="info_detail_title">
-                            <div>상호명</div>
-                            <div>영업시간</div>
-                            <div>전화번호</div>
-
-                        </div>
-
-                        <div class="info_detail">
-                            <div th:text="${storeDTO.storeName}"></div>
-                            <div>
-                                <span th:text="${storeDTO.openingTime}+'시 ~ '+${storeDTO.closingTime}+'시 까지 영업'"></span>
-                            </div>
-                            <div th:text="${storeDTO.getStorePhone()}"></div>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li>
-                    <div>
-                        <h2>가계 통계</h2>
-                        <div class="info_detail_title">
-                            <div>최근 주문수</div>
-                            <div>전체 리뷰 수</div>
-                            <div>찜</div>
-                        </div>
-
-                        <div class="info_detail">
-                            <div>${info.orderCount }</div>
-                            <div>${info.reviewCount }</div>
-                            <div>${info.likesCount }</div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <!-- 메뉴 탭 -->
-
-            <!-- 리뷰 탭 -->
-            <ul class="comment" >
-            </ul>
-        </main>
-
-        <input type="hidden" th:value="${storeDTO.id}" id="store_id">
-        <input type="hidden" th:value="${storeDTO.category}" id="store_category">
-        <input type="hidden" th:value="${storeDTO.openingTime}" id="store_opening_time">
-        <input type="hidden" th:value="${storeDTO.closingTime}" id="store_closing_time">
-<!--
-        <input type="hidden" th:value="${BMaddress.address2}" id="delivery_address">-->
-
-        <!--리뷰버튼 + 리뷰리스트-->
-        <div>
-            <button type="button" class="btn btn-info addReviewBtn">
-                리뷰등록
-            </button>
-        </div>
-        <div class="list-group reviewList">
-
+          </div>
         </div>
 
-        <!--//리뷰버튼 + 리뷰리스트-->
+        <div class="map_content">
+          <h4 class="mapheading">찾아 오시는 길</h4>
+          <div id="store_address" th:data-address="${storeDTO.getStoreAddress2()}"></div>
+          <div id="store_Name" th:data-store_name="${storeDTO.storeName}"></div>
+            <div class="div-block-6" id="map">
+                <script>
+                  $(document).ready(function(){
+                    var storeAddress = $("#store_address").data("address");
+                    console.log("storeAdd: "+ storeAddress)
+                    var storeName = $("#store_Name").data("store_name");
+                    console.log("storeName: " + storeName)
+                    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                            mapOption = {
+                              center: new kakao.maps.LatLng(33.25110701, 126.570667), // 지도의 중심좌표
+                              level: 3 // 지도의 확대 레벨
+                            };
+                    // 지도를 생성합니다
+                    var map = new kakao.maps.Map(mapContainer, mapOption);
+                    // 주소-좌표 변환 객체를 생성합니다
+                    var geocoder = new kakao.maps.services.Geocoder();
+                    // 주소로 좌표를 검색합니다
+                    geocoder.addressSearch(storeAddress, function(result, status) {
+                      // 정상적으로 검색이 완료됐으면
+                      if (status === kakao.maps.services.Status.OK) {
+                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                        // 결과값으로 받은 위치를 마커로 표시합니다
+                        var marker = new kakao.maps.Marker({
+                          map: map,
+                          position: coords
+                        });
+                        // 인포윈도우로 장소에 대한 설명을 표시합니다
+                        var infowindow = new kakao.maps.InfoWindow({
+                          content: '<div style="width:150px;text-align:center;padding:3px 0;">' + storeName + '</div>'
+                        });
+                        infowindow.open(map, marker);
+                        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                        map.setCenter(coords);
+                        $(".storePosition").click(function(){
+                          map.panTo(coords);
+                        })
+                      }
+                    });
+                    var userAddress = $("#delivery_address").val();
+                    if(userAddress != "" ) {
+                      $(".userPosition").css("display" , "inline");
+                      // 주소로 좌표를 검색합니다
+                      geocoder.addressSearch(userAddress, function(result, status) {
+                        // 정상적으로 검색이 완료됐으면
+                        if (status === kakao.maps.services.Status.OK) {
+                          coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                          // 결과값으로 받은 위치를 마커로 표시합니다
+                          var marker = new kakao.maps.Marker({
+                            map: map,
+                            position: coords
+                          });
+                          // 인포윈도우로 장소에 대한 설명을 표시합니다
+                          var infowindow = new kakao.maps.InfoWindow({
+                            content: '<div style="width:150px;text-align:center;padding:3px 0;">' + "배달받을위치" + '</div>'
+                          });
+                          infowindow.open(map, marker);
 
-        <!-- 모달 -->
-        <div class="reviewModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">가게 리뷰</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>작성자 ID</label>
-                            <input type="text" class="form-control" name="member_id" />
-                        </div>
-                        <div class="form-group">
-                            <label>평점</label>
-                            <input type="text" class="form-control" name="grade" />
-                        </div>
-                        <div class="form-group">
-                            <label>리뷰 내용</label>
-                            <input type="text" class="form-control" name="text" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
-                        <button type="button" class="btn btn-primary reviewModifyBtn">수정</button>
-                        <button type="button" class="btn btn-primary reviewDeleteBtn">삭제</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </th:block>
-</th:block>
-<script th:inline="javascript">
-    $(document).ready(function(){
-
-        let storeId = [[${storeDTO.id}]];
-        let reviewList = $(".reviewList");
-        //페이지가 열리면 리뷰 데이터 가져오기!
-        function getStoreReviews(){
-            $.getJSON("/reviews/"+storeId+"/all", function(arr){
-                let str="";
-                //서버가 보내준 list --> 자바스크립트 배열로 변환됨 arr(어떤 이름을 지어주든 상관 x)
-                $.each(arr,function(idx,review){
-                    str += "<div class='card-body' data-reviewnum='"+review.reviewnum+"' data-member-id='"+review.member_id+"'>";
-                    str += "<h5 class='card-title'><span class='reviewtext'>"+review.text+"</span> 평점 : <span class='reviewgrade'>"+review.grade+"</span></h5>";
-                    str += "<h6 class='card-subtitle mb-2 text-muted'>"+review.nickname+"</h6>";
-                    str += "<p class='card-text'>"+review.regDate+"</p>";
-                    str += "</div>";
-                })
-                reviewList.html(str);
-            })
-        }
-        getStoreReviews();
-
-        let reviewModal = $(".reviewModal");
-        //리뷰 등록 버튼 클릭시 모달창 보이기
-        $(".addReviewBtn").click(function(){
-            //모든 버튼 보이기
-            $(".modal-footer button").show();
-            //삭제, 수정 버튼 숨기기
-            $(".reviewDeleteBtn, .reviewModifyBtn").hide();
-            reviewModal.modal('show');
-        })
-
-        //save클릭시 서버로 등록 요청 post, /reviews/+storeId, json데이터 전송
-        //자바스크립트 객체 --> json
-        let inputMember_id = $("input[name='member_id']");
-        let inputGrade = $("input[name='grade']");
-        let inputText = $("input[name='text']");
-        $(".reviewSaveBtn").click(function(){
-            let data = {
-                //앞은 다 문자열이다. : 뒤가 변수
-                storeId: storeId,
-                grade: inputGrade.val(),
-                text: inputText.val(),
-                member_id: inputMember_id.val()
-            }
-            $.ajax({
-                url:'/reviews/'+storeId,
-                type: 'post',
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8",
-                dataType: "text",
-                success: function(result){
-                    console.log(result);
-                    self.location.reload(); //등록성공하면 새로고침
-                }
-            })
-        })
-
-        let reviewnum; //변수 선언 이벤트 바깥에다 하기
-        //리뷰선택시 모달창 보이기
-        $(".reviewList").on("click",".card-body",function(){
-            let target = $(this); //this = 클릭한 대상
-
-            console.log(target);
-            reviewnum = target.data("reviewnum");
-            inputMember_id.val(target.data("member_id"));
-            //inputMember_id는 readonly 속성지정
-            inputMember_id.attr("readonly", true);
-            let reviewtext = target.find(".reviewtext").text();
-            let reviewgrade = target.find(".reviewgrade").text();
-            inputText.val(reviewtext);
-            inputGrade.val(reviewgrade);
-            //모든 버튼 숨기기
-            $(".modal-footer button").hide();
-            //삭제, 수정 버튼 나타내기
-            $(".reviewDeleteBtn, .reviewModifyBtn").show();
-            reviewModal.modal('show');
-        })
-
-        //수정버튼 클릭했을때 서버로 수정요청 ajax요청
-        $(".reviewModifyBtn").click(function(){
-            let data = {
-                reviewnum: reviewnum,
-                storeId: storeId,
-                grade: inputGrade.val(),
-                text: inputText.val(),
-                member_id: inputMember_id.val()
-            }
-            $.ajax({
-                url:'/reviews/'+storeId+'/'+reviewnum,
-                type:'put',
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8",
-                dataType: 'text',
-                success: function(result){
-                    console.log(result);
-                    self.location.reload(); //등록성공하면 새로고침
-                }
-            })
-        })
-
-        //삭제버튼 클릭시 삭제 요청
-        $(".reviewDeleteBtn").click(function(){
-            let data = {reviewnum: reviewnum};
-            $.ajax({
-                url:'/reviews/'+storeId+'/'+reviewnum,
-                type:'delete',
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8",
-                dataType: 'text',
-                success: function(result){
-                    console.log(result);
-                    self.location.reload(); //등록성공하면 새로고침
-                }
-            })
-        })
-        //페이지 로드 때 카트 불러오기
-        let cartDTO = [[${cartDTO}]];
-        console.log(cartDTO);
-        cartList(cartDTO);
-    })
-
-    //단추의 수량조절 버튼
-    $(document).ready(function() {
-      $('.decrease').on('click', function() {
-        let quantityInput = $(this).next('.quantity-input');
-        let currentValue = parseInt(quantityInput.val());
-        if (currentValue > 1) {
-          quantityInput.val(currentValue - 1);
-        } else {
-          alert('수량은 1보다 작을 수 없습니다!');
-        }
-      });
-
-      $('.increase').on('click', function() {
-        let quantityInput = $(this).prev('.quantity-input');
-        let currentValue = parseInt(quantityInput.val());
-        quantityInput.val(currentValue + 1);
-      });
-
-      $('.quantity-input').on('change', function() {
-        let quantityInput = $(this);
-        if (quantityInput.val() < 1) {
-          alert('수량은 1보다 작을 수 없습니다!');
-          quantityInput.val(1);
-        }
-      });
-    });
-    //메뉴를 눌렀을 때 모달창 뛰우기
-    function showModal(menuId) {
-        let menuModal = $(".modal"+menuId);
-        menuModal.modal("show");
-    }
-
-    //옵션메뉴 클릭 시 on/off변경
-   function checkboxToggle(checkbox) {
-        if(checkbox.checked) {
-            checkbox.value = "true";
-        }else{
-            checkbox.value = "false";
-        }
-    }
-
-    //버튼 클릭시 메뉴상세보기에서 카트에 담는 함수
-    function addToCart(menuId) {
-        let targetDiv = "#MenuOptionList" + menuId;
-        let cartMenuOptionDTOList = [];
-        $(targetDiv+ ' input[type="checkbox"]').each(function() {
-            let CartMenuOptionDTO = {
-                menuOptionId: $(this).attr('name').split('%').pop(),
-                menu_id: menuId,
-                checked: $(this).val()
-            };
-            cartMenuOptionDTOList.push(CartMenuOptionDTO);
-        })
-        let cartMenuDTO = {
-            menu_id: menuId,
-            count: $('#count'+menuId).val(),
-            cartMenuOptionDTOList: cartMenuOptionDTOList
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/store/cart",
-            data: JSON.stringify(cartMenuDTO),
-            contentType: "application/json",
-            success: function (cartDTO) {
-                console.log(cartDTO);
-                cartList(cartDTO);
-            },
-            error: function (e) {
-               console.log(e)
-            }
-        })
-    }
-
-    function cartList(cartDTO) {
-        let CartList = $(".cart_list ul");
-        let str = "";
-
-        if(cartDTO.cartMenuDTOList.length != 0) {
-            for (let cartMenu of cartDTO.cartMenuDTOList) {
-                str += "<li><h3>메뉴 : " + cartMenu.menu_name + "</h3>";
-                str += "<div>가격 : " + cartMenu.menu_price + "</div>";
-                str += "<div>수량 : " + cartMenu.count + " </div>";
-                str += "<div> 옵션  </div>";
-                    for (let option of cartMenu.cartMenuOptionDTOList) {
-                        str += "<div>" + option.menuOption_name + "</div>";
-                        str += "<div>" + option.menuOption_price + "</div>";
-                        if(option.checked) {
-                            str += "<input type='checkbox' value=" + option.checked + " checked/>"
-                        }else {
-                            str += "<input type='checkbox' value=" + option.checked + "/>";
+                          $(".userPosition").click(function(){
+                            map.panTo(coords);
+                          })
                         }
-                    };
-                str += "<div>합계 : " + cartMenu.menu_price * cartMenu.count + " 원</div>";
-                str += "<button class='cancel_btn' onclick='deleteCartMenu("+cartMenu.cartMenu_id+")'> ｘ </button></li>";
-            }
-        }else {
-            str += "장바구니가 비었습니다.";
+                      });
+                    }
+                  })
+                </script>
+            </div>
+              <div id="position_box">
+                <button class="storePosition" ><i class="far fa-dot-circle"></i> 가게 위치로</button>
+              </div>
+        </div>
+      </div>
+
+      <div class="maingrid">
+        <div class="detail_sec">
+          <div class="menu_bar">
+            <div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100" class="w-tabs">
+              <div class="w-tab-menu">
+                <a data-w-tab="Tab 1" class="tab_heading w-inline-block w-tab-link w--current">
+                  <div>메뉴</div>
+                </a>
+                <a data-w-tab="Tab 2" class="tab_heading w-inline-block w-tab-link">
+                  <div>리뷰</div>
+                </a>
+                <a data-w-tab="Tab 3" class="tab_heading w-inline-block w-tab-link">
+                  <div>상세정보</div>
+                </a>
+              </div>
+              <div class="w-tab-content">
+                <div data-w-tab="Tab 1" class="tab-pane-tab-1 w-tab-pane">
+                  <div class="menulist">
+                    <div th:each="menu :${storeDTO.menuDTOList}">
+                      <a href="#" class="link-block w-inline-block" th:onclick="'openModal('+${menuStat.index}+')'">
+                        <div class="div-block-5">
+                          <h3>[[${menu.menuName}]]</h3>
+                          <h4>[[${menu.menuPrice}]]원</h4>
+                          <div>[[${menu.menuDesc}]]</div>
+                        </div><img loading="lazy" th:src="|/display?fileName=${menu.getImageURL()}|" alt="" class="image-2">
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div data-w-tab="Tab 2" class="w-tab-pane w--tab-active">
+                  <div class="review-overview">
+                    <div class="text-block-6">total Score</div>
+                    <div class="star_score">
+                      <div class="star_rating">
+                            <span th:each="starValue : ${#numbers.sequence(1, 5)}"
+                                  th:class="${starValue le starAvg} ? 'star on' : 'star'"
+                                  th:value="${starAvg}"> </span>
+                      </div>
+                      <div class="text-block">[[${starAvg}]]</div>
+                    </div>
+                  </div>
+                  <div class="reviewlist">
+                    <div th:each="reviewDTO : ${reviewDTOList}">
+                      <div class="reveiw_card">
+                        <h3 class="review_title">[[${reviewDTO.nickname}]]</h3>
+                        <div class="star_rating">
+                            <span th:each="starValue : ${#numbers.sequence(1, 5)}"
+                                  th:class="${starValue le reviewDTO.grade} ? 'star on' : 'star'"
+                                  th:value="${starValue}"> </span>
+                            <div class="text-block">[[${reviewDTO.grade}]].0</div>
+                        </div>
+                        <p class="paragraph">[[${reviewDTO.text}]]</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div data-w-tab="Tab 3" class="w-tab-pane">
+                  <div class="store_inform">
+                    <div class="inform_box">
+                      <h3 class="inform_heading">상호명</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storeName}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">연락처</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storePhone}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">가게주소</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storeAddress1}]] 번지 [[${storeDTO.storeAddress1}]] [[${storeDTO.storeAddress1}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">가게정보</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.storeDes}]]</p>
+                    </div>
+                    <div class="inform_box">
+                      <h3 class="inform_heading">영업시간</h3>
+                      <div class="inform_line"></div>
+                      <p class="inform_text">[[${storeDTO.openingTime}]] ~ [[${storeDTO.closingTime}]]</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart_sec">
+          <div class="cartbox">
+            <h4 class="cart_heading">Cart</h4>
+            <div class="cartlist" id="cartList">
+
+            </div>
+            <div class="cartamount">
+              <div class="cartline"></div>
+              <div class="delivery-fee" id="deliveryTip">배달 요금 : [[${storeDTO.deliveryTip}]] 원</div>
+              <div class="amounttext" id="allPrice">최종 주문 금액</div>
+            </div>
+            <div class="cartbtnwrap">
+              <a th:href="@{'/order/orderProgress/' + ${storeDTO.id}}" class="orderbutton w-inline-block" onclick="moveOrderProcess()">
+                <div class="text-block-3" >Order</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=65fc42eb24b1318121bba199" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="/js/webflow.js" type="text/javascript"></script>
+</body>
+</th:block>
+</th:block>
+
+<script th:inline="javascript">
+let storeDTO = [[${storeDTO}]];
+const modalWindow = $(".menu-modal-wrapper");
+let cartDTO = [[${cartDTO}]];
+
+$(document).ready(function() {
+  console.log(cartDTO);
+  cartShow(cartDTO);
+  cartAmountShow(cartDTO);
+});
+
+$('#decrease').on('click', function() {
+    let quantityInput = $(this).next('.amountinput');
+    let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
+  });
+
+  $('#increase').on('click', function() {
+      let quantityInput = $(this).prev('.amountinput');
+      let currentValue = parseInt(quantityInput.val());
+      quantityInput.val(currentValue + 1);
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
+  });
+
+  //수량 변경 시 총가격 변환 함수
+  $('.amountinput').on('change', function() {
+      let quantityInput = $(this);
+      if (quantityInput.val() < 1) {
+        alert('수량은 1보다 작을 수 없습니다!');
+        quantityInput.val(1);
+      }
+      let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
+  });
+
+//cartDTO의 정보를 뿌리는 함수
+function cartShow(cartDTO) {
+   if(cartDTO == null) {
+      $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
+   }else {
+      let str = "";
+      for(let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
+        let cartMenu = cartDTO.cartMenuDTOList[i];
+        str += "<div class='cartmenu'><div class='menuhedingwrap'>"
+        str += "<div name ='cartMenuId'></div>"
+        str += "<h4 class='cartmenuheading'>"+cartMenu.menu_name+"</h4>"
+        str += "<a href='#' class='button w-button' onclick='cartMenuDel("+cartMenu.cartMenu_id+")'>x</a></div>"
+        str += "<div>메뉴 가격 : "+cartMenu.menu_price+" 원</div>"
+        str += "<div class='cart-menu-optionlist'>"
+        for(let cartMenuOp of cartMenu.cartMenuOptionDTOList) {
+          str += "<div class='menu-detail-option'>"
+          str += "<div class='option-left'>"
+          str += "<div class='option-name'>"+cartMenuOp.menuOption_name+"</div>"
+          str += "<div class='option-price'>"+cartMenuOp.menuOption_price+" 원</div>"
+          if(cartMenuOp.checked) {
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' onchange='checkChange("+cartMenuOp.menuOptionId+")' "
+            str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' checked /></div></div>"
+          }else {
+            str += "</div><div class='checkbox w-embed'><input type='checkbox' onchange='checkChange("+cartMenuOp.menuOptionId+")' "
+            str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' /></div></div>"
+          }
         }
-        CartList.html(str);
+        str += "</div><div class='amoutadd'><div class='amount'>수량</div><div class='amountbtndiv'>"
+        str += "<a href='#' class='amountbtn left w-button' onclick='cartDecrease("+i+")'>-</a>"
+        str += "<input type='number' class='amountinput' id='Cartamountinput"+i+"' name='count' value='"+cartMenu.count+"'/>"
+        str += "<a href='#' class='amountbtn right w-button' onclick='cartIncrease("+i+")'>+</a></div>"
+        str += "</div><div>총 금액 : <span id='CartMenuTp"+i+"'>total price</span></div></div>"
+      }
+      $("#cartList").html(str);
+   }
+};
+
+//메뉴 클릭할 때 모달창이 열리면서 메뉴 값이 담김.
+  function openModal(menuIndex) {
+    const menuDTO = storeDTO.menuDTOList[menuIndex];
+
+    $('.amountinput').val(1);
+    $('#modalMenuIndex').html(menuIndex);
+    $('#modalMenuImg').attr("src", "/display?fileName="+menuDTO.imageURL);
+    $('#modalMenuName').html(menuDTO.menuName);
+    $('#modalMenuPrice').html(menuDTO.menuPrice+" 원");
+    $('#modalMenuDesc').html(menuDTO.menuDesc);
+    $('#menuTotalPrice').html(menuDTO.menuPrice);
+    $('#modalMenuId').html(menuDTO.id);
+
+    let str = "";
+
+    for(let option of menuDTO.menuOptionDTOList) {
+      str += "<div class='menu-detail-option'><div class='option-left'>"
+      str += "<div class='option-name'>"+option.opName+"</div>"
+      str += "<div class='option-price'>"+option.opPrice+" 원</div>"
+      str += "</div><div class='checkbox w-embed'>"
+      str += "<input type='checkbox' value='"+option.opPrice+"'"
+      str += " id='opCheck"+option.id+"' onchange='optionCheck("+option.id+")'/></div></div>"
+    }
+    $(".menu-optionlist").html(str);
+    modalWindow.show();
+  }
+
+  //옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function totalAmountShow(menuIndex) {
+    const menuDTO = storeDTO.menuDTOList[menuIndex];
+    let totalPrice = 0;
+    let menuPrice = menuDTO.menuPrice;
+    totalPrice += parseInt(menuPrice);
+    for (let i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+      let optionId = menuDTO.menuOptionDTOList[i].id;
+      let checkBox = $('#opCheck'+optionId);
+      let opChecked = checkBox.prop('checked');
+      let opPrice = checkBox.val();
+      if(opChecked) {
+        totalPrice += parseInt(opPrice);
+      }
+    }
+    let amount = $('.amountinput').val();
+    totalPrice = totalPrice*parseInt(amount);
+    $('#menuTotalPrice').html(totalPrice);
+  }
+
+  //모달창을 닫는 함수
+  function modalHide() {
+     modalWindow.hide();
+  }
+
+  //옵션 체크시 총가격을 바꾸는 함수
+  function optionCheck() {
+    let menuIndex = $("#modalMenuIndex").html();
+      if(menuIndex == null) { menuIndex = 0 };
+      totalAmountShow(menuIndex);
+  }
+
+  //버튼 클릭시 메뉴를 카트에 담는 함수
+  function addToCart() {
+      let menuIndex = $("#modalMenuIndex").html();
+      const menuDTO = storeDTO.menuDTOList[menuIndex];
+      let menuId = menuDTO.id;
+      let cartMenuOptionDTOList = [];
+
+      for (let i = 0; i < menuDTO.menuOptionDTOList.length; i++) {
+        let optionId = menuDTO.menuOptionDTOList[i].id;
+        let checkBox = $('#opCheck'+optionId);
+        let opChecked = checkBox.prop('checked');
+        let CartMenuOptionDTO = {
+              menuOptionId: optionId,
+              menu_id: menuId,
+              checked: opChecked
+        };
+        cartMenuOptionDTOList.push(CartMenuOptionDTO);
+      }
+
+      let cartMenuDTO = {
+          menu_id: menuId,
+          count: $('.amountinput').val(),
+          cartMenuOptionDTOList: cartMenuOptionDTOList
+      }
+
+      $.ajax({
+          type: "POST",
+          url: "/cart/insert",
+          data: JSON.stringify(cartMenuDTO),
+          contentType: "application/json",
+          success: function () {
+              console.log("카트 담기 성공");
+              cartDTOCall();
+              modalWindow.hide();
+
+          },
+          error: function (e) {
+             console.log(e)
+          }
+      })
     }
 
-    function deleteCartMenu(cartMenuId) {
+  //카트메뉴 삭제 버튼 함수
+  function cartMenuDel(cartMenuId) {
 
-        $.ajax({
-            type: "DELETE",
-            url: "/store/cart/delete/"+cartMenuId,
-            contentType: "application/json",
-            success: function (cartDTO) {
-                cartList(cartDTO);
-            },
-            error: function (e) {
-               console.log(e)
+  var data = {
+    cartMenuId: cartMenuId
+  };
+
+  $.ajax({
+    type: 'POST',
+    url: '/cart/delete', // 서버 URL을 입력해야 합니다.
+    data: JSON.stringify(data),
+    contentType: "application/json",
+    dataType: "json",
+    success: function(cartResult) {
+      console.log("삭제 성공");
+      cartDTO = cartResult;
+      cartShow(cartResult);
+      cartAmountShow(cartResult);
+
+    },
+    error: function(error) {
+      console.log(error);
+      console.error('삭제 실패');
+    }
+  });
+  }
+
+  //카트에 담긴 옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function cartAmountShow(cartDTO) {
+    if(cartDTO != null) {
+      let cartTotalPrice = 0;
+      for(let index = 0; index < cartDTO.cartMenuDTOList.length; index++) {
+        let CartMenuDTO = cartDTO.cartMenuDTOList[index];
+        let totalPrice = 0;
+        let menuPrice = CartMenuDTO.menu_price;
+        totalPrice += parseInt(menuPrice);
+        console.log(totalPrice);
+        for (let i = 0; i < CartMenuDTO.cartMenuOptionDTOList.length; i++) {
+          let ctOptionId = CartMenuDTO.cartMenuOptionDTOList[i].menuOptionId;
+          let checkBox = $('#ctOpCheck'+ctOptionId);
+          let opChecked = checkBox.prop('checked');
+          let opPrice = checkBox.val();
+          if(opChecked) {
+            totalPrice += parseInt(opPrice);
+          }
+        }
+        let amount = $('#Cartamountinput'+index).val();
+        totalPrice = totalPrice*parseInt(amount);
+        $('#CartMenuTp'+index).html(totalPrice);
+        cartTotalPrice += totalPrice;
+      }
+      cartTotalPrice += storeDTO.deliveryTip;
+      $('#allPrice').html('총 주문금액 : '+cartTotalPrice+' 원');
+    }else {
+      $('#allPrice').html('총 주문금액 : 0 원');
+    }
+  }
+
+   //카트 수량 변경 버튼
+  function cartIncrease(index) {
+    quantityInput = $('#Cartamountinput'+index);
+    let currentValue = parseInt(quantityInput.val());
+    quantityInput.val(currentValue + 1);
+    cartAmountChange(index);
+    cartAmountShow(cartDTO);
+  }
+
+  function cartDecrease(index) {
+  quantityInput = $('#Cartamountinput'+index);
+  let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+      cartAmountChange(index);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
+    cartAmountShow(cartDTO);
+  }
+
+  //카트의 메뉴 수량 변경 시 수량 변화 반영
+  function cartAmountChange(index) {
+    let count = $('#Cartamountinput'+index).val();
+    let cartMenuId = cartDTO.cartMenuDTOList[index].cartMenu_id;
+
+    var data = {
+      cartMenu_id: cartMenuId,
+      count: count
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/countUpdate', // 서버 URL을 입력해야 합니다.
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "text",
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(error) {
+        console.error('변경 실패');
+      }
+    });
+  }
+  //카트 체크 변환 시 체크 변화 반영
+  function checkChange(MenuOptionId) {
+    let checkBox = $('#ctOpCheck'+MenuOptionId);
+    let checked = checkBox.prop('checked');
+
+    var data = {
+      menuOptionId: MenuOptionId,
+      checked: checked
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/optionChecked', // 서버 URL을 입력해야 합니다.
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "text",
+      success: function(response) {
+        console.log(response);
+        cartDTOCall();
+      },
+      error: function(error) {
+        console.error('변경 실패');
+      }
+    });
+  }
+
+  function cartDTOCall() {
+    $.ajax({
+      type: 'POST',
+      url: '/cart/cartList',
+      dataType: "json",
+      success: function(cartResult) {
+        console.log(cartResult);
+        cartDTO = cartResult;
+        cartShow(cartResult);
+        cartAmountShow(cartResult);
+      },
+      error: function(error) {
+        console.error('카트 불러오기 실패');
+      }
+    });
+  }
+// 찜하기
+$(".inf2 i").click(function(){
+  let likes ="";
+  console.log("찜하기클릭")
+
+  if($(this).hasClass("far")) {
+    likes = "on";
+  } else {
+    likes = "off";
+  }
+
+  const data = {
+    storeId  : storeDTO.id,
+    likes : likes
+  }
+  console.log("data.id:"+data.storeId);
+  $.ajax({
+    url: "/store/likes",
+    type: "POST",
+    data: JSON.stringify(data),
+    contentType: "application/json",
+    dataType: "text"
+  })
+          .done(function(result){
+            console.log(result);
+
+            if(likes == "on") {
+              $(".inf2 i").removeClass("far").addClass("fas");
+            } else {
+              $(".inf2 i").removeClass("fas").addClass("far");
             }
-        })
-    }
-
+          })
+          .fail(function(error){
+            alert(error.responseText);
+          })
+}) // 찜
 </script>
 </html>

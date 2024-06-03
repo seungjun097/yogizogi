@@ -27,4 +27,6 @@ public class SignupDTO {
 
     @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$", message = "휴대폰번호를 확인해 주세요")
     private String phone;
+
+    private Long id;
 }

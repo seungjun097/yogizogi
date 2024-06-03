@@ -3,11 +3,14 @@ package com.green.yogizogi.service;
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
+import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.dto.StoreDTO;
 
+import com.green.yogizogi.entity.Likes;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.QStore;
 import com.green.yogizogi.entity.Store;
+import com.green.yogizogi.repository.LikesRepository;
 import com.green.yogizogi.repository.MemberRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -19,8 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.lang.model.element.Name;
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -30,6 +36,7 @@ import java.util.stream.Collectors;
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final MemberRepository memberRepository;
+    private final LikesRepository likesRepository;
 
     @Override
     @Transactional
@@ -44,25 +51,15 @@ public class StoreServiceImpl implements StoreService {
         Page<Store> result = storeRepository.findAll(booleanBuilder, pageable);
         Function<Store, StoreDTO> fn = (entity->entityToDto(entity));
         PageResultDTO<StoreDTO, Store> resultDTO = new PageResultDTO<>(result, fn);
-        resultDTO.setType(requestDTO.getType());
-        resultDTO.setKeyword(requestDTO.getKeyword());
         return resultDTO;
     }
 
-    //카테고리 주소값으로 주변가게 검색
     @Override
-    public PageResultDTO<StoreDTO, Store> getStoresByCategoryAndAddress(StoreCategory category, int address, PageRequestDTO requestDTO) {
-        System.out.println("--------------------------주변가게검색 서비스임플 작동");
-        Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
-        Page<Store> result = storeRepository.findStoresByCategoryAndAddress(category,address,pageable);
-        System.out.println("-----------------------------------result:"+result.getTotalElements());
-        Function<Store, StoreDTO> fn = (entity->entityToDto(entity));
-        PageResultDTO<StoreDTO, Store> resultDTO = new PageResultDTO<>(result, fn);
-        return resultDTO;
+    public List<StoreDTO> getStoresByCategoryAndAddress(StoreCategory category, int address) {
+        List<Store> storeList = storeRepository.findStoresByCategoryAndAddress(category,address);
+        List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
+        return storeDTOList;
     }
-
-
-
     @Override
     public Long StoreRegister(StoreDTO storeDTO) {
         Store store = DtoToEntity(storeDTO);
@@ -72,6 +69,11 @@ public class StoreServiceImpl implements StoreService {
         return store.getId();
     }
 
+    @Override
+    public List<MainStoreDTO> StoreAndAvgListAll() {
+        List<MainStoreDTO> storeDTOList = storeRepository.findStoreWithReviewGrade();
+        return storeDTOList;
+    }
 
     @Override
     @Transactional
@@ -80,30 +82,57 @@ public class StoreServiceImpl implements StoreService {
         List<StoreDTO> storeDTOList = storeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
         return storeDTOList;
     }
+
+    @Override
+    @Transactional
+    public String isLikes(Long storeId, String email) {
+        Long memberId = memberRepository.findByEmail(email).getId();
+        System.out.println(memberId);
+        Likes likes = likesRepository.findByMemberIdAndStoreId(memberId, storeId);
+        if(likes != null) {
+            return "Y";
+        }
+        return "N";
+    }
+
+
+
     private BooleanBuilder getSearch(PageRequestDTO requestDTO){
-        String type = requestDTO.getType();
         String keyword = requestDTO.getKeyword();
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         QStore qStore = QStore.store;
         BooleanExpression expression = qStore.id.gt(0L);
         booleanBuilder.and(expression);
-        if(type == null || type.trim().length() == 0) {
+
+        if(keyword == null || keyword.trim().isEmpty()) {
             return booleanBuilder;
         }
-        BooleanBuilder conditionBuilder = new BooleanBuilder();
-        for(StoreCategory category : StoreCategory.values()){
-            conditionBuilder.or(qStore.category.eq(category).and(qStore.category.stringValue().eq(keyword)));
-        }
-        if(type.contains("name")) {
-            conditionBuilder.or(qStore.store_name.contains(keyword));
-        }
-        if(type.contains("time")) {
-            conditionBuilder.or(qStore.delivery_time.eq(Integer.parseInt(keyword)));
-        }
-        if(type.contains("tip")) {
-            conditionBuilder.or(qStore.delivery_tip.eq(Integer.parseInt(keyword)));
-        }
-        booleanBuilder.and(conditionBuilder);
+
+        booleanBuilder.and(qStore.store_name.contains(keyword));
+
         return booleanBuilder;
+    }
+
+    @Transactional
+    public void likes(Long storeId, String likes, Long userId) {
+
+        Likes likes1 = likesRepository.findByMemberIdAndStoreId(userId, storeId);
+        if(likes1 == null) {
+            likes1 = Likes.builder()
+                    .store(storeRepository.findById(storeId).get())
+                    .member(memberRepository.findById(userId).get())
+                    .build();
+            likesRepository.save(likes1);
+        } else {
+            likesRepository.delete(likes1);
+        }
+    }
+    @Override
+    public List<StoreDTO> likeList(String email) {
+        Member member = memberRepository.findByEmail(email);
+        Long memberId = member.getId();
+        List<Store> likeList = likesRepository.findLikedStoresByMemberId(memberId);
+        List<StoreDTO> likeListDTO = likeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
+        return likeListDTO;
     }
 }

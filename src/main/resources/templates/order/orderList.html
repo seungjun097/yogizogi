@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="menu-modal-wrapper">
+    <div class="menu-container">
+        <div class="menu-positon">
+            <div class="menu-modal-window">
+                <div class="menu-modal-header">
+                    <h4 class="menu-modal-head-text">Review</h4>
+                    <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
+                </div>
+                <div class="menu-modal-body2">
+                    <input type="hidden" id="memberid" value="">
+                    <input type="hidden" id="storeid" value="">
+                    <div>
+                        <label class="labelText" >닉네임</label>
+                        <input class="text-input2 w-input" type="text" id="nickname" value="">
+                    </div>
+                    <div>
+                        <label class="labelText" >리뷰쓰기</label>
+                        <div class ="star_rating">
+                            <span class="star on" value="1"> </span>
+                            <span class="star on" value="2"> </span>
+                            <span class="star on" value="3"> </span>
+                            <span class="star on" value="4"> </span>
+                            <span class="star on" value="5"> </span>
+                        </div>
+                    </div>
+                    <textarea rows="8" class="text-input3 w-input" id="inputText"></textarea>
+                    <div class="menu-modal-button">
+                        <a href="#" class="menu-modal-btn w-inline-block" onclick="modalHide()">
+                            <div class="menu-modal-btn-text">닫기</div>
+                        </a>
+                        <a href="#" class="menu-modal-btn w-inline-block">
+                            <div class="menu-modal-btn-text" id="reviewSaveBtn">리뷰등록</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="myorderlist">
+                    <div class="orderlistheading">
+                        <h2 class="orderhead">내 주문목록</h2>
+                    </div>
+                    <div th:each="orderDTO, orderStat :${orderDTOList}">
+                        <div class="ordercard">
+                            <div class="ordercard_flexrow"><img th:src="|/display?fileName=${orderDTO.getThumbnailURL()}|" loading="lazy" alt="" class="ordercard_thumnail">
+                                <div class="orderdesc">
+                                    <div class="orderstoretime">
+                                        <h3 class="orderstorename">[[${orderDTO.storeName}]]</h3>
+                                        <div class="ordertime">[[${orderDTO.regDate}]]</div>
+                                    </div>
+                                    <div>배송지 : [[${orderDTO.address1+" "+orderDTO.address2+" "+orderDTO.address3}]]</div>
+                                    <div th:each="orderMenu : ${orderDTO.orderMenuDTOList}">
+                                        <div class="ordermenunp">
+                                            <div>메뉴이름 : [[${orderMenu.menuName}]]</div>
+                                            <div>메뉴가격 : [[${orderMenu.menuPrice}]] 원</div>
+                                            <div>개수 : [[${orderMenu.count}]] 개</div>
+                                        </div>
+                                    </div>
+                                    <div>배달비 : [[${orderDTO.deliveryTip}]] 원</div>
+                                    <h4 class="ordertotalprice">총 주문금액 : [[${orderDTO.totalPrice}]] 원</h4>
+                                </div>
+                                <div class="orderbtnwrap">
+                                    <a href="#" class="orderdetailbtn w-button" th:data-value="${orderDTO.order_id}" id="orderCancel">주문 취소</a>
+                                    <a href="#" class="orderdetailbtn w-button" onclick="openModal(this.getAttribute('data-value'))" th:data-value="${orderStat.index}">리뷰 쓰기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</th:block>
+</body>
+<script th:inline="javascript">
+
+    let orderDTOList = [[${orderDTOList}]];
+
+    $('#orderCancel').on('click', function(e) {
+
+        let order_id = $(this).attr('data-value');
+
+        $.ajax({
+        type: "POST",
+        url: "/payment/cancel",
+        data: order_id,
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+                alert("결제가 취소되었습니다.");
+            },
+        error: function (error) {
+                alert("결제 취소 실패");
+            }
+        })
+    })
+
+    //모달창 관련 함수들
+    const modalWindow = $(".menu-modal-wrapper");
+
+    function openModal(index) {
+        let orderDTO = orderDTOList[index];
+        console.log(orderDTO);
+        $("#nickname").val(orderDTO.nickname);
+        $("#storeid").val(orderDTO.store_id);
+        $("#memberid").val(orderDTO.member_id);
+        modalWindow.show();
+    }
+
+    function modalHide() {
+     modalWindow.hide();
+    }
+
+    //리뷰별점붙이기
+    $('.star_rating > .star').click(function() {
+        $(this).parent().children('span').removeClass('on');
+        $(this).addClass('on').prevAll('span').addClass('on');
+    })
+
+    //별점 변경시 grade 변수에 담기
+    let grade = 5;
+    $('.star').click(function() {
+        grade = 5;
+        grade = $(this).attr('value');
+        console.log('선택된 별점: ' + grade);
+    });
+
+    $("#reviewSaveBtn").click(function(){
+            let storeId = $("#storeid").val();
+            let data = {
+                storeId: storeId,
+                grade: grade,
+                text: $("#inputText").val(),
+                member_id: $("#memberid").val()
+            }
+            console.log(data)
+            $.ajax({
+               url:'/reviews/'+storeId,
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+               success: function(result){
+                    alert("리뷰가 등록되었습니다.");
+                    modalHide();
+               },
+                error: function(error) {
+                    alert("리뷰등록에 실패했습니다.");
+               }
+            })
+        })
+</script>
+</html>

@@ -27,7 +27,6 @@ public class MenuDTO {
     private SellStatus sellStatus;
     //메뉴 이미지
     private String uuid;
-
     private String imgName;
     private String path;
 

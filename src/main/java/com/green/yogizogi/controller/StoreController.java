@@ -1,26 +1,25 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.common.PageRequestDTO;
-import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
-import com.green.yogizogi.dto.CartDTO;
-import com.green.yogizogi.dto.CartMenuDTO;
-import com.green.yogizogi.dto.StoreDTO;
+import com.green.yogizogi.dto.*;
 import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.entity.Store;
-import com.green.yogizogi.service.CartMenuService;
-import com.green.yogizogi.service.CartService;
-import com.green.yogizogi.service.MemberService;
-import com.green.yogizogi.service.StoreService;
+import com.green.yogizogi.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -29,26 +28,20 @@ import org.springframework.web.bind.annotation.*;
 public class StoreController {
     private final StoreService storeService;
     private final MemberService memberService;
-    private final CartMenuService cartMenuService;
     private final CartService cartService;
+    private final ReviewService reviewService;
 
     //카테고리 주소로 주위가게리스트 검색
     @GetMapping("/{category}/{address1}")
-    public String store(@PathVariable("category") StoreCategory category, @PathVariable("address1") int address1, Model model, PageRequestDTO dto) {
+    public String store(@PathVariable("category") StoreCategory category, @PathVariable("address1") int address1, Model model) {
 
-        PageResultDTO<StoreDTO, Store> StoreList = storeService.getStoresByCategoryAndAddress(category, address1 / 100,dto);
-        System.out.println("---------------------------------StoreList = " + StoreList);
-        System.out.println("주위가게 리스트 컨트롤러 작동");
-        model.addAttribute("storeList", StoreList);
-        return "store/store";
+        System.out.println("category.address1 = " + category +","+ address1);
+        List<StoreDTO> storeList = storeService.getStoresByCategoryAndAddress(category, address1 / 100);
+        model.addAttribute("storeList", storeList);
+        System.out.println("storeList: " + storeList);
+
+        return "/store/mainlist";
     }
-
-    @GetMapping("/list")
-    public String list(PageRequestDTO dto, Model model) {
-        model.addAttribute("result", storeService.storeListAll(dto));
-        return "/store/storelist";
-    }
-
 
     @GetMapping("/")
     public String index() {
@@ -61,13 +54,13 @@ public class StoreController {
 
     //가게추가 페이지 이동
     @GetMapping("/register")
-    public String StoreUpdate(@AuthenticationPrincipal User user, Model model) {
-        if(user==null) {
-            return "main";
+    public String StoreUpdate(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        if(principalDetails==null) {
+            return "redirect:/";
         }else {
-            Member member = memberService.userFindEmail(user.getUsername());
+            Member member = memberService.userFindEmail(principalDetails.getUsername());
             model.addAttribute("member_id", member.getId());
-            return "store/storeregister";
+            return "store/storeRegister";
         }
     }
     //가게추가 과정
@@ -76,44 +69,63 @@ public class StoreController {
         System.out.println(storeDTO.toString());
         Long storeId = storeService.StoreRegister(storeDTO);
         System.out.println("가게 등록 성공 : "+storeId);
-        return "main";
+        return "redirect:/";
     }
 
+    @GetMapping("/list")
+    public String list(PageRequestDTO dto, Model model) {
+        System.out.println("검색컨트롤러작동");
+        System.out.println(dto.toString());
+        model.addAttribute("storeList", storeService.storeListAll(dto));
+        return "/store/maintest";
+    }
 
-
-    @GetMapping("/detail/{storeId}")
+    @GetMapping("/detail2/{storeId}")
     @Transactional
-    public String storeDetatilview(@PathVariable("storeId") Long storeId,
-                                   @AuthenticationPrincipal User user,
-                                   Model model) {
+    public String storeDetatilview2(@PathVariable("storeId") Long storeId,
+                                   @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                    Model model) {
+        boolean memberLogin = true;
+        if (principalDetails == null) {
+            memberLogin = false;
+            model.addAttribute("memberLogin", memberLogin);
+            return "/member/login";
+        }
         System.out.println("가게 아이디 조회 : "+storeId);
         //로그인한 유저 아이디로 카트DTO 불러오기
-        String email = user.getUsername();
+        String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         model.addAttribute("cartDTO", cartDTO);
         //스토어 아이디로 스토어DTO 불러오기
         StoreDTO storeDTO = storeService.findStore(storeId);
         model.addAttribute("storeDTO", storeDTO);
-
+        List<ReviewDTO> reviewDTOList = reviewService.getListOfStore(storeId);
+        Double starAvg = reviewService.storeAvgGrade(storeId);
+        if(starAvg == null) {
+            starAvg = 0.0;
+        }
+        model.addAttribute("starAvg", starAvg);
+        model.addAttribute("reviewDTOList", reviewDTOList);
+        String likes = storeService.isLikes(storeId, email);
+        model.addAttribute("likes", likes);
         return "store/storedetail";
     }
+    @PostMapping("/likes")
+    public @ResponseBody ResponseEntity<String> likes(@RequestBody LikeDTO likeDTO,
+                                                      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        if(principalDetails == null) {
+            return ResponseEntity.badRequest().body("회원만 가능합니다");
+        }
 
-    //카트 및 카트 메뉴 생성
-    @PostMapping("/cart")
-    public @ResponseBody ResponseEntity cartRegister(@RequestBody CartMenuDTO cartMenuDTO,
-                                                     @AuthenticationPrincipal User user) {
-        String email = user.getUsername();
-        Long cartId = cartMenuService.CartMenuRegister(email, cartMenuDTO);
-        //여기까지 저장은 되는데
-        CartDTO cartDTO = cartService.cartFindById(cartId);
-        return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
+        String userEmail = principalDetails.getUsername();
+        Member member = memberService.userFindEmail(userEmail);
+        Long userId = member.getId();
+        storeService.likes(likeDTO.getStoreId(), likeDTO.getLikes(), userId);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    @DeleteMapping("/cart/delete/{cartMenuId}")
-    public @ResponseBody ResponseEntity cartMenuDelete(@PathVariable("cartMenuId") Long cartMenuId) {
-        Long cartId = cartMenuService.cartMenuDelete(cartMenuId);
-        CartDTO cartDTO = cartService.cartFindById(cartId);
-        return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
+    @GetMapping("/search")
+    public String searchPage() {
+        return "store/mainfirst";
     }
-
 }

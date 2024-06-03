@@ -4,10 +4,7 @@ import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.service.MemberService;
-import com.green.yogizogi.service.MenuOptionService;
-import com.green.yogizogi.service.MenuService;
-import com.green.yogizogi.service.StoreService;
+import com.green.yogizogi.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,34 +16,40 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/manager/")
-@RequiredArgsConstructor //필수 매개 변수를 갖는 생성자 생성, 생성자에 final 키워드 필드 포함될시 객체 생성후 필드값이 변경되지 않도록 보장
+@RequestMapping("/manager")
+@RequiredArgsConstructor
+@Transactional
 public class ManagerController {
 
     private final MenuService menuService;
     private final StoreService storeService;
     private final MemberService memberService;
     private final MenuOptionService menuOptionService;
-    @GetMapping("/myStoreList")
-    @Transactional // 여러개의 데이터작업을 하나로 묶음으로 일관성 유지 성공시 커밋 하나라도 실패시 롤백
-    public String myStoreList(@AuthenticationPrincipal User user, Model model) {
+
+    @GetMapping("/update")
+    @Transactional
+    public String myStoreList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         String email;
-        if(user==null) {
+        if(principalDetails.getUsername().isEmpty()) {
             return "main";
         }else {
-            email = user.getUsername();
+            email = principalDetails.getUsername();
         }
         Member member = memberService.userFindEmail(email);
         List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
         model.addAttribute("storeDTOList", storeDTOList);
-        return "manager/mystorelist";
+        if(!storeDTOList.isEmpty()) {
+            model.addAttribute("storeDto", storeDTOList.get(0));
+        }
+        return "manager/storeupdate";
     }
 
-    @PostMapping("/menu/")
+    @PostMapping("/menu")
     @Transactional
-    public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) { //RequestBody는 http본문에있는 데이터를 메서드의 매개변수로 바인딩
+    public @ResponseBody ResponseEntity menuRegister(@RequestBody MenuDTO menuDTO) {
         menuService.MenuSave(menuDTO);
         List<MenuDTO> menuDTOList = storeService.findStore(menuDTO.getStore_id()).getMenuDTOList();
         try {
@@ -56,15 +59,41 @@ public class ManagerController {
         }
     }
 
-    @PostMapping("/option/")
+    @GetMapping("/update/{storeId}")
     @Transactional
-    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
-        menuOptionService.addOption(optionDTO);
-        try {
-            return new ResponseEntity<String>("옵션저장 성공", HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<String>("메뉴 리스트를 불러오는데 실패.", HttpStatus.OK);
-        }
+    public String storeUpdate(@PathVariable("storeId") Long storeId,
+                              @AuthenticationPrincipal PrincipalDetails principalDetails,
+                              Model model) {
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(principalDetails.getUsername());
+        StoreDTO storeDTO = storeDTOList.stream().filter(storeDto -> storeDto.getId() == storeId)
+                .collect(Collectors.toList()).get(0);
+        model.addAttribute("storeDTOList", storeDTOList);
+        model.addAttribute("storeDto", storeDTO);
+        return "manager/storeupdate";
+    }
 
+    @PostMapping("/option")
+    public @ResponseBody ResponseEntity optionRegister(@RequestBody MenuOptionDTO optionDTO) {
+        System.out.println("추가된 옵션 이름"+optionDTO.getOpName());
+        Long optionId =  menuOptionService.addOption(optionDTO);
+        return new ResponseEntity<String>("옵션저장 성공"+optionId, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/optionDelete/{menuOptionId}")
+    public @ResponseBody ResponseEntity optionDelete( @PathVariable("menuOptionId") Long id) {
+        menuOptionService.deleteOption(id);
+        return new ResponseEntity<String>("옵션삭제 성공", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/menuDelete/{menuId}")
+    public @ResponseBody ResponseEntity menuDelete(@PathVariable("menuId") Long id) {
+        menuService.menuDelete(id);
+        return new ResponseEntity<>("메뉴삭제 성공", HttpStatus.OK);
+    }
+
+    @PostMapping("/modify")
+    public @ResponseBody ResponseEntity menuModify(@RequestBody MenuDTO menuDTO) {
+        menuService.menuModify(menuDTO);
+        return new ResponseEntity<>("메뉴수정 성공", HttpStatus.OK);
     }
 }

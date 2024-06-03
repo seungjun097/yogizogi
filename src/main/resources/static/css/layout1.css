@@ -22,91 +22,49 @@ body {
     max-width: 1200px;
     padding: 0 50px;
 }
-.uploadResult {
+.repImgDiv {
+    width: 50%;
+    margin-right: 15px;
+}
+.repImg {
     width: 100%;
-    background: grey;
-    margin-top: 10px;
-  }
-  .uploadResult ul {
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-    vertical-align: top;
-  }
-  .uploadResult ul li {
-    list-style:none;
-    padding: 10px;
-  }
-  .uploadResult ul li img {
-    width: 100px;
-  }
+    height: auto;
+}
+.wh50 {
+    width: 50%;
+    padding: 20px;
+}
+.w-layout-blockcontainer {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
 
-  /*웹플로우스타일*/
-
-  :root {
-    --white: white;
-    --black: black;
-  }
-
+@media screen and (max-width: 991px) {
   .w-layout-blockcontainer {
-    max-width: 940px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+    max-width: 728px;
   }
+}
 
-  @media screen and (max-width: 991px) {
-    .w-layout-blockcontainer {
-      max-width: 728px;
-    }
+@media screen and (max-width: 767px) {
+  .w-layout-blockcontainer {
+    max-width: none;
   }
+}
 
-  @media screen and (max-width: 767px) {
-    .w-layout-blockcontainer {
-      max-width: none;
-    }
-  }
+.container {
+  max-width: 1200px;
+}
 
-  .container {
-    max-width: 1200px;
-  }
-
-  .menu_card {
-    grid-column-gap: 16px;
-    grid-row-gap: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    grid-template: "Area"
-    / 1fr 1fr;
-    grid-auto-columns: 1fr;
-    align-items: center;
-    justify-items: start;
-    width: 50vw;
-    margin: 20px;
-    padding: 10px;
-    display: grid;
-  }
-
-  .menu_content {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    padding: 10px;
-  }
-
-   /*수량조절 버튼CSS*/
-  .quantity {
-        display: flex;
-        align-items: center;
-        width: 150px;
-      }
-      .quantity input {
-        text-align: center;
-        width: 50px;
-      }
-      .quantity button {
-        width: 30px;
-        height: 30px;
-        font-size: 1.2em;
-        cursor: pointer;
-      }
+.menu_card {
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  grid-template: "Area"
+  / 1fr 1fr;
+  grid-auto-columns: 1fr;
+  align-items: center;
+  justify-items: start;
+  width: 50vw;
+  display: grid;
+}

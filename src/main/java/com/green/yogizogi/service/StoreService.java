@@ -3,6 +3,7 @@ package com.green.yogizogi.service;
 import com.green.yogizogi.common.PageRequestDTO;
 import com.green.yogizogi.common.PageResultDTO;
 import com.green.yogizogi.constant.StoreCategory;
+import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.MenuOptionDTO;
 import com.green.yogizogi.dto.StoreDTO;
@@ -13,6 +14,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface StoreService {
+    void likes(Long storeId, String likes, Long userId);
 
     StoreDTO findStore(Long store_id);
 
@@ -21,9 +23,13 @@ public interface StoreService {
     PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO requestDTO);
 
     //주소 카테고리값으로 주변가게 찾기
-    PageResultDTO<StoreDTO,Store> getStoresByCategoryAndAddress(StoreCategory category, int address, PageRequestDTO requestDTO);
+    public List<StoreDTO> getStoresByCategoryAndAddress(StoreCategory category, int address);
+
+    List<MainStoreDTO> StoreAndAvgListAll();
 
     List<StoreDTO> storeFindMemberEmail(String email);
+
+    String isLikes(Long storeId, String email);
 
     default Store DtoToEntity(StoreDTO storeDTO) {
         Store store = Store.builder()
@@ -48,7 +54,6 @@ public interface StoreService {
     }
 
     //store엔티티를 storeDTO바꾸며 store의 menu리스트도 menudto리스트로 바꿔 넣는다.
-    @Transactional
     default StoreDTO entityToDto(Store store) {
         StoreDTO storeDTO = StoreDTO.builder()
                 .id(store.getId())
@@ -95,5 +100,6 @@ public interface StoreService {
         }).forEach(menuDTO-> storeDTO.addMenuDTO(menuDTO));
         return storeDTO;
     }
+    List<StoreDTO> likeList(String email);
 
 }

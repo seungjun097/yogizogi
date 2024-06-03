@@ -62,4 +62,11 @@ public class ReviewServiceImpl implements ReviewService{
     public void remove(Long reviewnum) {
         reviewRepository.deleteById(reviewnum);
     }
+
+    @Override
+    public Double storeAvgGrade(Long StoreId) {
+        Store store = storeRepository.findById(StoreId).get();
+        Double avgGrade = reviewRepository.totalStarEvg(store);
+        return avgGrade;
+    }
 }

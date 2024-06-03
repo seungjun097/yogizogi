@@ -1,5 +1,6 @@
 package com.green.yogizogi.repository;
 
+import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Menu;
 import com.green.yogizogi.entity.Store;
@@ -31,5 +32,21 @@ public class StoreRepositoryTest {
         Store store = storeRepository.findById(1L).get();
         List<Menu> menuList = store.getMenuList();
         menuList.stream().forEach(i-> System.out.println(i.getMenuName()));
+    }
+
+    @Test
+    @Transactional
+    public void storeTest() {
+        Member member = memberRepository.findByEmail("green@green.com");
+        List<Store> storeList = storeRepository.findByMember(member);
+        System.out.println(storeList.size());
+        System.out.println(storeList.get(0).getMenuList());
+    }
+
+    @Test
+    @Transactional
+    public void storetest2() {
+        List<MainStoreDTO> result = storeRepository.findStoreWithReviewGrade();
+        result.stream().forEach(dto -> System.out.println(dto.toString()));
     }
 }

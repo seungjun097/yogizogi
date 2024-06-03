@@ -17,6 +17,8 @@ public interface ReviewService {
     //가게리뷰 삭제하기
     void remove(Long reviewnum);
 
+    Double storeAvgGrade(Long storeId);
+
     //dto --> entity로 변환 메소드
     default Review dtoToEntity(ReviewDTO reviewDTO){
         Review review = Review.builder()

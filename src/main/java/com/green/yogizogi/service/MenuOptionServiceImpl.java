@@ -24,4 +24,10 @@ public class MenuOptionServiceImpl implements MenuOptionService{
         menuOptionRepository.save(menuOption);
         return menuOption.getId();
     }
+
+    @Override
+    public void deleteOption(Long menuOptionId) {
+        MenuOption menuOption = menuOptionRepository.findById(menuOptionId).get();
+        menuOptionRepository.delete(menuOption);
+    }
 }

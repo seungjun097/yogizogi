@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <div style="height: 100px"></div>
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="search-form w-form">
+                    <div class="search-div">
+                        <label class="search_text">주변 맛집찾기</label>
+                        <input type="hidden" id="deliveryAddress1" placeholder="우편번호" value="" name="address1" readonly>
+                        <input class="address_search_bar" type="text" id="deliveryAddress2"  onclick="execution_daum_address()" name="address2" placeholder="음식점을 검색할 주소를 입력하세요." readonly>
+                        <input type="submit" class="search_btn w-button" value="Search" onclick ="searchStore()">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div style="height: 200px"></div>
+    </th:block>
+</th:block>
+
+<script>
+    // 쿠키를 읽는 함수
+    function getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+    }
+
+    function searchStore() {
+        let address1 = getCookie("deliveryAddress1");
+        let address2 = getCookie("deliveryAddress2");
+
+    }
+
+    // 쿠키에서 address1 값을 가져옴
+    var address1Value = getCookie("deliveryAddress1");
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const categoryLinks = document.querySelectorAll(".category_link");
+
+        categoryLinks.forEach(link => {
+            link.addEventListener("click", function(event) {
+                // URL에서 address1 추출
+                const href = link.getAttribute("href");
+                const address1Match = href.match(/\/store\/\w+\/(\d+)/);
+                const address1 = address1Match ? address1Match[1] : null;
+
+                if (address1 === null || isNaN(parseInt(address1))) {
+                    event.preventDefault();
+                    alert("주소를 입력해주세요");
+                }
+            });
+        });
+    });
+</script>
+<script src="/js/home.js"></script>
+</html>

@@ -4,8 +4,11 @@ import com.green.yogizogi.constant.StoreCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 @Entity
 @Table(name = "store")
@@ -36,16 +39,15 @@ public class Store {
     @Column(nullable = false)
     private String store_phone;
     @Column
-    private int opening_time;
+    private String opening_time;
     @Column
-    private int closing_time;
+    private String closing_time;
     @Column
     private int min_delivery;
     @Column
     private int delivery_time;
     @Column
     private int delivery_tip;
-    @Lob
     @Column
     private String storeDes;
 
@@ -69,4 +71,6 @@ public class Store {
         menu.setStore(this);
     }
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<Likes> likes = new ArrayList<>();
 }
