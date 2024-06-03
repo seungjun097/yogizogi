@@ -34,8 +34,8 @@ public interface StoreRepository extends JpaRepository<Store,Long>, QuerydslPred
     List<MainStoreDTO> findStoreWithReviewGrade();
 
 
-    @Query("SELECT s FROM Store s WHERE s.category = :category AND CAST(s.store_address1 AS string) LIKE CONCAT(:address, '%')")
-    Page<Store> findStoresByCategoryAndAddress(@Param("category") StoreCategory category, @Param("address") int address, Pageable pageable);
+    @Query("SELECT s FROM Store s WHERE s.category = :category AND s.store_address1 LIKE CONCAT(:address, '%')")
+    List<Store> findStoresByCategoryAndAddress(@Param("category") StoreCategory category,@Param("address") int address);
 
 
 }
