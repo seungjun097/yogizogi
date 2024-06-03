@@ -23,7 +23,7 @@ public interface StoreService {
     PageResultDTO<StoreDTO,Store> storeListAll(PageRequestDTO requestDTO);
 
     //주소 카테고리값으로 주변가게 찾기
-    public List<StoreDTO> getStoresByCategoryAndAddress(StoreCategory category, int address);
+    PageResultDTO<StoreDTO,Store> getStoresByCategoryAndAddress(StoreCategory category, int address, PageRequestDTO requestDTO);
 
     List<MainStoreDTO> StoreAndAvgListAll();
 
