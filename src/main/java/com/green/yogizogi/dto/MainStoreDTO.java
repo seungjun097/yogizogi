@@ -24,13 +24,16 @@ public class MainStoreDTO {
     private Integer min_delivery;
     private Integer delivery_time;
     private Integer delivery_tip;
+
     //이미지 주소
     private String uuid;
     private String imgName;
     private String path;
-    //별점
     private String storeDes;
+    //별점
     private Double avgGrade;
+    //스토어 리뷰수
+    private Long reviewCount;
 
     public String getImageURL(){
         try {
