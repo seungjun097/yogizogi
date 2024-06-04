@@ -6,14 +6,12 @@ import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.dto.MainStoreDTO;
 import com.green.yogizogi.dto.StoreDTO;
 
-import com.green.yogizogi.entity.Likes;
-import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.entity.QStore;
-import com.green.yogizogi.entity.Store;
+import com.green.yogizogi.entity.*;
 import com.green.yogizogi.repository.LikesRepository;
 import com.green.yogizogi.repository.MemberRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Name;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +94,36 @@ public class StoreServiceImpl implements StoreService {
         return "N";
     }
 
+    @Override
+    public List<MainStoreDTO> StoreAndAvgListSortBy(String sort) {
+        List<Object[]> results = storeRepository.storeSortBy(sort);
+        List<MainStoreDTO> mainStoreDTOList = new ArrayList<>();
+        for(Object[] objects : results) {
+            Store store = (Store) objects[0];
+            Double avg = (Double) objects[1];
+            Long reviewCount = (Long) objects[2];
+            MainStoreDTO mainStoreDTO = MainStoreDTO.builder()
+                    .id(store.getId())
+                    .category(store.getCategory())
+                    .store_address1(store.getStore_address1())
+                    .store_address2(store.getStore_address2())
+                    .store_address3(store.getStore_address3())
+                    .opening_time(store.getOpening_time())
+                    .closing_time(store.getClosing_time())
+                    .min_delivery(store.getMin_delivery())
+                    .delivery_time(store.getDelivery_time())
+                    .delivery_tip(store.getDelivery_tip())
+                    .storeDes(store.getStoreDes())
+                    .imgName(store.getImgName())
+                    .uuid(store.getUuid())
+                    .path(store.getPath())
+                    .avgGrade(avg)
+                    .reviewCount(reviewCount)
+                    .build();
+            mainStoreDTOList.add(mainStoreDTO);
+        }
+        return mainStoreDTOList;
+    }
 
 
     private BooleanBuilder getSearch(PageRequestDTO requestDTO){

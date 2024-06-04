@@ -31,6 +31,8 @@ public interface StoreService {
 
     String isLikes(Long storeId, String email);
 
+    List<MainStoreDTO> StoreAndAvgListSortBy(String sort);
+
     default Store DtoToEntity(StoreDTO storeDTO) {
         Store store = Store.builder()
                 .category(storeDTO.getCategory())

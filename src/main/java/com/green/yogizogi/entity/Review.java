@@ -2,6 +2,7 @@ package com.green.yogizogi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Builder

@@ -82,7 +82,8 @@
                                     <div class="div-block">
                                         <h3 class="sysf-heading sysf-xs">[[${dto.store_name}]]</h3>
                                         <div class="starwrap"><img src="/images/1495916677round-star-png-image-yellow.png" loading="lazy" alt="" class="image-3">
-                                            <h3 class="sysf-heading sysf-xs">[[${dto.avgGrade}]]</h3>
+                                            <h3 th:if="${dto.avgGrade != null}" class="sysf-heading sysf-xs">[[${dto.avgGrade}]]</h3>
+                                            <h3 th:unless="${dto.avgGrade != null}" class="sysf-heading sysf-xs">0.0</h3>
                                         </div>
                                     </div>
                                     <p class="sysf-body-text sysf-m sysf-s-m-b-0">[[${dto.storeDes}]]</p>
@@ -148,6 +149,7 @@
             });
         });
     });
+
 </script>
 
 <script src="/js/home.js"></script>
