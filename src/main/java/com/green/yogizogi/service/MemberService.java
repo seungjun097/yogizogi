@@ -11,6 +11,8 @@ public interface MemberService {
 
     Member userFindEmail(String email);
 
+    Long update(SignupDTO signupDTO);
+
     default Member signUpDTOtoEntity(SignupDTO dto) {
         Member member = Member.builder()
                 .email(dto.getEmail())

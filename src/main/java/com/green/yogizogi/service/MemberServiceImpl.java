@@ -42,6 +42,14 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return memberRepository.findByEmail(email);
     }
 
+    @Override
+    public Long update(SignupDTO signupDTO) {
+        Member member = signUpDTOtoEntity(signupDTO);
+        member.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
+        member = memberRepository.save(member);
+        return member.getId();
+    }
+
 
     /*@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

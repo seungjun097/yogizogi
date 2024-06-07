@@ -13,6 +13,9 @@
                         <div class="menu-link-text login">가게 찾기</div>
                     </a>
                     <th:block sec:authorize="isAuthenticated()">
+                        <a href="/member/update" class="memu-link w-inline-block">
+                            <div class="menu-link-text login">내정보</div>
+                        </a>
                         <a href="/store/register" class="memu-link w-inline-block">
                             <div class="menu-link-text login">스토어 등록</div>
                         </a>

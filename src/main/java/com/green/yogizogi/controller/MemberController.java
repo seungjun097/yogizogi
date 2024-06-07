@@ -62,4 +62,10 @@ public class MemberController {
                 "아이디 또는 비밀번호를 확인해주세요");
         return "/member/login";
     }
+
+    //수정 페이지 이동;
+    @GetMapping("/update")
+    public String getUpdate() {
+        return "/member/update";
+    }
 }
