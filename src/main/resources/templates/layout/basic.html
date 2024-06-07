@@ -7,6 +7,26 @@
         <title>yogizogi</title>
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <meta content="Webflow" name="generator">
+        <style>
+            .fa-heart {
+                font-size: 24px; /* 아이콘 크기 조정 */
+                color: #ff0000; /* 아이콘 색상 지정 */
+                margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 조정 */
+            }
+
+            .w-dropdown-list {
+                display: none;
+                background-color: #f0f0f0;
+                padding: 10px;
+                border: 1px solid #ccc;
+            }
+            .dropdown-toggle {
+                cursor: pointer;
+            }
+            .dropdown:hover .w-dropdown-list {
+                display: block;
+            }
+        </style>
         <link href="/css/normalize.css" rel="stylesheet" type="text/css">
         <link href="/css/webflow.css" rel="stylesheet" type="text/css">
         <link href="/css/yogizogi-ef7df8.webflow.css" rel="stylesheet" type="text/css">
@@ -22,13 +42,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 
-        <style>
-            .fa-heart {
-                font-size: 24px; /* 아이콘 크기 조정 */
-                color: #ff0000; /* 아이콘 색상 지정 */
-                margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 조정 */
-            }
-        </style>
+
     </head>
     <body>
     <div th:replace="~{/include/header::header}"></div>
