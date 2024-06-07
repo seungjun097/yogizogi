@@ -141,7 +141,8 @@ a {
   display: flex;
 }
 
-.top-memu {
+
+.top-menu {
   justify-content: space-between;
   align-items: center;
   margin-top: 15px;
@@ -149,7 +150,7 @@ a {
   display: flex;
 }
 
-.memu-link {
+.menu-link {
   padding: 15px;
 }
 

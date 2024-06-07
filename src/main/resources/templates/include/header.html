@@ -4,18 +4,18 @@
 <div class="header" th:fragment="header">
     <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
         <div class="container w-container">
-            <div class="top-memu">
+            <div class="top-menu">
                 <a href="/" class="logo w-inline-block">
                     <h1 class="logo-text">yogizogi</h1>
                 </a>
                 <nav role="navigation" class="nav-menu w-nav-menu">
-                    <a href="/store/search" class="memu-link w-inline-block">
+                    <a href="/store/search" class="menu-link w-inline-block">
                         <div class="menu-link-text login">가게 찾기</div>
                     </a>
-                    <a href="/store/likesList" class="memu-link w-inline-block">
+                    <a href="/store/likesList" class="menu-link w-inline-block">
                         <div class="menu-link-text login">좋아요 가게 찾기</div>
                     </a>
-                    <a href="/member/edit" class="memu-link w-inline-block">
+                    <a href="/member/edit" class="menu-link w-inline-block">
                         <div class="menu-link-text login">정보수정</div>
                     </a>
                     <th:block sec:authorize="isAuthenticated()">
@@ -25,37 +25,37 @@
                                 <div>스토어 관리</div>
                             </div>
                             <nav class="w-dropdown-list">
-                                <a href="/store/register" class="memu-link w-inline-block">
+                                <a href="/store/register" class="menu-link w-inline-block">
                                     <div class="menu-link-text login">가게 등록</div>
                                 </a>
-                                <a href="/manager/update" class="memu-link w-inline-block">
+                                <a href="/manager/update" class="menu-link w-inline-block">
                                     <div class="menu-link-text login">메뉴 등록</div>
                                 </a>
                             </nav>
                         </div>
-                        <a href="/store/register" class="memu-link w-inline-block">
+                        <a href="/store/register" class="menu-link w-inline-block">
                             <div class="menu-link-text login">스토어 등록</div>
                         </a>
-                        <a href="/manager/update" class="memu-link w-inline-block">
+                        <a href="/manager/update" class="menu-link w-inline-block">
                             <div class="menu-link-text login">메뉴 등록</div>
                         </a>
-                        <a href="/order/orderList" class="memu-link w-inline-block">
+                        <a href="/order/orderList" class="menu-link w-inline-block">
                             <div class="menu-link-text login">주문 이력</div>
                         </a>
-                        <a href="/cart/cart" class="memu-link w-inline-block">
+                        <a href="/cart/cart" class="menu-link w-inline-block">
                             <div class="menu-link-text cart-button">장바구니</div>
                         </a>
                     </th:block>
                     <th:block sec:authorize="isAnonymous()">
-                        <a href="/member/login" class="memu-link w-inline-block">
+                        <a href="/member/login" class="menu-link w-inline-block">
                             <div class="menu-link-text login">로그인</div>
                         </a>
-                        <a href="/member/signup" class="memu-link w-inline-block">
+                        <a href="/member/signup" class="menu-link w-inline-block">
                             <div class="menu-link-text">회원가입</div>
                         </a>
                     </th:block>
                     <th:block sec:authorize="isAuthenticated()">
-                        <a  href="/logout" class="memu-link w-inline-block">
+                        <a  href="/logout" class="menu-link w-inline-block">
                             <div class="menu-link-text login">로그아웃</div>
                         </a>
                     </th:block>
@@ -68,10 +68,26 @@
     </div>
 </div>
 <script>
-    $('.dropdown-toggle').on('mouseenter', function() {
-        $(this).next('.w-dropdown-list').show();
-    }).on('mouseleave', function() {
-        $(this).next('.w-dropdown-list').hide();
+    $(document).ready(function() {
+        console.log("Document is ready!");
+
+        $('.dropdown-toggle').on('mouseenter', function() {
+            console.log("mouseenter event triggered");
+            $(this).next('.w-dropdown-list').stop(true, true).slideDown('fast');
+        }).on('mouseleave', function() {
+            console.log("mouseleave event triggered");
+            var dropdownList = $(this).next('.w-dropdown-list');
+            setTimeout(function() {
+                if (!dropdownList.is(':hover')) {
+                    dropdownList.stop(true, true).slideUp('fast');
+                }
+            }, 200); // 200ms 딜레이 후 드롭다운을 닫습니다.
+        });
+
+        $('.w-dropdown-list').on('mouseleave', function() {
+            console.log("mouseleave event triggered for dropdown list");
+            $(this).stop(true, true).slideUp('fast');
+        });
     });
 </script>
 </html>
