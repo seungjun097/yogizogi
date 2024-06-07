@@ -19,7 +19,7 @@
                         <div class="menu-link-text login">정보수정</div>
                     </a>
                     <th:block sec:authorize="isAuthenticated()">
-                        <!--<div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
                             <div class="dropdown-toggle w-dropdown-toggle">
                                 <div class="w-icon-dropdown-toggle"></div>
                                 <div>스토어 관리</div>
@@ -32,7 +32,7 @@
                                     <div class="menu-link-text login">메뉴 등록</div>
                                 </a>
                             </nav>
-                        </div>-->
+                        </div>
                         <a href="/store/register" class="memu-link w-inline-block">
                             <div class="menu-link-text login">스토어 등록</div>
                         </a>
@@ -66,4 +66,12 @@
             </div>
         </div>
     </div>
+</div>
+<script>
+    $('.dropdown-toggle').on('mouseenter', function() {
+        $(this).next('.w-dropdown-list').show();
+    }).on('mouseleave', function() {
+        $(this).next('.w-dropdown-list').hide();
+    });
+</script>
 </html>
