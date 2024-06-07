@@ -128,4 +128,21 @@ public class StoreController {
     public String searchPage() {
         return "store/mainfirst";
     }
+
+    // 찜한 가게 목록
+    @GetMapping("/likesList")
+    public String likes(Model model, @AuthenticationPrincipal UserDetails principal) {
+        System.out.println("좋아요리스트작동");
+
+        if (principal == null) {
+            System.out.println("비로그인");
+
+        } else {
+            System.out.println("로그인");
+            List<StoreDTO> likesList = storeService.likeList(principal.getUsername());
+            model.addAttribute("likesList", likesList);
+        }
+
+        return "/store/likeList";
+    }
 }
