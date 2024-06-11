@@ -1,5 +1,6 @@
 package com.green.yogizogi.repository.search;
 
+import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.entity.QReview;
 import com.green.yogizogi.entity.QStore;
 import com.green.yogizogi.entity.Store;
@@ -17,12 +18,7 @@ public class SearchStoreRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public List<Tuple> searchStoreByName(String name) {
-        return null;
-    }
-
-    @Override
-    public List<Object[]> storeSortBy(String name) {
+    public List<Object[]> storeSearch(StoreCategory category, int address1 ,String sort, String search) {
         QStore store = QStore.store;
         QReview review = QReview.review;
 
@@ -33,8 +29,28 @@ public class SearchStoreRepositoryImpl extends QuerydslRepositorySupport impleme
         JPQLQuery<Tuple> tuple = jpqlQuery.select(store, review.grade.avg().coalesce(0.0), review.count())
                 .groupBy(store);
 
-        if(name != null) {
-            switch (name) {
+        System.out.println("category : " + category + " address : " + address1 +" Sort : " + sort + " search : "+ search);
+
+        //주소 조건
+        if(address1 >= 10000 && address1 <= 99999) {
+            int address = address1/100;
+            String addressStr = String.valueOf(address);
+            tuple.where(store.store_address1.substring(0, 3).eq(addressStr));
+        }
+
+        //카테고리 조건
+        if(category != null) {
+            tuple.where(store.category.eq(category));
+        }
+
+        //검색 조건
+        if(search != null) {
+            tuple.where(store.store_name.contains(search));
+        }
+
+        //정렬 조건
+        if(sort != null) {
+            switch (sort) {
                 case "min_delivery":
                     tuple.orderBy(store.min_delivery.asc());
                     break;
@@ -49,7 +65,10 @@ public class SearchStoreRepositoryImpl extends QuerydslRepositorySupport impleme
                     break;
             }
         }
+        //결과 적용
         List<Tuple> result = tuple.fetch();
+
+        //결과를 오브젝트 배열로 전환
         List<Object[]> results = new ArrayList<>();
         for(Tuple obj : result) {
             Object[] objects = new Object[3];
