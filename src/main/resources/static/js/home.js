@@ -40,6 +40,7 @@ function execution_daum_address() {
             // 입력된 주소를 화면에 표시
             $("#deliveryAddress1").val(data.zonecode);
             $("#deliveryAddress2").val(addr);
+          
         }
     }).open();
 }
@@ -59,8 +60,6 @@ var getCookie = function(name) {
 
 
 
-
-
 //주소 입력 확인
 /*$(".category li").click(function(){
     let address1 = $("#deliveryAddress1").val();
@@ -73,9 +72,10 @@ var getCookie = function(name) {
 
     location.href = "/store/" + (100+index) + "/" +address1;
 })*/
+
 $(".category li").click(function(){
     let address1 = $("#deliveryAddress1").val();
-    if (!address1) {
+    if (address1 != null) {
         swal("배달 받으실 주소를 입력해 주세요");
         return false;
     }
@@ -89,15 +89,12 @@ $(".category li").click(function(){
         case "KOREAN":
             enumType = "KOREAN";
             break;
-
         case "SUSHI":
             enumType = "SUSHI";
             break;
-
         case "THAI":
             enumType = "THAI";
             break;
-
         case "HOTDOT":
             enumType = "HOTDOT";
             break;
@@ -134,10 +131,6 @@ $(".category li").click(function(){
         case "OTHER_CATEGORY":
             enumType = "OTHER_CATEGORY";
             break;
-        // 필요한 경우 다른 이넘 값들에 대해서도 처리 추가
-        default:
-            // 기본값 설정
-            enumType = "DEFAULT_CATEGORY";
     }
 
     // 주소 설정 및 페이지 이동
@@ -145,8 +138,5 @@ $(".category li").click(function(){
 })
 
 
-//페이지 진입시 쿠키에서 주소정보 읽어오기
-$("#deliveryAddress1").val(getCookie("deliveryAddress1"));
-$("#deliveryAddress2").val(getCookie("deliveryAddress2"));
 
 

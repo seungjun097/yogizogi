@@ -50,13 +50,4 @@ public class StoreRepositoryTest {
         result.stream().forEach(dto -> System.out.println(dto.toString()));
     }
 
-    @Test
-    @Transactional
-    public void sorttest() {
-        List<Object[]> result = storeRepository.storeSortBy("min_delivery");
-        for(Object[] obj : result) {
-            Store store = (Store) obj[0];
-            System.out.println(store.getStore_name());
-        }
-    }
 }
