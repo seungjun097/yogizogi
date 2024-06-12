@@ -206,12 +206,16 @@ a {
 }
 
 .uui-footer04_bottom-wrapper {
-  grid-column-gap: 1.5rem;
-  border-top: 1px solid var(--untitled-ui--gray300);
-  justify-content: center;
-  margin-top: 4rem;
-  padding-top: 2rem;
-  display: block;
+    display: flex;
+    grid-column-gap: 1.5rem;
+    border-top: 1px solid var(--untitled-ui--gray300);
+    margin-top: 1rem;
+    padding-top: 2rem;
+    padding: 2.5rem;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    align-content: flex-start;
+    justify-content: center;
 }
 
 .uui-footer04_social-icon {
@@ -2275,21 +2279,6 @@ a {
 
   .uui-footer04_legal-list {
     margin-bottom: 1rem;
-  }
-
-  .uui-text-size-small {
-    display: block;
-    align-items: center;
-    margin-bottom: 10px; /* 요소 사이의 간격 조절 */
-    padding: 10px;
-  }
-
-  .text-align-right {
-    display: block;
-    margin-bottom: 10px; /* 요소 사이의 간격 조절 */
-    padding: 10px;
-    margin-left: auto;
-    text-align: right;
   }
 
   .uui-footer04_social-link:hover {
