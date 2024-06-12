@@ -40,7 +40,6 @@ function execution_daum_address() {
             // 입력된 주소를 화면에 표시
             $("#deliveryAddress1").val(data.zonecode);
             $("#deliveryAddress2").val(addr);
-          
         }
     }).open();
 }
@@ -58,85 +57,38 @@ var getCookie = function(name) {
     return value ? decodeURIComponent(value[2]) : null;
 };
 
+$(document).ready(function() {
+    //페이지 로딩 시 쿠키에 있는 주소값 입력
+    $("#deliveryAddress1").val(getCookie("deliveryAddress1"));
+    $("#deliveryAddress2").val(getCookie("deliveryAddress2"));
 
+    //주소 변경 시 페이지 이동
+    $("#deliveryAddress2").on('input', function() {
+        let address1 = getCookie("deliveryAddress1");
+        location.href = "/store/DEFAULT/" + address1 + "/none/none";
+    })
+    //카테고리 버튼 클릭 시
+    $(".category_link").on('click', function() {
 
-//주소 입력 확인
-/*$(".category li").click(function(){
-    let address1 = $("#deliveryAddress1").val();
-    if(!address1) {
-        swal("배달 받으실 주소를 입력해 주세요");
-        return false;
-    }
+        let address1 = getCookie("deliveryAddress1");
+        category = $(this).data('value');
+        location.href = "/store/" + category + "/" + address1 + "/" + sort + "/" + search;
+    });
 
-    const index = $(this).index();
+    //정렬 버튼 클릭 시
+    $(".sort-link").on('click', function() {
+        let address1 = getCookie("deliveryAddress1");
+        sort = $(this).data('value');
+        location.href = "/store/" + category + "/" + address1 + "/" + sort + "/" + search;
+    });
 
-    location.href = "/store/" + (100+index) + "/" +address1;
-})*/
-
-$(".category li").click(function(){
-    let address1 = $("#deliveryAddress1").val();
-    if (address1 != null) {
-        swal("배달 받으실 주소를 입력해 주세요");
-        return false;
-    }
-
-    // 클릭한 li 요소의 텍스트 값 가져오기
-    let categoryType = $(this).text().trim();
-
-    // categoryType을 이용하여 주소 설정
-    let enumType;
-    switch (categoryType) {
-        case "KOREAN":
-            enumType = "KOREAN";
-            break;
-        case "SUSHI":
-            enumType = "SUSHI";
-            break;
-        case "THAI":
-            enumType = "THAI";
-            break;
-        case "HOTDOT":
-            enumType = "HOTDOT";
-            break;
-        case "ITALIAN":
-            enumType = "ITALIAN";
-            break;
-        case "PIZZA":
-            enumType = "PIZZA";
-            break;
-        case "MAXICAN":
-            enumType = "MAXICAN";
-            break;
-        case "RAMAN":
-            enumType = "RAMAN";
-            break;
-        case "FASTFOOD":
-            enumType = "FASTFOOD";
-            break;
-        case "BBQ":
-            enumType = "BBQ";
-            break;
-        case "TEA":
-            enumType = "TEA";
-            break;
-        case "STREET":
-            enumType = "STREET";
-            break;
-        case "CHICKEN":
-            enumType = "CHICKEN";
-            break;
-        case "SANDWICH":
-            enumType = "SANDWICH";
-            break;
-        case "OTHER_CATEGORY":
-            enumType = "OTHER_CATEGORY";
-            break;
-    }
-
-    // 주소 설정 및 페이지 이동
-    location.href = "/store/" + enumType + "/" + address1;
-})
-
+    //검색 실행 시
+    $("#searchBtn").on('click', function() {
+        let address1 = getCookie("deliveryAddress1");
+        search = $("#nameSearch").val();
+        location.href = "/store/" + category + "/" + address1 + "/" + sort + "/" + search;
+    });
+});
 
 
 
