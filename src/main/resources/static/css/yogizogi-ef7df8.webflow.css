@@ -1198,6 +1198,16 @@ a {
   box-shadow: 0 2px 20px rgba(0, 0, 0, .2);
 }
 
+.storelistbox2 {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-top: 0px;
+  margin-left: 60px;
+  margin-right: 60px;
+  padding: 5px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, .2);
+}
+
 .gray-box {
   background-color: var(--deep-gray);
   border-radius: 10px;

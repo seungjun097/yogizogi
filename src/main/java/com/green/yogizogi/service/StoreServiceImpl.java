@@ -159,11 +159,36 @@ public class StoreServiceImpl implements StoreService {
         }
     }
     @Override
-    public List<StoreDTO> likeList(String email) {
+    public List<MainStoreDTO> likeList(String email) {
         Member member = memberRepository.findByEmail(email);
-        Long memberId = member.getId();
-        List<Store> likeList = likesRepository.findLikedStoresByMemberId(memberId);
-        List<StoreDTO> likeListDTO = likeList.stream().map(store -> entityToDto(store)).collect(Collectors.toList());
-        return likeListDTO;
+        List<Object[]> results = storeRepository.likeStoreSearch(member);
+        List<MainStoreDTO> mainStoreDTOList = new ArrayList<>();
+        for(Object[] objects : results) {
+            Store store = (Store) objects[0];
+            Double avg = (Double) objects[1];
+            avg = Math.round(avg*10.0)/10.0;
+            Long reviewCount = (Long) objects[2];
+            MainStoreDTO mainStoreDTO = MainStoreDTO.builder()
+                    .id(store.getId())
+                    .store_name(store.getStore_name())
+                    .category(store.getCategory())
+                    .store_address1(store.getStore_address1())
+                    .store_address2(store.getStore_address2())
+                    .store_address3(store.getStore_address3())
+                    .opening_time(store.getOpening_time())
+                    .closing_time(store.getClosing_time())
+                    .min_delivery(store.getMin_delivery())
+                    .delivery_time(store.getDelivery_time())
+                    .delivery_tip(store.getDelivery_tip())
+                    .storeDes(store.getStoreDes())
+                    .imgName(store.getImgName())
+                    .uuid(store.getUuid())
+                    .path(store.getPath())
+                    .avgGrade(avg)
+                    .reviewCount(reviewCount)
+                    .build();
+            mainStoreDTOList.add(mainStoreDTO);
+        }
+        return mainStoreDTOList;
     }
 }

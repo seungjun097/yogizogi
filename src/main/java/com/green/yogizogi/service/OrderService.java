@@ -10,5 +10,7 @@ public interface OrderService {
     void orderCreate(OrderDTO orderDTO, String memberEmail);
     List<OrderListDTO> orderList(String memberEmail);
 
+    List<OrderListDTO> mamagerOrderList(Long storeId);
+
     String findMerchantId(Long order_id);
 }

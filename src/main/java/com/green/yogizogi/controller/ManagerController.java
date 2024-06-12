@@ -2,6 +2,7 @@ package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.MenuDTO;
 import com.green.yogizogi.dto.MenuOptionDTO;
+import com.green.yogizogi.dto.OrderListDTO;
 import com.green.yogizogi.dto.StoreDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.*;
@@ -28,6 +29,7 @@ public class ManagerController {
     private final StoreService storeService;
     private final MemberService memberService;
     private final MenuOptionService menuOptionService;
+    private final OrderService orderService;
 
     @GetMapping("/update")
     @Transactional
@@ -95,5 +97,25 @@ public class ManagerController {
     public @ResponseBody ResponseEntity menuModify(@RequestBody MenuDTO menuDTO) {
         menuService.menuModify(menuDTO);
         return new ResponseEntity<>("메뉴수정 성공", HttpStatus.OK);
+    }
+
+    @GetMapping("/orderList")
+    public String moveOrderList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        String email = principalDetails.getUsername();
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
+        model.addAttribute("storeDTOList", storeDTOList);
+        return "manager/manageOrder";
+    }
+
+    @GetMapping("/storeOrder/{storeId}")
+    public String moveOrder(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                            @PathVariable("storeId") Long storeId,
+                            Model model) {
+        String email = principalDetails.getUsername();
+        List<StoreDTO> storeDTOList = storeService.storeFindMemberEmail(email);
+        model.addAttribute("storeDTOList", storeDTOList);
+        List<OrderListDTO> orderDTOList = orderService.mamagerOrderList(storeId);
+        model.addAttribute("orderDTOList", orderDTOList);
+        return "manager/manageOrder";
     }
 }

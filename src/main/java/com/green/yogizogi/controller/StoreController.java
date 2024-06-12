@@ -138,13 +138,11 @@ public class StoreController {
 
         if (principal == null) {
             System.out.println("비로그인");
-
         } else {
             System.out.println("로그인");
-            List<StoreDTO> likesList = storeService.likeList(principal.getUsername());
-            model.addAttribute("likesList", likesList);
+            List<MainStoreDTO> storeList = storeService.likeList(principal.getUsername());
+            model.addAttribute("storeDTOList", storeList);
         }
-
-        return "/store/likeList";
+        return "main";
     }
 }
