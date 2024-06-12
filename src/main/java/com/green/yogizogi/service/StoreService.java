@@ -102,6 +102,6 @@ public interface StoreService {
         }).forEach(menuDTO-> storeDTO.addMenuDTO(menuDTO));
         return storeDTO;
     }
-    List<StoreDTO> likeList(String email);
+    List<MainStoreDTO> likeList(String email);
 
 }

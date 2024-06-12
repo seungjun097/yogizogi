@@ -12,6 +12,7 @@
                         <label class="search_text">주변 맛집찾기</label>
                         <input type="hidden" id="deliveryAddress1" placeholder="우편번호" value="" name="address1" readonly>
                         <input class="address_search_bar" type="text" id="deliveryAddress2"  onclick="execution_daum_address()" name="address2" placeholder="주변의 음식점을 찾아보세요." readonly>
+                        <input type="submit" class="search_btn w-button" id="addressSearch" value="검색">
                     </div>
                 </div>
                 <!--별점 표시 및 검색 기능 정리-->
@@ -109,6 +110,11 @@
     let category = [[${category}]]
     let  sort = [[${sort}]]
     let search = "none";
+
+    let address1 = getCookie("deliveryAddress1");
+    if(address1 == null) {
+      location.href = "/store/search";
+    }
 
     if(category == null) {
         category = "DEFAULT"

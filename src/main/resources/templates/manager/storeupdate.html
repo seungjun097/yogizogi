@@ -10,7 +10,7 @@
             <div th:each="dto:${storeDTOList}">
             <a th:href="@{'/manager/update/' + ${dto.id}}" class="storeupdatecard w-inline-block"><img th:if="${dto.path != null}" th:src="|/display?fileName=${dto.getThumbnailURL()}|" loading="lazy" alt="" class="storeupdateimg">
               <h3>[[${dto.storeName}]]</h3>
-              <div class="storeadress">[[${dto.storeDes}]]</div>
+              <div class="storeadress">[[${dto.storeAddress1}]] 번지 [[${dto.storeAddress2}]] [[${dto.storeAddress3}]]</div>
             </a>
             </div>
           </div>
