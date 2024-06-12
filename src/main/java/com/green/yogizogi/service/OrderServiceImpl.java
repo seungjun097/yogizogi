@@ -6,6 +6,7 @@ import com.green.yogizogi.dto.OrderMenuDTO;
 import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.entity.Order;
 import com.green.yogizogi.entity.OrderMenu;
+import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,11 +47,48 @@ public class OrderServiceImpl implements OrderService{
             orderMenuRepository.save(orderMenu);
         }
     }
-
     @Override
     public List<OrderListDTO> orderList(String memberEmail) {
         Member member = memberRepository.findByEmail(memberEmail);
         List<Order> orderList = orderRepository.findByMember(member);
+        List<OrderListDTO> orderListDTOList = new ArrayList<>();
+        for (Order order : orderList) {
+            OrderListDTO orderListDTO = OrderListDTO.builder()
+                    .order_id(order.getId())
+                    .regDate(order.getRegDate())
+                    .deliveryTip(order.getStore().getDelivery_tip())
+                    .storeName(order.getStore().getStore_name())
+                    .store_id(order.getStore().getId())
+                    .totalPrice(order.getTotalPrice())
+                    .imgName(order.getStore().getImgName())
+                    .path(order.getStore().getPath())
+                    .uuid(order.getStore().getUuid())
+                    .member_id(order.getMember().getId())
+                    .nickname(order.getMember().getNickname())
+                    .address1(order.getAddress().getAddress1())
+                    .address2(order.getAddress().getAddress2())
+                    .address3(order.getAddress().getAddress3())
+                    .build();
+            for(OrderMenu orderMenu : order.getOrderMenuList()) {
+                OrderMenuDTO orderMenuDTO = OrderMenuDTO.builder()
+                        .orderMenu_id(orderMenu.getId())
+                        .count(orderMenu.getCount())
+                        .menuName(orderMenu.getMenuName())
+                        .menuPrice(orderMenu.getMenuPrice())
+                        .selectOp(orderMenu.getSelectOp())
+                        .build();
+                orderListDTO.addMenuDTO(orderMenuDTO);
+            }
+            orderListDTOList.add(orderListDTO);
+        }
+        return orderListDTOList;
+    }
+
+    //스토어 아이디로 접수된 오더 조회
+    @Override
+    public List<OrderListDTO> mamagerOrderList(Long storeId) {
+        Store store = storeRepository.findById(storeId).get();
+        List<Order> orderList = orderRepository.findByStore(store);
         List<OrderListDTO> orderListDTOList = new ArrayList<>();
         for (Order order : orderList) {
             OrderListDTO orderListDTO = OrderListDTO.builder()

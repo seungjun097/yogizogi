@@ -62,11 +62,12 @@ $(document).ready(function() {
     $("#deliveryAddress1").val(getCookie("deliveryAddress1"));
     $("#deliveryAddress2").val(getCookie("deliveryAddress2"));
 
-    //주소 변경 시 페이지 이동
-    $("#deliveryAddress2").on('input', function() {
+    //주소 변경 후 버튼 클릭 시 페이지 이동
+    $("#addressSearch").on('click', function() {
         let address1 = getCookie("deliveryAddress1");
         location.href = "/store/DEFAULT/" + address1 + "/none/none";
     })
+
     //카테고리 버튼 클릭 시
     $(".category_link").on('click', function() {
 

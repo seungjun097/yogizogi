@@ -1,9 +1,7 @@
 package com.green.yogizogi.repository.search;
 
 import com.green.yogizogi.constant.StoreCategory;
-import com.green.yogizogi.entity.QReview;
-import com.green.yogizogi.entity.QStore;
-import com.green.yogizogi.entity.Store;
+import com.green.yogizogi.entity.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -73,6 +71,36 @@ public class SearchStoreRepositoryImpl extends QuerydslRepositorySupport impleme
             }
         }
         //결과 적용
+        List<Tuple> result = tuple.fetch();
+
+        //결과를 오브젝트 배열로 전환
+        List<Object[]> results = new ArrayList<>();
+        for(Tuple obj : result) {
+            Object[] objects = new Object[3];
+            objects[0] = obj.get(QStore.store);
+            objects[1] = obj.get(review.grade.avg().coalesce(0.0));
+            objects[2] = obj.get(review.count());
+            results.add(objects);
+        }
+        return results;
+    }
+
+    @Override
+    public List<Object[]> likeStoreSearch(Member member) {
+        QStore store = QStore.store;
+        QReview review = QReview.review;
+        QLikes likes = QLikes.likes;
+
+        JPQLQuery<Store> jpqlQuery = from(store)
+                .leftJoin(review).on(review.store.eq(store))
+                .leftJoin(likes).on(likes.store.eq(store));
+
+        JPQLQuery<Tuple> tuple = jpqlQuery.select(store, review.grade.avg().coalesce(0.0), review.count())
+                .groupBy(store);
+
+        tuple.where(likes.member.eq(member));
+
+        //결과를 대입
         List<Tuple> result = tuple.fetch();
 
         //결과를 오브젝트 배열로 전환

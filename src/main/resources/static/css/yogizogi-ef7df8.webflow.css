@@ -1198,6 +1198,16 @@ a {
   box-shadow: 0 2px 20px rgba(0, 0, 0, .2);
 }
 
+.storelistbox2 {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-top: 0px;
+  margin-left: 60px;
+  margin-right: 60px;
+  padding: 5px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, .2);
+}
+
 .gray-box {
   background-color: var(--deep-gray);
   border-radius: 10px;
@@ -2270,8 +2280,10 @@ a {
 }
 
 .fa-heart{
-    margin-top: 10px;
-    margin-right: 20px;
+    margin-top: 0px;
+    margin-right: 5px;
+    color: red;
+    font-size: xx-large;
 }
 
 @media screen and (max-width: 991px) {
@@ -2305,21 +2317,6 @@ a {
 
   .uui-footer04_legal-list {
     margin-bottom: 1rem;
-  }
-
-  .uui-text-size-small {
-    display: block;
-    align-items: center;
-    margin-bottom: 10px; /* 요소 사이의 간격 조절 */
-    padding: 10px;
-  }
-
-  .text-align-right {
-    display: block;
-    margin-bottom: 10px; /* 요소 사이의 간격 조절 */
-    padding: 10px;
-    margin-left: auto;
-    text-align: right;
   }
 
   .uui-footer04_social-link:hover {

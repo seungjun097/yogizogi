@@ -9,11 +9,11 @@
                     <h1 class="logo-text">yogizogi</h1>
                 </a>
                 <nav role="navigation" class="nav-menu w-nav-menu">
-                    <a href="/store/search" class="menu-link w-inline-block">
+                    <a href="/" class="menu-link w-inline-block">
                         <div class="menu-link-text login">가게 찾기</div>
                     </a>
                     <a href="/store/likesList" class="menu-link w-inline-block">
-                        <div class="menu-link-text login">좋아요 가게 찾기</div>
+                        <div class="menu-link-text login">찜 목록</div>
                     </a>
                     <th:block sec:authorize="isAuthenticated()">
                         <a href="/order/orderList" class="menu-link w-inline-block">
@@ -34,7 +34,7 @@
                                 <a href="/manager/update" class="menu-link w-inline-block">
                                     <div class="menu-link-text-drop">메뉴 등록</div>
                                 </a>
-                                <a href="#" class="menu-link w-inline-block">
+                                <a href="/manager/orderList" class="menu-link w-inline-block">
                                     <div class="menu-link-text-drop">주문 관리</div>
                                 </a>
                             </nav>
