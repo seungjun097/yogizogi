@@ -4,7 +4,9 @@ import com.green.yogizogi.constant.StoreCategory;
 import com.green.yogizogi.entity.QReview;
 import com.green.yogizogi.entity.QStore;
 import com.green.yogizogi.entity.Store;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -31,25 +33,30 @@ public class SearchStoreRepositoryImpl extends QuerydslRepositorySupport impleme
 
         System.out.println("category : " + category + " address : " + address1 +" Sort : " + sort + " search : "+ search);
 
+        BooleanBuilder builder = new BooleanBuilder();
         //주소 조건
         if(address1 >= 10000 && address1 <= 99999) {
             int address = address1/100;
             String addressStr = String.valueOf(address);
-            tuple.where(store.store_address1.substring(0, 3).eq(addressStr));
+            BooleanExpression expression = store.store_address1.substring(0, 3).eq(addressStr);
+            builder.and(expression);
         }
-
         //카테고리 조건
-        if(category != null) {
-            tuple.where(store.category.eq(category));
+        if(!category.equals(StoreCategory.DEFAULT)) {
+            BooleanExpression expression = store.category.eq(category);
+            builder.and(expression);
         }
 
         //검색 조건
-        if(search != null) {
-            tuple.where(store.store_name.contains(search));
+        if(!search.equals("none")) {
+            BooleanExpression expression = store.store_name.contains(search);
+            builder.and(expression);
         }
 
+        tuple.where(builder);
+
         //정렬 조건
-        if(sort != null) {
+        if(!sort.equals("none")) {
             switch (sort) {
                 case "min_delivery":
                     tuple.orderBy(store.min_delivery.asc());
