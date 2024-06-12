@@ -33,14 +33,16 @@ public class StoreController {
 
     //카테고리 주소로 주위가게리스트 검색
     @GetMapping("/{category}/{address1}")
-    public String store(@PathVariable("category") StoreCategory category, @PathVariable("address1") int address1, Model model) {
+    public String store(@PathVariable("category") StoreCategory category,
+                        @PathVariable("address1") int address1, Model model) {
 
         System.out.println("category.address1 = " + category +","+ address1);
-        List<StoreDTO> storeList = storeService.getStoresByCategoryAndAddress(category, address1 / 100);
-        model.addAttribute("storeList", storeList);
-        System.out.println("storeList: " + storeList);
-
-        return "/store/mainlist";
+        if(category.equals("DEFAULT")) {
+            category = null;
+        }
+        List<MainStoreDTO> storeList = storeService.StoreSearch(category, address1, null, null);
+        model.addAttribute("storeDTOList", storeList);
+        return "main";
     }
 
     @GetMapping("/")

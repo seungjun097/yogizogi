@@ -12,34 +12,47 @@
                     <a href="/store/search" class="menu-link w-inline-block">
                         <div class="menu-link-text login">가게 찾기</div>
                     </a>
+                    <a href="/store/likesList" class="menu-link w-inline-block">
+                        <div class="menu-link-text login">좋아요 가게 찾기</div>
+                    </a>
                     <th:block sec:authorize="isAuthenticated()">
-                        <a href="/store/likesList" class="menu-link w-inline-block">
-                            <div class="menu-link-text login">좋아요 가게 찾기</div>
-                        </a>
-
-                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
-                            <div class="dropdown-toggle w-dropdown-toggle">
-                                <div class="w-icon-dropdown-toggle"></div>
-                                <div>스토어 관리</div>
-                            </div>
-                            <nav class="w-dropdown-list">
-                                <a href="/store/register" class="menu-link w-inline-block">
-                                    <div class="menu-link-text login">가게 등록</div>
-                                </a>
-                                <a href="/manager/update" class="menu-link w-inline-block">
-                                    <div class="menu-link-text login">메뉴 등록</div>
-                                </a>
-                            </nav>
-                        </div>
-                        <a href="/member/edit" class="menu-link w-inline-block">
-                            <div class="menu-link-text login">정보수정</div>
-                        </a>
                         <a href="/order/orderList" class="menu-link w-inline-block">
                             <div class="menu-link-text login">주문 이력</div>
                         </a>
                         <a href="/cart/cart" class="menu-link w-inline-block">
                             <div class="menu-link-text cart-button">장바구니</div>
                         </a>
+                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                            <div class="dropdown-toggle w-dropdown-toggle">
+                                <div class="w-icon-dropdown-toggle"></div>
+                                <div class ="drop-textBox">스토어 관리</div>
+                            </div>
+                            <nav class="w-dropdown-list">
+                                <a href="/store/register" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">가게 등록</div>
+                                </a>
+                                <a href="/manager/update" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">메뉴 등록</div>
+                                </a>
+                                <a href="#" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">주문 관리</div>
+                                </a>
+                            </nav>
+                        </div>
+                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                            <div class="dropdown-toggle w-dropdown-toggle">
+                                <div class="w-icon-dropdown-toggle"></div>
+                                <div class ="drop-textBox">내 정보</div>
+                            </div>
+                            <nav class="w-dropdown-list">
+                                <a href="/member/edit" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">정보 수정</div>
+                                </a>
+                                <a href="#" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">리뷰 관리</div>
+                                </a>
+                            </nav>
+                        </div>
                     </th:block>
                     <th:block sec:authorize="isAnonymous()">
                         <a href="/member/login" class="menu-link w-inline-block">
@@ -64,13 +77,9 @@
 </div>
 <script>
     $(document).ready(function() {
-        console.log("Document is ready!");
-
         $('.dropdown-toggle').on('mouseenter', function() {
-            console.log("mouseenter event triggered");
             $(this).next('.w-dropdown-list').stop(true, true).slideDown('fast');
         }).on('mouseleave', function() {
-            console.log("mouseleave event triggered");
             var dropdownList = $(this).next('.w-dropdown-list');
             setTimeout(function() {
                 if (!dropdownList.is(':hover')) {

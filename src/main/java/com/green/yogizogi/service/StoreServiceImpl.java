@@ -95,15 +95,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<MainStoreDTO> StoreAndAvgListSortBy(String sort) {
-        List<Object[]> results = storeRepository.storeSortBy(sort);
+    public List<MainStoreDTO> StoreSearch(StoreCategory category, int address1, String sort, String search) {
+        List<Object[]> results = storeRepository.storeSearch(category, address1, sort, search);
         List<MainStoreDTO> mainStoreDTOList = new ArrayList<>();
         for(Object[] objects : results) {
             Store store = (Store) objects[0];
             Double avg = (Double) objects[1];
+            avg = Math.round(avg*10.0)/10.0;
             Long reviewCount = (Long) objects[2];
             MainStoreDTO mainStoreDTO = MainStoreDTO.builder()
                     .id(store.getId())
+                    .store_name(store.getStore_name())
                     .category(store.getCategory())
                     .store_address1(store.getStore_address1())
                     .store_address2(store.getStore_address2())
