@@ -2308,8 +2308,10 @@ a {
 }
 
 .fa-heart{
-    margin-top: 10px;
-    margin-right: 20px;
+    margin-top: 0px;
+    margin-right: 5px;
+    color: red;
+    font-size: xx-large;
 }
 
 @media screen and (max-width: 991px) {
@@ -2343,21 +2345,6 @@ a {
 
   .uui-footer04_legal-list {
     margin-bottom: 1rem;
-  }
-
-  .uui-text-size-small {
-    display: block;
-    align-items: center;
-    margin-bottom: 10px; /* 요소 사이의 간격 조절 */
-    padding: 10px;
-  }
-
-  .text-align-right {
-    display: block;
-    margin-bottom: 10px; /* 요소 사이의 간격 조절 */
-    padding: 10px;
-    margin-left: auto;
-    text-align: right;
   }
 
   .uui-footer04_social-link:hover {
