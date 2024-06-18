@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="menu-modal-wrapper">
+    <div class="menu-container">
+        <div class="menu-positon">
+            <div class="menu-modal-window">
+                <div class="menu-modal-header">
+                    <h4 class="menu-modal-head-text">Review</h4>
+                    <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
+                </div>
+                <div class="menu-modal-body2">
+                    <input type="hidden" id="memberid" value="">
+                    <input type="hidden" id="storeid" value="">
+                    <input type="hidden" id="orderid" value="">
+                    <input type="hidden" id="reviewnum" value="">
+                    <div>
+                        <label class="labelText" >닉네임</label>
+                        <input class="text-input2 w-input" type="text" id="nickname" value="">
+                    </div>
+                    <div>
+                        <label class="labelText" >리뷰쓰기</label>
+                        <div class ="star_rating">
+                            <span class="star" value="1"> </span>
+                            <span class="star" value="2"> </span>
+                            <span class="star" value="3"> </span>
+                            <span class="star" value="4"> </span>
+                            <span class="star" value="5"> </span>
+                        </div>
+                    </div>
+                    <textarea rows="8" class="text-input3 w-input" id="inputText"></textarea>
+                    <div class="menu-modal-button2">
+                        <a href="#" class="menu-modal-btn w-inline-block" onclick="modalHide()">
+                            <div class="menu-modal-btn-text">닫기</div>
+                        </a>
+                        <a href="#" class="menu-modal-btn w-inline-block" id="saveBtn">
+                            <div class="menu-modal-btn-text" id="reviewSaveBtn">리뷰등록</div>
+                        </a>
+                        <a href="#" class="menu-modal-btn w-inline-block" id="deleteBtn">
+                            <div class="menu-modal-btn-text" id="reviewDeleteBtn">리뷰삭제</div>
+                        </a>
+                        <a href="#" class="menu-modal-btn w-inline-block" id="updateBtn">
+                            <div class="menu-modal-btn-text" id="reviewUpdateBtn">리뷰수정</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="menu-modal-wrapper-order">
+    <div class="menu-container">
+        <div class="menu-positon">
+            <div class="menu-modal-window">
+                <div class="menu-modal-header">
+                    <h4 class="menu-modal-head-text">Order Detail</h4>
+                    <div class="material-icons sysf-icon-close" onclick="modalHide()">close</div>
+                </div>
+                <div class="menu-modal-body2" >
+                    <div style="max-height: calc(100vh - 300px); overflow-x: hidden; overflow-y: auto;">
+                        <div>
+                            <label class="labelText" >상호명</label>
+                            <h6 id="storeName"></h6>
+                        </div>
+                        <div>
+                            <label class="labelText" >주문일</label>
+                            <h6 id="regDate"></h6>
+                        </div>
+                        <div>
+                            <label class="labelText" >주문 메뉴</label>
+                            <div id="orderMenu"></div>
+                            <h6 id="deliveryTip"></h6>
+                        </div>
+                        <div>
+                            <label class="labelText" >총 주문 가격</label>
+                            <h5 id="totalPrice"></h5>
+                        </div>
+                        <div>
+                            <label class="labelText" >배달 주소</label>
+                            <h6 id="orderAddress"></h6>
+                        </div>
+                        <div>
+                            <label class="labelText" >주문 상태</label>
+                            <h6 id="orderStatus"></h6>
+                        </div>
+                    </div>
+                    <div class="menu-modal-button2">
+                        <a href="#" class="menu-modal-btn w-inline-block" onclick="modalHide()">
+                            <div class="menu-modal-btn-text">닫기</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="myorderlist">
+                    <div class="orderlistheading">
+                        <h2 class="orderhead">내 주문목록</h2>
+                    </div>
+                    <div th:each="OrReDTO, OrReStat :${OrReDTOList}">
+                        <div class="ordercard">
+                            <div class="ordercard_flexrow"><img th:src="|/display?fileName=${OrReDTO.getThumbnailURL()}|" loading="lazy" alt="" class="ordercard_thumnail">
+                                <div class="orderdesc">
+                                    <div class="orderstoretime">
+                                        <h3 class="orderstorename">[[${OrReDTO.storeName}]]</h3>
+                                        <div th:text="${#temporals.format(OrReDTO.regDate, 'MM월 dd일 HH시간 mm분')}"></div>
+                                    </div>
+                                    <div>배송지 : [[${OrReDTO.address1+" "+OrReDTO.address2+" "+OrReDTO.address3}]]</div>
+                                    <div th:each="orderMenu : ${OrReDTO.orderMenuDTOList}">
+                                        <div class="ordermenunp">
+                                            <div>메뉴이름 : [[${orderMenu.menuName}]]</div>
+                                            <div>메뉴가격 : [[${orderMenu.menuPrice}]] 원</div>
+                                            <div>개수 : [[${orderMenu.count}]] 개</div>
+                                        </div>
+                                    </div>
+                                    <div>배달비 : [[${OrReDTO.deliveryTip}]] 원</div>
+                                    <h4 class="ordertotalprice">총 주문금액 : [[${OrReDTO.totalPrice}]] 원</h4>
+                                </div>
+                                <div class="orderbtnwrap">
+                                    <a href="#" class="orderdetailbtn w-button" onclick="orderModalShow(this.getAttribute('data-value'))" th:data-value="${OrReStat.index}">주문 상세보기</a>
+                                        <a th:if="${OrReDTO.reviewnum == null}" href="#" class="orderdetailbtn w-button" onclick="saveModal(this.getAttribute('data-value'))" th:data-value="${OrReStat.index}">리뷰 쓰기</a>
+                                        <a th:unless="${OrReDTO.reviewnum == null}" href="#" class="orderdetailbtn w-button" onclick="updateModal(this.getAttribute('data-value'))" th:data-value="${OrReStat.index}">리뷰 수정/삭제</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</th:block>
+</body>
+<script th:inline="javascript">
+
+    let OrReDTOList = [[${OrReDTOList}]];
+
+
+    //모달창 관련 함수들
+    const modalWindow = $(".menu-modal-wrapper");
+    const modalWindowOrder = $(".menu-modal-wrapper-order");
+
+    //모달창 숨기기
+    function modalHide() {
+     modalWindow.hide();
+     modalWindowOrder.hide();
+    }
+
+    //리뷰 별 클릭시 별점붙이기
+    let grade;
+    let stars = $('.star_rating .star');
+
+    stars.click(function() {
+        $(this).parent().children('span').removeClass('on');
+        $(this).addClass('on').prevAll('span').addClass('on');
+    })
+
+    //별점 변경시 grade 변수에 담기
+
+    $('.star').click(function() {
+        grade = $(this).attr('value');
+        console.log('선택된 별점: ' + grade);
+    });
+
+    function orderModalShow(index) {
+        let OrReDTO = OrReDTOList[index];
+        $('#storeName').html(OrReDTO.storeName);
+        $('#regDate').html(OrReDTO.regDate);
+        $('#orderAddress').html(OrReDTO.address1 + " 번지 " + OrReDTO.address2 + " " + OrReDTO.address3);
+        $('#orderStatus').html(OrReDTO.orderStatus);
+        $('#deliveryTip').html("배달팁 : "+OrReDTO.deliveryTip+" 원");
+        $('#totalPrice').html(OrReDTO.totalPrice+" 원");
+        let str = '';
+        if (OrReDTO.orderMenuDTOList != null) {
+            for (let i = 0; i < OrReDTO.orderMenuDTOList.length; i++) {
+                let orderMenuDTO = OrReDTO.orderMenuDTOList[i];
+                str += "<h6>   메뉴이름 : " + orderMenuDTO.menuName + "   가격 : " + orderMenuDTO.menuPrice + " 원 "
+                str += "   개수 : " + orderMenuDTO.count + " 개 </h6>";
+                if(orderMenuDTO.selectOp != null) {
+                   let select = orderMenuDTO.selectOp.split("%");
+                   str += "<h6> 옵션 : "+select[0]+"   가격 : "+select[1]+" 원</h6>"
+                }else {
+                    str += "<h6>옵션 선택 없음</h6>"
+                }
+            }
+        }
+        $('#orderMenu').html(str);
+        modalWindowOrder.show();
+    }
+
+    function saveModal(index) {
+        let OrReDTO = OrReDTOList[index];
+        console.log(OrReDTO);
+        $("#nickname").val(OrReDTO.nickname);
+        $("#storeid").val(OrReDTO.store_id);
+        $("#memberid").val(OrReDTO.member_id);
+        $("#orderid").val(OrReDTO.order_id);
+
+        //별점 표기하기
+        grade = 5;
+        stars.each(function() {
+            var starValue = parseInt($(this).attr('value'));
+            if (starValue <= grade) {
+                $(this).addClass('on');
+            } else {
+                $(this).removeClass('on');
+            }
+        });
+        $("#saveBtn").show();
+        $("#updateBtn").hide();
+        $("#deleteBtn").hide();
+        modalWindow.show();
+    }
+
+    function updateModal(index) {
+        let OrReDTO = OrReDTOList[index];
+        console.log(OrReDTO);
+        $("#reviewnum").val(OrReDTO.reviewnum);
+        $("#storeid").val(OrReDTO.store_id);
+        $("#memberid").val(OrReDTO.member_id);
+        $("#orderid").val(OrReDTO.order_id);
+        $("#nickname").val(OrReDTO.nickname);
+        $("#inputText").html(OrReDTO.text);
+
+        //별점 표기하기
+        grade = OrReDTO.grade;
+        stars.each(function() {
+            var starValue = parseInt($(this).attr('value'));
+            if (starValue <= grade) {
+                $(this).addClass('on');
+            } else {
+                $(this).removeClass('on');
+            }
+        });
+        $("#saveBtn").hide();
+        $("#updateBtn").show();
+        $("#deleteBtn").show();
+        modalWindow.show();
+    }
+
+    $("#reviewSaveBtn").click(function(){
+        let storeId = $("#storeid").val();
+        let orderId = $("#orderid").val();
+        let data = {
+            storeId: storeId,
+            orderId: orderId,
+            grade: grade,
+            text: $("#inputText").val(),
+            memberId: $("#memberid").val()
+        }
+        $.ajax({
+           url:'/reviews/'+orderId,
+            type: 'post',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+           success: function(result){
+                alert("리뷰가 등록되었습니다.");
+                modalHide();
+                location.reload();
+           },
+            error: function(error) {
+                alert("리뷰등록에 실패했습니다.");
+           }
+        })
+    });
+
+    $("#reviewUpdateBtn").click(function(){
+        let reviewnum = $("#reviewnum").val();
+        let storeId = $("#storeid").val();
+        let orderId = $("#orderid").val();
+        let data = {
+            storeId: storeId,
+            reviewnum: reviewnum,
+            orderId: orderId,
+            grade: grade,
+            text: $("#inputText").val(),
+            memberId: $("#memberid").val()
+        }
+        $.ajax({
+           url:'/reviews/'+orderId+'/'+reviewnum,
+            type: 'put',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+           success: function(result){
+                alert("리뷰가 수정되었습니다.");
+                modalHide();
+                location.reload();
+           },
+            error: function(error) {
+                alert("리뷰수정에 실패했습니다.");
+           }
+        })
+    });
+
+    $("#reviewDeleteBtn").click(function(){
+        let reviewnum = $("#reviewnum").val();
+        let orderId = $("#orderid").val();
+        $.ajax({
+           url:'/reviews/'+orderId+'/'+reviewnum,
+            type: 'delete',
+            dataType: "text",
+           success: function(result){
+                alert("리뷰가 삭제되었습니다.");
+                modalHide();
+                location.reload();
+           },
+            error: function(error) {
+                alert("리뷰삭제에 실패했습니다.");
+           }
+        })
+    });
+</script>
+</html>

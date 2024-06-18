@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+
+    <th:block th:fragment="content">
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="myorderlist">
+                    <div class="orderlistheading">
+                        <h2 class="orderhead">스토어 선택</h2>
+                    </div>
+                    <div class="storelistbox2">
+                        <div class="gray-box">
+                            <div th:each="dto:${storeDTOList}">
+                                <a th:href="@{'/manager/storeOrder/' + ${dto.id}}" class="storeupdatecard w-inline-block">
+                                    <h3>[[${dto.storeName}]]</h3>
+                                    <div class="storeadress">[[${dto.storeAddress1}]] 번지 [[${dto.storeAddress2}]] [[${dto.storeAddress3}]]</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="orderlistheading">
+                        <h2 class="orderhead">접수된 주문 목록</h2>
+                    </div>
+                    <div th:each="orderDTO, orderStat :${orderDTOList}">
+                        <div class="ordercard">
+                            <div class="ordercard_flexrow">
+                                <div class="timeShow">
+                                    <h4 th:text="${#temporals.format(orderDTO.regDate, 'MM월 dd일')}"></h4>
+                                    <h3 th:text="${#temporals.format(orderDTO.regDate, 'HH시간 mm분')}"></h3>
+                                </div>
+                                <div class="orderdesc">
+                                    <div class="orderstoretime">
+                                        <h3 class="orderstorename">[[${orderDTO.storeName}]]</h3>
+                                    </div>
+                                    <div>배송지 : [[${orderDTO.address1+" "+orderDTO.address2+" "+orderDTO.address3}]]</div>
+                                    <div th:each="orderMenu : ${orderDTO.orderMenuDTOList}">
+                                        <div class="ordermenunp">
+                                            <div>메뉴이름 : [[${orderMenu.menuName}]]</div>
+                                            <div>메뉴가격 : [[${orderMenu.menuPrice}]] 원</div>
+                                            <div>개수 : [[${orderMenu.count}]] 개</div>
+                                        </div>
+                                    </div>
+                                    <h4 class="ordertotalprice">총 주문금액 : [[${orderDTO.totalPrice}]] 원</h4>
+                                </div>
+                                <div class="orderbtnwrap">
+                                    <a href="#" class="orderdetailbtn w-button" >주문 접수</a>
+                                    <a href="#" class="orderdetailbtn w-button" th:data-value="${orderDTO.order_id}" id="orderCancel">주문 취소</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </th:block>
+</th:block>
+</body>
+<script th:inline="javascript">
+
+    let orderDTOList = [[${orderDTOList}]];
+
+    $('#orderCancel').on('click', function(e) {
+
+        let order_id = $(this).attr('data-value');
+
+        $.ajax({
+        type: "POST",
+        url: "/payment/cancel",
+        data: order_id,
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+                alert("결제가 취소되었습니다.");
+            },
+        error: function (error) {
+                alert("결제 취소 실패");
+            }
+        })
+    })
+</script>
+</html>

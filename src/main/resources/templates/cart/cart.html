@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+  <th:block th:fragment="content">
+    <section class="section">
+      <div class="w-layout-blockcontainer container w-container">
+        <div class="bigcartmenu">
+          <a href="#" class="cartHeadcardText w-inline-block">
+            <th:block th:if="${storeDTO != null}">
+                <img th:src="|/display?fileName=${storeDTO.getThumbnailURL()}|" loading="lazy" alt="" class="storeupdateimg">
+                <h3 class="cartHeadingText">[[${storeDTO.storeName}]]</h3>
+                <div class="storeadress">[[${storeDTO.storeAddress1+" "+storeDTO.storeAddress2+" "+storeDTO.storeAddress3}]]</div>
+            </th:block>
+            <div th:unless="${storeDTO != null}">
+              <h3 class="cartHeadingText" style="height: 50px"></h3>
+            </div>
+          </a>
+          <div class="cartlist" id="cartList">
+          </div>
+          <div class="menuplus"></div>
+          <div class="cartamount">
+            <div class="cartline"></div>
+            <div th:if="${storeDTO != null}" class="delivery-fee">배달비 : [[${storeDTO.deliveryTip}]] 원</div>
+            <div th:if="${storeDTO == null}" class="delivery-fee">배달비 : 0 원</div>
+            <div class="amounttext" id="allPrice">총 주문금액 : 0 원</div>
+          </div>
+          <div class="cartbtnwrap">
+            <a href="#" class="orderbutton w-inline-block">
+              <div class="text-block-3">Order</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </th:block>
+</th:block>
+</body>
+<script th:inline="javascript">
+  let cartDTO = [[${cartDTO}]];
+
+  $(document).ready(function() {
+    if(cartDTO != null) {
+        cartShow(cartDTO);
+        cartAmountShow(cartDTO);
+    }else {
+        $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
+    }
+  })
+
+  function cartShow(cartDTO) {
+        let str = "";
+        for(let i = 0; i < cartDTO.cartMenuDTOList.length; i++) {
+          let cartMenu = cartDTO.cartMenuDTOList[i];
+          let imgUrl = cartMenu.thumbnailURL;
+          str += "<div class='cartmenu'><div class='div-block-11'>"
+          str += "<img src='/display?fileName="+imgUrl+"' loading='lazy' alt='' class='image-7'>"
+          str += "<div class='div-block-12'><div class='menuhedingwrap'>"
+          str += "<div name ='cartMenuId'></div>"
+          str += "<h4 class='cartmenuheading'>"+cartMenu.menu_name+"</h4>"
+          str += "<a href='#' class='button w-button' onclick='cartMenuDel("+cartMenu.cartMenu_id+")'>x</a></div>"
+          str += "<div>메뉴 가격 : "+cartMenu.menu_price+" 원</div>"
+          str += "<div class='cart-menu-optionlist'>"
+          for(let cartMenuOp of cartMenu.cartMenuOptionDTOList) {
+            str += "<div class='menu-detail-option'>"
+            str += "<div class='option-left'>"
+            str += "<div class='option-name'>"+cartMenuOp.menuOption_name+"</div>"
+            str += "<div class='option-price'>"+cartMenuOp.menuOption_price+" 원</div>"
+            if(cartMenuOp.checked) {
+              str += "</div><div class='checkbox w-embed'><input type='checkbox' onchange='checkChange("+cartMenuOp.menuOptionId+")' "
+              str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' checked /></div></div>"
+            }else {
+              str += "</div><div class='checkbox w-embed'><input type='checkbox' onchange='checkChange("+cartMenuOp.menuOptionId+")' "
+              str += "value = '"+cartMenuOp.menuOption_price+"' id='ctOpCheck"+cartMenuOp.menuOptionId+"' /></div></div>"
+            }
+          }
+          str += "</div><div class='amoutadd'><div class='amount'>수량</div><div class='amountbtndiv'>"
+          str += "<a href='#' class='amountbtn left w-button' onclick='cartDecrease("+i+")'>-</a>"
+          str += "<input type='number' class='amountinput' id='Cartamountinput"+i+"' name='count' value='"+cartMenu.count+"'/>"
+          str += "<a href='#' class='amountbtn right w-button' onclick='cartIncrease("+i+")'>+</a></div>"
+          str += "</div><div>총 금액 : <span id='CartMenuTp"+i+"'>total price</span></div></div></div></div>"
+        }
+        $("#cartList").html(str);
+  };
+
+
+  //카트메뉴 삭제 함수
+  function cartMenuDel(cartMenuId) {
+
+  var data = {
+    cartMenuId: cartMenuId
+  };
+
+  $.ajax({
+    type: 'POST',
+    url: '/cart/delete', // 서버 URL을 입력해야 합니다.
+    data: JSON.stringify(data),
+    contentType: "application/json",
+    dataType: "json",
+    success: function(cartResult) {
+      if(cartResult != null) {
+        console.log("삭제 성공");
+        cartDTO = cartResult;
+        cartShow(cartResult);
+        cartAmountShow(cartResult);
+      }else{
+        console.log("카트가 비었음");
+      }
+    },
+    error: function(error) {
+      $(".delivery-fee").html("배달비 : 0 원")
+      $("#allPrice").html("총 주문금액 : 0 원")
+      $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
+      $(".cartHeadcardText").html("<h3 class='cartHeadingText' style='height: 50px'></h3>");
+    }
+  });
+  }
+
+//카트에 담긴 옵션리스트의 체크 여부와 카운트의 value값을 확인 후 최종 값을 계산하는 함수
+  function cartAmountShow(cartDTO) {
+    if(cartDTO != null) {
+      let cartTotalPrice = 0;
+      for(let index = 0; index < cartDTO.cartMenuDTOList.length; index++) {
+        let CartMenuDTO = cartDTO.cartMenuDTOList[index];
+        let totalPrice = 0;
+        let menuPrice = CartMenuDTO.menu_price;
+        totalPrice += parseInt(menuPrice);
+        console.log(totalPrice);
+        for (let i = 0; i < CartMenuDTO.cartMenuOptionDTOList.length; i++) {
+          let ctOptionId = CartMenuDTO.cartMenuOptionDTOList[i].menuOptionId;
+          let checkBox = $('#ctOpCheck'+ctOptionId);
+          let opChecked = checkBox.prop('checked');
+          let opPrice = checkBox.val();
+          if(opChecked) {
+            totalPrice += parseInt(opPrice);
+          }
+        }
+        let amount = $('#Cartamountinput'+index).val();
+        totalPrice = totalPrice*parseInt(amount);
+        $('#CartMenuTp'+index).html(totalPrice);
+        cartTotalPrice += totalPrice;
+      }
+      cartTotalPrice += 3000;
+      $('#allPrice').html('총 주문금액 : '+cartTotalPrice+' 원');
+    }else {
+      $('#allPrice').html('총 주문금액 : 0 원');
+    }
+  }
+
+   //카트 수량 변경 버튼
+  function cartIncrease(index) {
+    quantityInput = $('#Cartamountinput'+index);
+    let currentValue = parseInt(quantityInput.val());
+    quantityInput.val(currentValue + 1);
+    cartAmountChange(index);
+    cartAmountShow(cartDTO);
+  }
+
+  function cartDecrease(index) {
+  quantityInput = $('#Cartamountinput'+index);
+  let currentValue = parseInt(quantityInput.val());
+    if (currentValue > 1) {
+      quantityInput.val(currentValue - 1);
+      cartAmountChange(index);
+    } else {
+      alert('수량은 1보다 작을 수 없습니다!');
+    }
+    cartAmountShow(cartDTO);
+  }
+
+  //카트의 메뉴 수량 변경 시 수량 변화 반영
+  function cartAmountChange(index) {
+    let count = $('#Cartamountinput'+index).val();
+    let cartMenuId = cartDTO.cartMenuDTOList[index].cartMenu_id;
+
+    var data = {
+      cartMenu_id: cartMenuId,
+      count: count
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/countUpdate', // 서버 URL을 입력해야 합니다.
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "text",
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(error) {
+        console.error('변경 실패');
+      }
+    });
+  }
+  //카트 체크 변환 시 체크 변화 반영
+  function checkChange(MenuOptionId) {
+    let checkBox = $('#ctOpCheck'+MenuOptionId);
+    let checked = checkBox.prop('checked');
+
+    var data = {
+      menuOptionId: MenuOptionId,
+      checked: checked
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/optionChecked', // 서버 URL을 입력해야 합니다.
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "text",
+      success: function(response) {
+        console.log(response);
+        cartDTOCall();
+      },
+      error: function(error) {
+        console.error('변경 실패');
+      }
+    });
+  }
+
+  function cartDTOCall() {
+    $.ajax({
+      type: 'POST',
+      url: '/cart/cartList',
+      dataType: "json",
+      success: function(cartResult) {
+        console.log(cartResult);
+        cartDTO = cartResult;
+        cartShow(cartResult);
+        cartAmountShow(cartResult);
+      },
+      error: function(error) {
+        console.error('카트 불러오기 실패');
+      }
+    });
+  }
+</script>
+</html>

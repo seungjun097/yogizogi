@@ -2,55 +2,95 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div class="header" th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#">GreenShop</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">
-                    <a class="nav-link" href="/admin/item/new">상품등록</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/itemlist"
-                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">상품관리</a>
-                </li>
-                <th:block sec:authorize="isAuthenticated()">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/order/cart">장바구니</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/order/orderlist">구매이력</a>
-                    </li>
-                </th:block>
-                <th:block sec:authorize="isAnonymous()">
-                    <!-- 인증 받지 않음 -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/member/login">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/member/signup">회원가입</a>
-                    </li>
-                </th:block>
-
-                <th:block sec:authorize="isAuthenticated()">
-                    <!-- 인증 받음 -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">로그아웃</a>
-                    </li>
-                </th:block>
-
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search"
-                       placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0"
-                        type="submit">Searcch</button>
-            </form>
+    <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+        <div class="container w-container">
+            <div class="top-menu">
+                <a href="/" class="logo w-inline-block">
+                    <h1 class="logo-text">yogizogi</h1>
+                </a>
+                <nav role="navigation" class="nav-menu w-nav-menu">
+                    <a href="/" class="menu-link w-inline-block">
+                        <div class="menu-link-text login">가게 찾기</div>
+                    </a>
+                    <a href="/store/likesList" class="menu-link w-inline-block">
+                        <div class="menu-link-text login">찜 목록</div>
+                    </a>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <a href="/order/orderList" class="menu-link w-inline-block">
+                            <div class="menu-link-text login">주문 이력</div>
+                        </a>
+                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                            <div class="dropdown-toggle w-dropdown-toggle">
+                                <div class="w-icon-dropdown-toggle"></div>
+                                <div class ="drop-textBox">내 정보</div>
+                            </div>
+                            <nav class="w-dropdown-list">
+                                <a href="/member/edit" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">정보 수정</div>
+                                </a>
+                            </nav>
+                        </div>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                            <div class="dropdown-toggle w-dropdown-toggle">
+                                <div class="w-icon-dropdown-toggle"></div>
+                                <div class ="drop-textBox">스토어 관리</div>
+                            </div>
+                            <nav class="w-dropdown-list">
+                                <a href="/store/register" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">가게 등록</div>
+                                </a>
+                                <a href="/manager/update" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">메뉴 등록</div>
+                                </a>
+                                <a href="/manager/orderList" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">주문 관리</div>
+                                </a>
+                            </nav>
+                        </div>
+                    </th:block>
+                    <th:block sec:authorize="isAnonymous()">
+                        <a href="/member/login" class="menu-link w-inline-block">
+                            <div class="menu-link-text login">로그인</div>
+                        </a>
+                        <a href="/member/signup" class="menu-link w-inline-block">
+                            <div class="menu-link-text">회원가입</div>
+                        </a>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <a href="/cart/cart" class="menu-link w-inline-block">
+                            <div class="menu-link-text cart-button">장바구니</div>
+                        </a>
+                        <a  href="/logout" class="menu-link w-inline-block">
+                            <div class="menu-link-text login">로그아웃</div>
+                        </a>
+                    </th:block>
+                </nav>
+                <div class="w-nav-button">
+                    <div class="w-icon-nav-menu"></div>
+                </div>
+            </div>
         </div>
-    </nav>
+    </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('.dropdown-toggle').on('mouseenter', function() {
+            $(this).next('.w-dropdown-list').stop(true, true).slideDown('fast');
+        }).on('mouseleave', function() {
+            var dropdownList = $(this).next('.w-dropdown-list');
+            setTimeout(function() {
+                if (!dropdownList.is(':hover')) {
+                    dropdownList.stop(true, true).slideUp('fast');
+                }
+            }, 200); // 200ms 딜레이 후 드롭다운을 닫습니다.
+        });
+
+        $('.w-dropdown-list').on('mouseleave', function() {
+            console.log("mouseleave event triggered for dropdown list");
+            $(this).stop(true, true).slideUp('fast');
+        });
+    });
+</script>
 </html>

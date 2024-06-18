@@ -1,5 +1,5 @@
 package com.green.yogizogi.constant;
 
 public enum Role {
-    ADMIN, USER
+    ADMIN, USER, MANAGER
 }

@@ -7,7 +7,11 @@ import com.green.yogizogi.entity.Member;
 public interface MemberService {
     Long signUp(SignupDTO signupDTO);
 
+    Long edit(SignupDTO signupDTO);
+
     String userEmailChk(String email);
+
+    Member userFindEmail(String email);
 
     default Member signUpDTOtoEntity(SignupDTO dto) {
         Member member = Member.builder()

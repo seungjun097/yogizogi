@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <h1>상점리스트</h1>
+        <div th:each="dto:${likesList}">
+            <div class="card" style="width: 18rem;">
+                <img th:if="${dto.path != null}"
+                     th:src="|/display?fileName=${dto.getThumbnailURL()}|" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">[[${dto.storeName}]]</h5>
+                    <p class="card-text">[[${dto.storeDes}]]</p>
+                    <a th:href="'/store/detail2/'+${dto.id}" class="btn btn-primary">가게 살펴보기</a>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+<script th:inline="javascript">
+    //버튼 클릭시 폼 전송
+    let SearchForm = $("#searchForm")
+    $(".btn-search").click(function() {
+        SearchForm.submit();
+    })
+</script>9
+</html>

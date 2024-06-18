@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+  <th:block th:fragment="content">
+<section class="section">
+  <div class="w-layout-blockcontainer container w-container">
+    <div class="w-form">
+      <form action="/member/edit" method="post" onsubmit="return valid()" class="signup_form" data-wf-page-id="660e61a57b4021b8cd2e728a" data-wf-element-id="0bf4527a-5ac8-2eaa-7adb-41066757e753">
+        <h1 class="signup_heading">내 정보수정</h1>
+
+        <label  class="sigh-up-label">이메일</label>
+        <input type="hidden" name="id" th:value="${member.getId()}">
+        <div class="emailcheck_div">
+          <input class="input-round w-input" type="text" required id="email" name="email"
+                 th:value="${member.getEmail()}" readonly/>
+        </div>
+        <label class="sigh-up-label">비밀번호 설정</label>
+        <input class="input-round w-input" type="password" id="password" name="password"
+               placeholder="새 비밀번호를 입력해주세요" />
+
+        <label class="sigh-up-label">비밀번호 확인</label>
+        <input class="input-round w-input" type="password" id="passwordCheck" name="passwordCheck"
+               placeholder="비밀번호를 한번 더 입력해주세요"/>
+
+        <label class="sigh-up-label">닉네임</label>
+        <input class="input-round w-input" type="text" id="nickname" name="nickname"
+               th:placeholder="${member.getNickname()}"/>
+
+        <label class="sigh-up-label">핸드폰 번호</label>
+        <input class="input-round w-input" type="text" id="phone" name="phone"
+               th:placeholder="${member.getPhone()}" />
+        <input type="submit" data-wait="Please wait..." class="signup-submit w-button" value="Sign up">
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form.</div>
+      </div>
+    </div>
+  </div>
+</section>
+  </th:block>
+</th:block>
+<script>
+
+  function valid() {
+
+      if(!($("#password").val() == $("#passwordCheck").val())) {
+          alert("비밀번호가 일치하지 않습니다.");
+          return false;
+      }
+      return true;
+  }
+
+</script>
+</html>

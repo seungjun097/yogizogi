@@ -1,11 +1,14 @@
 package com.green.yogizogi.controller;
 
 import com.green.yogizogi.dto.SignupDTO;
+import com.green.yogizogi.entity.Member;
 import com.green.yogizogi.service.MemberService;
+import com.green.yogizogi.service.PrincipalDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -25,6 +28,22 @@ public class MemberController {
     public String getSignUp() {
         return "/member/signup";
     }
+
+    @GetMapping("/edit")
+    public String getEdit(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        Member member = memberService.userFindEmail(principalDetails.getUsername());
+        model.addAttribute("member", member);
+        return "/member/edit";
+    }
+
+    @PostMapping("/edit")
+    public String postEdit(@Valid SignupDTO signupDTO, Errors errors, Model model) {
+        System.out.println(signupDTO.toString());
+        Long result = memberService.edit(signupDTO);
+        System.out.println(result);
+        return "/main";
+    }
+
 
     //가입 처리 및 결과 리턴
     @PostMapping("/signup")
@@ -55,6 +74,7 @@ public class MemberController {
     public String loginMember() {
         return "/member/login";
     }
+
     @GetMapping("/login/error")
     public String loginMember(Model model) {
         model.addAttribute("loginErrorMsg",

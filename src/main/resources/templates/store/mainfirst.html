@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e400eae390747a237232735511d63bb"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<th:block th:replace="~{/layout/basic::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <div style="height: 100px"></div>
+        <section class="section">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="search-form w-form">
+                    <div class="search-div">
+                        <label class="search_text">주변 맛집찾기</label>
+                        <input type="hidden" id="deliveryAddress1" placeholder="우편번호" value="" name="address1" readonly>
+                        <input class="address_search_bar" type="text" id="deliveryAddress2"  onclick="execution_daum_address()" name="address2" placeholder="주변의 음식점을 찾아보세요." readonly>
+                        <input type="submit" class="search_btn w-button" value="검색" id="addressSearch">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div style="height: 200px"></div>
+    </th:block>
+</th:block>
+<script src="/js/home.js"></script>
+<script th:inline="javascript">
+    let address1 = getCookie("deliveryAddress1");
+    if(address1 != null) {
+      location.href = "/store/DEFAULT/" + address1 + "/none/none";
+    }
+</script>
+</html>
