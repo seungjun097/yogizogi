@@ -282,14 +282,13 @@ let cartDTO = [[${cartDTO}]];
 
 $(document).ready(function() {
   if(cartDTO != null && storeDTO.id != cartDTO.storeId) {
-     alert("카트에 다른 상점의 상품이 있습니다. 카트를 비우시겠습니까?");
-     location.href("/cart/deleteAll");
+     alert("카트에 다른 상점의 상품이 있습니다. 카트를 우선 비워주세요.")
+     location.href = "/cart/deleteAll/"+storeDTO.id;
   }else {
     console.log(cartDTO);
     cartShow(cartDTO);
     cartAmountShow(cartDTO);
   }
-
 });
 
 $('#decrease').on('click', function() {

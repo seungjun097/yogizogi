@@ -48,9 +48,11 @@ public class CartServiceimpl implements CartService{
     }
 
     @Override
+    @Transactional
     public void cartDeleteByEmail(String email) {
         Member member = memberRepository.findByEmail(email);
         Cart cart = cartRepository.findByMember(member);
+        System.out.println("삭제할 카트의 아이디 : "+cart.getId());
         cartRepository.delete(cart);
     }
 }
