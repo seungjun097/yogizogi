@@ -1,12 +1,10 @@
 package com.green.yogizogi.service;
 
+import com.green.yogizogi.dto.OrderAndReviewDTO;
 import com.green.yogizogi.dto.OrderDTO;
 import com.green.yogizogi.dto.OrderListDTO;
 import com.green.yogizogi.dto.OrderMenuDTO;
-import com.green.yogizogi.entity.Member;
-import com.green.yogizogi.entity.Order;
-import com.green.yogizogi.entity.OrderMenu;
-import com.green.yogizogi.entity.Store;
+import com.green.yogizogi.entity.*;
 import com.green.yogizogi.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -47,43 +45,6 @@ public class OrderServiceImpl implements OrderService{
             orderMenuRepository.save(orderMenu);
         }
     }
-    @Override
-    public List<OrderListDTO> orderList(String memberEmail) {
-        Member member = memberRepository.findByEmail(memberEmail);
-        List<Order> orderList = orderRepository.findByMember(member);
-        List<OrderListDTO> orderListDTOList = new ArrayList<>();
-        for (Order order : orderList) {
-            OrderListDTO orderListDTO = OrderListDTO.builder()
-                    .order_id(order.getId())
-                    .regDate(order.getRegDate())
-                    .deliveryTip(order.getStore().getDelivery_tip())
-                    .storeName(order.getStore().getStore_name())
-                    .store_id(order.getStore().getId())
-                    .totalPrice(order.getTotalPrice())
-                    .imgName(order.getStore().getImgName())
-                    .path(order.getStore().getPath())
-                    .uuid(order.getStore().getUuid())
-                    .member_id(order.getMember().getId())
-                    .nickname(order.getMember().getNickname())
-                    .address1(order.getAddress().getAddress1())
-                    .address2(order.getAddress().getAddress2())
-                    .address3(order.getAddress().getAddress3())
-                    .build();
-            for(OrderMenu orderMenu : order.getOrderMenuList()) {
-                OrderMenuDTO orderMenuDTO = OrderMenuDTO.builder()
-                        .orderMenu_id(orderMenu.getId())
-                        .count(orderMenu.getCount())
-                        .menuName(orderMenu.getMenuName())
-                        .menuPrice(orderMenu.getMenuPrice())
-                        .selectOp(orderMenu.getSelectOp())
-                        .build();
-                orderListDTO.addMenuDTO(orderMenuDTO);
-            }
-            orderListDTOList.add(orderListDTO);
-        }
-        return orderListDTOList;
-    }
-
     //스토어 아이디로 접수된 오더 조회
     @Override
     public List<OrderListDTO> mamagerOrderList(Long storeId) {
@@ -120,6 +81,54 @@ public class OrderServiceImpl implements OrderService{
             orderListDTOList.add(orderListDTO);
         }
         return orderListDTOList;
+    }
+
+    @Override
+    public List<OrderAndReviewDTO> orderAndReviewList(String email) {
+        Member member = memberRepository.findByEmail(email);
+        List<Object[]> result = orderRepository.reviewAndOrder(member);
+        List<OrderAndReviewDTO> orderAndReviewDTOList = new ArrayList<>();
+        for (Object[] obj : result) {
+            Order order = (Order) obj[0];
+            Review review = (Review) obj[1];
+
+            OrderAndReviewDTO orderAndReviewDTO = OrderAndReviewDTO.builder()
+                    .order_id(order.getId())
+                    .regDate(order.getRegDate())
+                    .deliveryTip(order.getStore().getDelivery_tip())
+                    .storeName(order.getStore().getStore_name())
+                    .store_id(order.getStore().getId())
+                    .totalPrice(order.getTotalPrice())
+                    .orderStatus(order.getOrderStatus())
+                    .imgName(order.getStore().getImgName())
+                    .path(order.getStore().getPath())
+                    .uuid(order.getStore().getUuid())
+                    .member_id(order.getMember().getId())
+                    .nickname(order.getMember().getNickname())
+                    .address1(order.getAddress().getAddress1())
+                    .address2(order.getAddress().getAddress2())
+                    .address3(order.getAddress().getAddress3())
+                    .build();
+            if(review !=null) {
+                orderAndReviewDTO.setReviewnum(review.getReviewnum());
+                orderAndReviewDTO.setGrade(review.getGrade());
+                orderAndReviewDTO.setText(review.getText());
+                orderAndReviewDTO.setReviewModDate(review.getModDate());
+                orderAndReviewDTO.setEmail(email);
+            }
+            for(OrderMenu orderMenu : order.getOrderMenuList()) {
+                OrderMenuDTO orderMenuDTO = OrderMenuDTO.builder()
+                        .orderMenu_id(orderMenu.getId())
+                        .count(orderMenu.getCount())
+                        .menuName(orderMenu.getMenuName())
+                        .menuPrice(orderMenu.getMenuPrice())
+                        .selectOp(orderMenu.getSelectOp())
+                        .build();
+                orderAndReviewDTO.addMenuDTO(orderMenuDTO);
+            }
+            orderAndReviewDTOList.add(orderAndReviewDTO);
+        }
+        return orderAndReviewDTOList;
     }
 
     @Override

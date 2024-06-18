@@ -13,9 +13,12 @@ public interface CartService {
 
     CartDTO cartFindById(Long cartId);
 
+    void cartDeleteByEmail(String email);
+
     default CartDTO entityToDTO(Cart cart) {
         List<CartMenuDTO> cartMenuDTOList = new ArrayList<>();
         CartDTO cartDTO = CartDTO.builder()
+                .storeId(cart.getStore().getId())
                 .cartId(cart.getId())
                 .memberId(cart.getMember().getId())
                 .build();

@@ -24,20 +24,20 @@ public class ReviewController {
         return new ResponseEntity<>(reviewDTOList, HttpStatus.OK);
     }
 
-    @PostMapping("/{storeId}")
+    @PostMapping("/{orderId}")
     public ResponseEntity<Long> addReview(@RequestBody ReviewDTO reviewDTO){
         Long reviewnum = reviewService.register(reviewDTO);
         return new ResponseEntity<>(reviewnum, HttpStatus.OK);
     }
 
-    @PutMapping("/{storeId}/{reviewnum}")
+    @PutMapping("/{orderId}/{reviewnum}")
     public ResponseEntity<Long> modifyReview(@PathVariable("reviewnum") Long reviewnum,
                                              @RequestBody ReviewDTO reviewDTO){
         reviewService.modify(reviewDTO);
         return new ResponseEntity<>(reviewnum, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{storeId}/{reviewnum}")
+    @DeleteMapping("/{orderId}/{reviewnum}")
     public ResponseEntity<Long> removeReview(@PathVariable("reviewnum") Long reviewnum){
         reviewService.remove(reviewnum);
         return new ResponseEntity<>(reviewnum, HttpStatus.OK);

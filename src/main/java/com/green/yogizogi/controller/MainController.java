@@ -15,6 +15,6 @@ public class MainController {
     @GetMapping("/")
     public String mainPage(Model model) {
         model.addAttribute("storeDTOList", storeService.StoreAndAvgListAll());
-        return "main";
+        return "store/mainfirst";
     }
 }

@@ -17,11 +17,17 @@ public class Review extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "myReviewSeq")
     private Long reviewnum;
     private String text;
-    private int grade; //평점
+
+    @Builder.Default
+    private int grade = 0; //평점
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

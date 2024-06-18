@@ -19,7 +19,8 @@ public class ReviewDTO {
     private Long storeId;
     //회원정보
     //회원아이디
-    private Long member_id;
+    private Long memberId;
+    private Long orderId;
     private String nickname;
     private String email;
     private int grade;

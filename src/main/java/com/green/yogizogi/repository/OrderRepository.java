@@ -15,4 +15,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
 
     @Query("select o from Order o where o.store = :store order by o.regDate desc")
     List<Order> findByStore(@Param("store") Store store);
+
+    @Query("SELECT o, r FROM Order o LEFT JOIN Review r on o = r.order" +
+            " where o.member = :member order by o.regDate desc")
+    List<Object[]> reviewAndOrder(@Param("member") Member member);
 }

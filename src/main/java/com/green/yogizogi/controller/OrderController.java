@@ -28,8 +28,8 @@ public class OrderController {
     @GetMapping("/orderList")
     public String orderPage(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         String email = principalDetails.getUsername();
-        List<OrderListDTO> orderListDTOList = orderService.orderList(email);
-        model.addAttribute("orderDTOList", orderListDTOList);
+        List<OrderAndReviewDTO> orderAndReviewDTOList = orderService.orderAndReviewList(email);
+        model.addAttribute("OrReDTOList", orderAndReviewDTOList);
         return "order/orderList";
     }
 
