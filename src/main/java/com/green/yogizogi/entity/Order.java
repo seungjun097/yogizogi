@@ -1,5 +1,6 @@
 package com.green.yogizogi.entity;
 
+import com.green.yogizogi.constant.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,8 +35,15 @@ public class Order extends BaseEntity{
     private String merchant_uid;
 
     private int totalPrice;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private OrderStatus orderStatus = OrderStatus.ORDERWAITING;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
+
+    public void orderStatusChange(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

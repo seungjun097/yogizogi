@@ -13,20 +13,27 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CartServiceimpl implements CartService{
     private final CartRepository cartRepository;
     private final MemberRepository memberRepository;
     @Override
-    @Transactional
     public CartDTO cartFindByMemberEmail(String memberEmail) {
         Member member = memberRepository.findByEmail(memberEmail);
         Cart cart = cartRepository.findByMember(member);
         if(cart != null) {
-            return entityToDTO(cart);
+            if(!cart.getCartMenuList().isEmpty()) {
+                return entityToDTO(cart);
+            }else {
+                cartRepository.delete(cart);
+                return null;
+            }
         }else {
             return null;
         }
+
+
     }
 
     @Override
@@ -38,5 +45,12 @@ public class CartServiceimpl implements CartService{
         }else {
             return null;
         }
+    }
+
+    @Override
+    public void cartDeleteByEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        Cart cart = cartRepository.findByMember(member);
+        cartRepository.delete(cart);
     }
 }

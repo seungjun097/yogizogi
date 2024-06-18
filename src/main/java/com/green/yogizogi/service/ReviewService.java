@@ -10,6 +10,8 @@ import java.util.List;
 public interface ReviewService {
     //특정 가게의 모든 리뷰를 조회
     List<ReviewDTO> getListOfStore(Long store_id);
+    //특정 회원의 리뷰 조회하기
+    List<ReviewDTO> getListOfEmail(String email);
     //가게리뷰 추가하기
     Long register(ReviewDTO reviewDTO);
     //가게리뷰 수정하기
@@ -34,7 +36,7 @@ public interface ReviewService {
         ReviewDTO reviewDTO = ReviewDTO.builder()
                 .reviewnum(review.getReviewnum())
                 .storeId(review.getStore().getId())
-                .member_id(review.getMember().getId())
+                .memberId(review.getMember().getId())
                 .nickname(review.getMember().getNickname())
                 .email(review.getMember().getEmail())
                 .grade(review.getGrade())

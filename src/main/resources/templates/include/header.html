@@ -19,9 +19,19 @@
                         <a href="/order/orderList" class="menu-link w-inline-block">
                             <div class="menu-link-text login">주문 이력</div>
                         </a>
-                        <a href="/cart/cart" class="menu-link w-inline-block">
-                            <div class="menu-link-text cart-button">장바구니</div>
-                        </a>
+                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
+                            <div class="dropdown-toggle w-dropdown-toggle">
+                                <div class="w-icon-dropdown-toggle"></div>
+                                <div class ="drop-textBox">내 정보</div>
+                            </div>
+                            <nav class="w-dropdown-list">
+                                <a href="/member/edit" class="menu-link w-inline-block">
+                                    <div class="menu-link-text-drop">정보 수정</div>
+                                </a>
+                            </nav>
+                        </div>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
                         <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
                             <div class="dropdown-toggle w-dropdown-toggle">
                                 <div class="w-icon-dropdown-toggle"></div>
@@ -39,20 +49,6 @@
                                 </a>
                             </nav>
                         </div>
-                        <div data-hover="false" data-delay="0" class="dropdown w-dropdown">
-                            <div class="dropdown-toggle w-dropdown-toggle">
-                                <div class="w-icon-dropdown-toggle"></div>
-                                <div class ="drop-textBox">내 정보</div>
-                            </div>
-                            <nav class="w-dropdown-list">
-                                <a href="/member/edit" class="menu-link w-inline-block">
-                                    <div class="menu-link-text-drop">정보 수정</div>
-                                </a>
-                                <a href="#" class="menu-link w-inline-block">
-                                    <div class="menu-link-text-drop">리뷰 관리</div>
-                                </a>
-                            </nav>
-                        </div>
                     </th:block>
                     <th:block sec:authorize="isAnonymous()">
                         <a href="/member/login" class="menu-link w-inline-block">
@@ -63,6 +59,9 @@
                         </a>
                     </th:block>
                     <th:block sec:authorize="isAuthenticated()">
+                        <a href="/cart/cart" class="menu-link w-inline-block">
+                            <div class="menu-link-text cart-button">장바구니</div>
+                        </a>
                         <a  href="/logout" class="menu-link w-inline-block">
                             <div class="menu-link-text login">로그아웃</div>
                         </a>

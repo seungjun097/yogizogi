@@ -20,7 +20,6 @@ public class CartMenuServiceImpl implements CartMenuService{
     private final MemberRepository memberRepository;
     private final MenuRepository menuRepository;
     private final MenuOptionRepository menuOptionRepository;
-    private final CartService cartService;
 
     //email과 cartmenu dto 받아서 카트 메뉴 등록하는 과정
     @Override
@@ -30,8 +29,10 @@ public class CartMenuServiceImpl implements CartMenuService{
         Cart cart;
         //해당 멤버에게 카트가 없으면 카트를 만듬
         if(cartRepository.findByMember(member) == null) {
+            Menu menu = menuRepository.findById(cartMenuDTO.getMenu_id()).get();
             cart = Cart.builder()
                     .member(member)
+                    .store(menu.getStore())
                     .build();
             cart = cartRepository.save(cart);
         }else{

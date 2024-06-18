@@ -24,6 +24,10 @@ public class Cart {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartMenu> cartMenuList = new ArrayList<>();

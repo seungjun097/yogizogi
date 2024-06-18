@@ -30,12 +30,18 @@ public class CartController {
         String email = principalDetails.getUsername();
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
         if(cartDTO != null) {
-            Long menu_id = cartDTO.getCartMenuDTOList().get(0).getMenu_id();
-            Long store_id = menuService.findStoreByMenuId(menu_id);
-            StoreDTO storeDTO = storeService.findStore(store_id);
-            model.addAttribute("storeDTO", storeDTO);
+            if(!cartDTO.getCartMenuDTOList().isEmpty()) {
+                StoreDTO storeDTO = storeService.findStore(cartDTO.getStoreId());
+                model.addAttribute("cartDTO", cartDTO);
+                model.addAttribute("storeDTO", storeDTO);
+            }else {
+                model.addAttribute("cartDTO", null);
+                model.addAttribute("storeDTO", null);
+            }
+        }else {
+            model.addAttribute("cartDTO", null);
+            model.addAttribute("storeDTO", null);
         }
-        model.addAttribute("cartDTO", cartDTO);
         return "cart/cart";
     }
 
@@ -51,11 +57,10 @@ public class CartController {
     public @ResponseBody ResponseEntity cartMenuDelete(@RequestBody Map<String, Object> data,
                                          @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Long cartMenuId = Long.parseLong(data.get("cartMenuId").toString());
-        System.out.println("삭제 요청시 카트 메뉴 아이디 : "+cartMenuId);
-        cartMenuService.cartMenuDelete(cartMenuId);
         String email = principalDetails.getUsername();
+        cartMenuService.cartMenuDelete(cartMenuId);
         CartDTO cartDTO = cartService.cartFindByMemberEmail(email);
-        return new ResponseEntity<CartDTO> (cartDTO, HttpStatus.OK);
+        return new ResponseEntity<> (cartDTO, HttpStatus.OK);
     }
 
     @PostMapping("/countUpdate")
@@ -73,6 +78,13 @@ public class CartController {
         System.out.println("카트체크변경 : "+menuOptionId+"체크여부 : "+checked);
         cartMenuService.cartMenuOptionChecked(menuOptionId, checked);
         return new ResponseEntity<String>("체크 변경 성공", HttpStatus.OK);
+    }
+
+    @GetMapping("/deleteAll")
+    public String cartDelete(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String email = principalDetails.getUsername();
+        cartService.cartDeleteByEmail(email);
+        return "/";
     }
 
     @PostMapping("/cartList")

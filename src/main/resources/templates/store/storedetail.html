@@ -281,9 +281,15 @@ const modalWindow = $(".menu-modal-wrapper");
 let cartDTO = [[${cartDTO}]];
 
 $(document).ready(function() {
-  console.log(cartDTO);
-  cartShow(cartDTO);
-  cartAmountShow(cartDTO);
+  if(cartDTO != null && storeDTO.id != cartDTO.storeId) {
+     alert("카트에 다른 상점의 상품이 있습니다. 카트를 비우시겠습니까?");
+     location.href("/cart/deleteAll");
+  }else {
+    console.log(cartDTO);
+    cartShow(cartDTO);
+    cartAmountShow(cartDTO);
+  }
+
 });
 
 $('#decrease').on('click', function() {
@@ -472,15 +478,18 @@ function cartShow(cartDTO) {
     contentType: "application/json",
     dataType: "json",
     success: function(cartResult) {
-      console.log("삭제 성공");
-      cartDTO = cartResult;
-      cartShow(cartResult);
-      cartAmountShow(cartResult);
-
+      if(cartResult != null) {
+        console.log("삭제 성공");
+        cartDTO = cartResult;
+        cartShow(cartResult);
+        cartAmountShow(cartResult);
+      }else{
+        console.log("카트가 비었음");
+      }
     },
     error: function(error) {
-      console.log(error);
-      console.error('삭제 실패');
+      $('#allPrice').html('총 주문금액 : 0 원');
+      $("#cartList").html("<div class='cartmenu'>카트가 비었습니다.</div>");
     }
   });
   }

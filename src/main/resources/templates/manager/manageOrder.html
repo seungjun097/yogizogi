@@ -31,8 +31,10 @@
                     <div th:each="orderDTO, orderStat :${orderDTOList}">
                         <div class="ordercard">
                             <div class="ordercard_flexrow">
-                                <div th:text="${#temporals.format(orderDTO.regDate, 'MM월 dd일')}"></div>
-                                <div th:text="${#temporals.format(orderDTO.regDate, 'HH시간 mm분')}"></div>
+                                <div class="timeShow">
+                                    <h4 th:text="${#temporals.format(orderDTO.regDate, 'MM월 dd일')}"></h4>
+                                    <h3 th:text="${#temporals.format(orderDTO.regDate, 'HH시간 mm분')}"></h3>
+                                </div>
                                 <div class="orderdesc">
                                     <div class="orderstoretime">
                                         <h3 class="orderstorename">[[${orderDTO.storeName}]]</h3>

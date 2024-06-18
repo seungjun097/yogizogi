@@ -66,7 +66,7 @@ public class SearchStoreRepositoryImpl extends QuerydslRepositorySupport impleme
                     tuple.orderBy(review.count().desc());
                     break;
                 case "starAvg":
-                    tuple.orderBy(review.grade.avg().desc());
+                    tuple.orderBy(review.grade.avg().coalesce(0.0).desc());
                     break;
             }
         }

@@ -2,9 +2,11 @@ package com.green.yogizogi.service;
 
 import com.green.yogizogi.dto.ReviewDTO;
 import com.green.yogizogi.entity.Member;
+import com.green.yogizogi.entity.Order;
 import com.green.yogizogi.entity.Review;
 import com.green.yogizogi.entity.Store;
 import com.green.yogizogi.repository.MemberRepository;
+import com.green.yogizogi.repository.OrderRepository;
 import com.green.yogizogi.repository.ReviewRepository;
 import com.green.yogizogi.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class ReviewServiceImpl implements ReviewService{
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public List<ReviewDTO> getListOfStore(Long storeId) {
@@ -32,12 +35,21 @@ public class ReviewServiceImpl implements ReviewService{
     }                        //형태를 바꾸고 싶을땐 map을 쓴다.
 
     @Override
+    public List<ReviewDTO> getListOfEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        List<Review> reviewList = reviewRepository.findByMember(member);
+        return reviewList.stream().map(review -> entityToDto(review)).collect(Collectors.toList());
+    }
+
+    @Override
     public Long register(ReviewDTO reviewDTO) {
         Review review = dtoToEntity(reviewDTO);
-        Member member = memberRepository.findById(reviewDTO.getMember_id()).get();
+        Member member = memberRepository.findById(reviewDTO.getMemberId()).get();
         Store store = storeRepository.findById(reviewDTO.getStoreId()).get();
+        Order order = orderRepository.findById(reviewDTO.getOrderId()).get();
         review.setMember(member);
         review.setStore(store);
+        review.setOrder(order);
         reviewRepository.save(review);
         return review.getReviewnum();
     }

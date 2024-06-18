@@ -45,15 +45,6 @@ public class StoreController {
         return "main";
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "/store/storelist";
-    }
-    @GetMapping("/map")
-    public String map(){
-        return "/store/map";
-    }
-
     //가게추가 페이지 이동
     @GetMapping("/register")
     public String StoreUpdate(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
