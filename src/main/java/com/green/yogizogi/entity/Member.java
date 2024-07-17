@@ -3,8 +3,6 @@ package com.green.yogizogi.entity;
 import com.green.yogizogi.constant.Role;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,9 +21,7 @@ public class Member {
     private String email;
     private String password;
     private String nickname;
-    private int point;
     private String phone;
-    private String rating;
     @Enumerated(EnumType.STRING)
     private Role role;
 
