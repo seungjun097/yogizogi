@@ -80,11 +80,13 @@ public class CartController {
         return new ResponseEntity<String>("체크 변경 성공", HttpStatus.OK);
     }
 
-    @GetMapping("/deleteAll")
-    public String cartDelete(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @GetMapping("/deleteAll/{storeId}")
+    public String cartDelete(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                             @PathVariable("storeId") Long storeId) {
         String email = principalDetails.getUsername();
+        System.out.println("카트 삭제 컨트롤러 진입");
         cartService.cartDeleteByEmail(email);
-        return "/";
+        return "redirect:/store/detail2/"+storeId;
     }
 
     @PostMapping("/cartList")
